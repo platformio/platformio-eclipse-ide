@@ -1,9 +1,11 @@
 package com.insightmachines.pio.installer;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,11 +13,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 public final class Helpers {
 
@@ -111,8 +122,33 @@ public final class Helpers {
 //	  return false;
 //	}
 
-	private static void _download(String source, Path target) {
-		// TODO: Implement
+	private static void _download(String source, Path target) throws ClientProtocolException, IOException {		
+		String httpsProxy = System.getenv("HTTPS_PROXY");
+		String httpProxy = System.getenv("HTTP_PROXY");		
+		String proxy = httpsProxy != null ? httpsProxy.trim() : httpProxy != null ? httpProxy.trim() : "";
+		
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpGet httpget = new HttpGet(source);
+		
+		if ( !proxy.isEmpty() ) {
+			RequestConfig requestConfig = RequestConfig.custom()
+			        .setProxy( new HttpHost(proxy) )
+			        .build();
+			httpget.setConfig(requestConfig);
+		}
+		
+		CloseableHttpResponse response = httpClient.execute(httpget);
+		try {
+		    HttpEntity entity = response.getEntity();
+		    if (entity != null) {
+		        try ( InputStream inStream = entity.getContent() ) {
+		        	Files.copy(inStream, target);
+		        }
+		    }
+		} finally {
+		    response.close();
+		}
+		
 	}
 	
 //	async function _download(source, target) {
@@ -181,7 +217,7 @@ public final class Helpers {
 //	  });
 //	}
 
-	public static void extractTarGz(Path source, Path destination) throws IOException {	
+	public static Path extractTarGz(Path source, Path destination) throws IOException {	
 		InputStream in = Files.newInputStream(source);
 		File out = destination.toFile();
 		try (TarArchiveInputStream fin = new TarArchiveInputStream(new GzipCompressorInputStream(in))){
@@ -198,7 +234,7 @@ public final class Helpers {
                 IOUtils.copy(fin, new FileOutputStream(curfile));
             }
         }
-		
+		return destination;
 	}
 	
 //	export function extractTarGz(source, destination) {

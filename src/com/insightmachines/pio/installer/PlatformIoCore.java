@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -53,14 +54,14 @@ public class PlatformIoCore {
 
 	private Path whereIsPython() {
 		// SIMPLIFIED IMPLEMENTATION!
-		
-		Path pythonExecutable = getPythonExecutable( Boolean.parseBoolean(getParameter("useBuiltinPIOCore")) );
+
+		Path pythonExecutable = getPythonExecutable(Boolean.parseBoolean(getParameter("useBuiltinPIOCore")));
 		if (Files.exists(pythonExecutable)) {
 			return pythonExecutable;
 		}
 
 		if (IS_WINDOWS) {
-          return installPythonForWindows();
+			return installPythonForWindows();
 		}
 		return null;
 	}
@@ -94,37 +95,32 @@ public class PlatformIoCore {
 
 	private Path installPythonForWindows() {
 		// https://www.python.org/ftp/python/2.7.14/python-2.7.14.msi
-	    // https://www.python.org/ftp/python/2.7.14/python-2.7.14.amd64.msi
-	    String pythonArch = IS_64_BIT ? ".amd64" : "";
-	    String msiUrl = "https://www.python.org/ftp/python/" + pythonVersion + "/python-" + pythonVersion + pythonArch + ".msi";
-	    Path msiInstaller = download(
-	      msiUrl,
-	      getCacheDir().resolve(basename(msiUrl))
-	    );
-	    Path targetDir = getHomeDir().resolve("python27");
-	    Path pythonPath = targetDir.resolve("python.exe");
-		
-	    if (!Files.exists(pythonPath)) {
-	      try {
-	        installPythonFromWindowsMSI(msiInstaller, targetDir, false);
-	      } catch (Exception ex) {
-	        LOGGER.warning(ex.getMessage());
-	        installPythonFromWindowsMSI(msiInstaller, targetDir, true);
-	      }
-	    }
-	    
-	    // append temporary to system environment	    
-	    String path = String.join( File.pathSeparator, targetDir.toString(), targetDir.resolve("Scripts").toString(), System.getenv("PATH") );
-	    Map<String,String> env = new HashMap<String, String>();
-	    env.put("PATH", path);
-	    env.put("Path", path);
+		// https://www.python.org/ftp/python/2.7.14/python-2.7.14.amd64.msi
+		String pythonArch = IS_64_BIT ? ".amd64" : "";
+		String msiUrl = "https://www.python.org/ftp/python/" + pythonVersion + "/python-" + pythonVersion + pythonArch
+				+ ".msi";
+		Path msiInstaller = download(msiUrl, getCacheDir().resolve(basename(msiUrl)));
+		Path targetDir = getHomeDir().resolve("python27");
+		Path pythonPath = targetDir.resolve("python.exe");
 
-	    // install virtualenv
-	    return runCommand(
-	    	"pip",
-	        Arrays.asList("install", "virtualenv"),
-	        (code, stdout, stderr) -> pythonPath
-	    );
+		if (!Files.exists(pythonPath)) {
+			try {
+				installPythonFromWindowsMSI(msiInstaller, targetDir, false);
+			} catch (Exception ex) {
+				LOGGER.warning(ex.getMessage());
+				installPythonFromWindowsMSI(msiInstaller, targetDir, true);
+			}
+		}
+
+		// append temporary to system environment
+		String path = String.join(File.pathSeparator, targetDir.toString(), targetDir.resolve("Scripts").toString(),
+				System.getenv("PATH"));
+		Map<String, String> env = new HashMap<String, String>();
+		env.put("PATH", path);
+		env.put("Path", path);
+
+		// install virtualenv
+		return runCommand("pip", Arrays.asList("install", "virtualenv"), (code, stdout, stderr) -> pythonPath);
 
 	}
 
@@ -165,22 +161,21 @@ public class PlatformIoCore {
 
 	private void installPythonFromWindowsMSI(Path msiInstaller, Path targetDir, boolean administrative) {
 		Path logFile = getCacheDir().resolve("python27msi.log");
-		runCommand(
-			"msiexec.exe",
-			Arrays.asList(administrative ? "/a" : "/i", '"' + msiInstaller.toString() + '"', "/qn", "/li", '"' + logFile.toString() + '"', "TARGETDIR=\"" + targetDir.toString() + '"'),
-			(code, stdout, stderr) -> {
-				if (code == 0) {
-					return stdout;
-				} else {
-					try {
-						stderr = new String(Files.readAllBytes(logFile));
-					} catch (IOException e) {
-						LOGGER.warning("Failed to read the log file for Python MSI installer");
+		runCommand("msiexec.exe",
+				Arrays.asList(administrative ? "/a" : "/i", '"' + msiInstaller.toString() + '"', "/qn", "/li",
+						'"' + logFile.toString() + '"', "TARGETDIR=\"" + targetDir.toString() + '"'),
+				(code, stdout, stderr) -> {
+					if (code == 0) {
+						return stdout;
+					} else {
+						try {
+							stderr = new String(Files.readAllBytes(logFile));
+						} catch (IOException e) {
+							LOGGER.warning("Failed to read the log file for Python MSI installer");
+						}
+						throw new RuntimeException("MSI Python2.7: " + stderr);
 					}
-					throw new RuntimeException("MSI Python2.7: " + stderr);
-				}
-			}
-		);
+				});
 
 		if (!Files.exists(targetDir.resolve("python.exe"))) {
 			throw new RuntimeException("Could not install Python 2.7 using MSI");
@@ -255,17 +250,15 @@ public class PlatformIoCore {
 
 	private void createVirtualenvWithConda() {
 		cleanVirtualEnvDir();
-		runCommand(
-			"conda", 
-			Arrays.asList("create", "--yes", "--quiet", "python=2", "pip", "--prefix", getEnvDir().toString()), 
-			(code, stdout, stderr) -> {
-				if (code == 0) {
-					return stdout;
-				} else {
-					throw new RuntimeException("Conda Virtualenv: " + stderr);
-				}
-			}
-		);
+		runCommand("conda",
+				Arrays.asList("create", "--yes", "--quiet", "python=2", "pip", "--prefix", getEnvDir().toString()),
+				(code, stdout, stderr) -> {
+					if (code == 0) {
+						return stdout;
+					} else {
+						throw new RuntimeException("Conda Virtualenv: " + stderr);
+					}
+				});
 	}
 
 //		  createVirtualenvWithConda() {
@@ -289,30 +282,25 @@ public class PlatformIoCore {
 		cleanVirtualEnvDir();
 		Path pythonExecutable = whereIsPython();
 		try {
-			runCommand(
-	          pythonExecutable,
-	          Arrays.asList("-m", "virtualenv", "-p", pythonExecutable.toString(), getEnvDir().toString()),
-	          (code, stdout, stderr) -> {
-	            if (code == 0) {
-	              return stdout;
-	            } else {
-	              throw new RuntimeException("User's Virtualenv: " + stderr );
-	            }
-	          }
-	        );
-		} catch ( Exception ex ) {
+			runCommand(pythonExecutable,
+					Arrays.asList("-m", "virtualenv", "-p", pythonExecutable.toString(), getEnvDir().toString()),
+					(code, stdout, stderr) -> {
+						if (code == 0) {
+							return stdout;
+						} else {
+							throw new RuntimeException("User's Virtualenv: " + stderr);
+						}
+					});
+		} catch (Exception ex) {
 			cleanVirtualEnvDir();
-	        runCommand(
-	          "virtualenv",
-	          Arrays.asList("-p", pythonExecutable.toString(), getEnvDir().toString()),
-	          (code, stdout, stderr) -> {
-	            if (code == 0) {
-	              return stdout;
-	            } else {
-	              throw new RuntimeException("User's Virtualenv: " + stderr);
-	            }
-	          }
-	        );		      
+			runCommand("virtualenv", Arrays.asList("-p", pythonExecutable.toString(), getEnvDir().toString()),
+					(code, stdout, stderr) -> {
+						if (code == 0) {
+							return stdout;
+						} else {
+							throw new RuntimeException("User's Virtualenv: " + stderr);
+						}
+					});
 		}
 	}
 
@@ -354,6 +342,35 @@ public class PlatformIoCore {
 //		  }
 
 	private void createVirtualenvWithDownload() {
+		cleanVirtualEnvDir();
+		Path archivePath = download(virtualenvUrl, getCacheDir().resolve("virtualenv.tar.gz"));
+		try {
+			Path tmpDir = Files.createTempDirectory(getCacheDir(), "virtualenv");
+			Path dstDir = extractTarGz(archivePath, tmpDir);
+			Path virtualenvScript = Files.list(dstDir)
+				.filter(item -> "virtualenv.py".equals(item.getFileName().toString())).findFirst()
+				.orElseThrow(() -> new RuntimeException("Can not find virtualenv.py script"));
+			Path pythonExecutable = whereIsPython();
+			runCommand( 
+				pythonExecutable,
+				Arrays.asList(virtualenvScript, getEnvDir()),
+				(code, stdOut, stdErr) -> {
+					Files.deleteIfExists(tmpDir);          
+					if (code == 0) {
+						return stdOut;
+					} else {
+			            String userNotification = String.format("Virtualenv Create: %s%n%s", stdErr, stdOut);
+			            if (stdErr.contains("WindowsError: [Error 5]")) {
+			              userNotification = "If you use Antivirus, it can block PlatformIO Installer. Try to disable it for a while.";
+			            }
+			            throw new RuntimeException(userNotification);
+					}
+				}
+			);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+
 		// TODO: Implement
 	}
 
