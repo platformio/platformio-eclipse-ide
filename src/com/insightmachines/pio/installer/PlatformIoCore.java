@@ -121,7 +121,6 @@ public class PlatformIoCore {
 
 		// install virtualenv
 		return runCommand("pip", Arrays.asList("install", "virtualenv"), (code, stdout, stderr) -> pythonPath);
-
 	}
 
 //		  async installPythonForWindows() {
@@ -348,30 +347,30 @@ public class PlatformIoCore {
 			Path tmpDir = Files.createTempDirectory(getCacheDir(), "virtualenv");
 			Path dstDir = extractTarGz(archivePath, tmpDir);
 			Path virtualenvScript = Files.list(dstDir)
-				.filter(item -> "virtualenv.py".equals(item.getFileName().toString())).findFirst()
-				.orElseThrow(() -> new RuntimeException("Can not find virtualenv.py script"));
+					.filter(item -> "virtualenv.py".equals(item.getFileName().toString())).findFirst()
+					.orElseThrow(() -> new RuntimeException("Can not find virtualenv.py script"));
 			Path pythonExecutable = whereIsPython();
-			runCommand( 
-				pythonExecutable,
-				Arrays.asList(virtualenvScript, getEnvDir()),
-				(code, stdOut, stdErr) -> {
-					Files.deleteIfExists(tmpDir);          
-					if (code == 0) {
-						return stdOut;
-					} else {
-			            String userNotification = String.format("Virtualenv Create: %s%n%s", stdErr, stdOut);
-			            if (stdErr.contains("WindowsError: [Error 5]")) {
-			              userNotification = "If you use Antivirus, it can block PlatformIO Installer. Try to disable it for a while.";
-			            }
-			            throw new RuntimeException(userNotification);
-					}
-				}
-			);
+			runCommand(pythonExecutable, 
+					Arrays.asList(virtualenvScript.toAbsolutePath().toString(), getEnvDir().toAbsolutePath().toString()), 
+					(code, stdOut, stdErr) -> {
+						try {
+							Files.deleteIfExists(tmpDir);
+						} catch (IOException e) {
+							LOGGER.warning("Failed to delete " + tmpDir);
+						}
+						if (code == 0) {
+							return stdOut;
+						} else {
+							String userNotification = String.format("Virtualenv Create: %s%n%s", stdErr, stdOut);
+							if (stdErr.contains("WindowsError: [Error 5]")) {
+								userNotification = "If you use Antivirus, it can block PlatformIO Installer. Try to disable it for a while.";
+							}
+							throw new RuntimeException(userNotification);
+						}
+					});
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-
-		// TODO: Implement
 	}
 
 //		  async createVirtualenvWithDownload() {
@@ -521,7 +520,36 @@ public class PlatformIoCore {
 //		  }
 
 	private boolean installPIOCore() {
-		// TODO: Implement
+		Path pythonExecutable = whereIsPython();
+		// Try to upgrade PIP to the latest version with updated openSSL
+	    try {
+	      upgradePIP(pythonExecutable.toAbsolutePath().toString());
+	    } catch (Exception ex) {
+	      LOGGER.warning(ex.getMessage());
+	    }
+	    
+	    // Install dependencies
+	    List <String> args = Arrays.asList("-m", "pip", "install", "-U");
+	    if ( getParameter("useDevelopmentPIOCore") != null ) {
+	      args.add(pioCoreDevelopUrl);
+	    } else {
+	      args.add("platformio");
+	    }
+	    
+	    runCommand(
+    		pythonExecutable, 
+    		args, 
+    		(code, stdOut, stdErr) -> {
+    			if (code == 0) {
+  		          return stdOut;
+  		        } else {
+  		          if (IS_WINDOWS) {
+  		            stdErr = "If you have antivirus/firewall/defender software in a system, try to disable it for a while.\n" + stdErr;
+  		          }
+  		          throw new RuntimeException( "PIP Core: " + stdErr );
+  		        }
+    		});
+	    
 		return false;
 	}
 
