@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +45,16 @@ public class PlatformIoCore {
 		Map<String, Object> m = params;
 		for (String k : keys) {
 			Object v = m.get(k);
+			if (v == null) {
+				return null;
+			}
 			if (v instanceof Map) {
 				m = (Map<String, Object>) v;
 			} else {
 				return v.toString();
 			}
 		}
-		return "";
+		return null;
 	}
 
 	private Path whereIsPython() {
@@ -238,7 +243,12 @@ public class PlatformIoCore {
 //		  }
 
 	boolean isCondaInstalled() {
-		return runCommand("conda", "--version") == 0;
+		try {
+			return runCommand("conda", "--version") == 0;
+		} catch (Exception ex) {
+			LOGGER.info(ex.getMessage());
+			return false;
+		}
 	}
 
 //		  isCondaInstalled() {
@@ -277,7 +287,7 @@ public class PlatformIoCore {
 //		    });
 //		  }
 
-	private void createVirtualenvWithLocal() {
+	private void createVirtualEnvWithLocal() {
 		cleanVirtualEnvDir();
 		Path pythonExecutable = whereIsPython();
 		try {
@@ -287,7 +297,7 @@ public class PlatformIoCore {
 						if (code == 0) {
 							return stdout;
 						} else {
-							throw new RuntimeException("User's Virtualenv: " + stderr);
+							throw new RuntimeException("User's Virtualenv: " + stdout);
 						}
 					});
 		} catch (Exception ex) {
@@ -297,7 +307,7 @@ public class PlatformIoCore {
 						if (code == 0) {
 							return stdout;
 						} else {
-							throw new RuntimeException("User's Virtualenv: " + stderr);
+							throw new RuntimeException("User's Virtualenv: " + stdout);
 						}
 					});
 		}
@@ -346,15 +356,15 @@ public class PlatformIoCore {
 		try {
 			Path tmpDir = Files.createTempDirectory(getCacheDir(), "virtualenv");
 			Path dstDir = extractTarGz(archivePath, tmpDir);
-			Path virtualenvScript = Files.list(dstDir)
-					.filter(item -> "virtualenv.py".equals(item.getFileName().toString())).findFirst()
+			Path virtualenvScript = Files
+					.find(dstDir, 4, (path, attr) -> "virtualenv.py".equals(path.getFileName().toString())).findAny()
 					.orElseThrow(() -> new RuntimeException("Can not find virtualenv.py script"));
 			Path pythonExecutable = whereIsPython();
-			runCommand(pythonExecutable, 
-					Arrays.asList(virtualenvScript.toAbsolutePath().toString(), getEnvDir().toAbsolutePath().toString()), 
-					(code, stdOut, stdErr) -> {
+			runCommand(pythonExecutable, Arrays.asList(virtualenvScript.toAbsolutePath().toString(),
+					getEnvDir().toAbsolutePath().toString()), (code, stdOut, stdErr) -> {
 						try {
-							Files.deleteIfExists(tmpDir);
+							Files.walk(tmpDir).sorted(Comparator.reverseOrder()).map(Path::toFile)
+									.forEach(File::delete);
 						} catch (IOException e) {
 							LOGGER.warning("Failed to delete " + tmpDir);
 						}
@@ -414,7 +424,7 @@ public class PlatformIoCore {
 //		    });
 //		  }
 
-	private void installVirtualenvPackage() {
+	private void installVirtualEnvPackage() {
 		Path pythonExecutable = whereIsPython();
 		runCommand(pythonExecutable.toAbsolutePath().toString(), Arrays.asList("-m", "pip", "install", "virtualenv"),
 				(code, stdout, stderr) -> {
@@ -443,13 +453,13 @@ public class PlatformIoCore {
 //		    });
 //		  }
 
-	private void createVirtualenv() throws Exception {
+	private void createVirtualEnv() throws Exception {
 		if (isCondaInstalled()) {
 			createVirtualenvWithConda();
 			return;
 		}
 		try {
-			createVirtualenvWithLocal();
+			createVirtualEnvWithLocal();
 		} catch (Exception ex1) {
 			LOGGER.warning(ex1.getMessage());
 			try {
@@ -457,8 +467,8 @@ public class PlatformIoCore {
 			} catch (Exception ex2) {
 				LOGGER.warning(ex2.getMessage());
 				try {
-					installVirtualenvPackage();
-					createVirtualenvWithLocal();
+					installVirtualEnvPackage();
+					createVirtualEnvWithLocal();
 				} catch (Exception ex3) {
 					// misc.reportError(errDl);
 					LOGGER.warning(ex3.getMessage());
@@ -522,34 +532,32 @@ public class PlatformIoCore {
 	private boolean installPIOCore() {
 		Path pythonExecutable = whereIsPython();
 		// Try to upgrade PIP to the latest version with updated openSSL
-	    try {
-	      upgradePIP(pythonExecutable.toAbsolutePath().toString());
-	    } catch (Exception ex) {
-	      LOGGER.warning(ex.getMessage());
-	    }
-	    
-	    // Install dependencies
-	    List <String> args = Arrays.asList("-m", "pip", "install", "-U");
-	    if ( getParameter("useDevelopmentPIOCore") != null ) {
-	      args.add(pioCoreDevelopUrl);
-	    } else {
-	      args.add("platformio");
-	    }
-	    
-	    runCommand(
-    		pythonExecutable, 
-    		args, 
-    		(code, stdOut, stdErr) -> {
-    			if (code == 0) {
-  		          return stdOut;
-  		        } else {
-  		          if (IS_WINDOWS) {
-  		            stdErr = "If you have antivirus/firewall/defender software in a system, try to disable it for a while.\n" + stdErr;
-  		          }
-  		          throw new RuntimeException( "PIP Core: " + stdErr );
-  		        }
-    		});
-	    
+		try {
+			upgradePIP(pythonExecutable.toAbsolutePath().toString());
+		} catch (Exception ex) {
+			LOGGER.warning(ex.getMessage());
+		}
+
+		// Install dependencies
+		List<String> args = new ArrayList<String>( Arrays.asList("-m", "pip", "install", "--user", "-U") );
+		if (getParameter("useDevelopmentPIOCore") != null) {
+			args.add(pioCoreDevelopUrl);
+		} else {
+			args.add("platformio");
+		}
+
+		runCommand(pythonExecutable, args, (code, stdOut, stdErr) -> {
+			if (code == 0) {
+				return stdOut;
+			} else {
+				if (IS_WINDOWS) {
+					stdErr = "If you have antivirus/firewall/defender software in a system, try to disable it for a while.\n"
+							+ stdErr;
+				}
+				throw new RuntimeException("PIP Core: " + stdErr);
+			}
+		});
+
 		return false;
 	}
 
@@ -685,7 +693,7 @@ public class PlatformIoCore {
 
 	public void install() {
 		try {
-			createVirtualenv();
+			createVirtualEnv();
 			installPIOCore();
 			installPIOHome();
 		} catch (Exception e) {

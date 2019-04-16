@@ -37,7 +37,7 @@ public class Misc {
 	public static Path getPythonExecutable(boolean useBuiltinPIOCore, Path... customDirs) {
 		List<String> exeNames = IS_WINDOWS ? Arrays.asList("python.exe")
 				: Arrays.asList("python2.7", "python2", "python");
-		List<Path> locations = Arrays.asList(customDirs);
+		List<Path> locations = new ArrayList<Path>(Arrays.asList(customDirs));
 
 		if (useBuiltinPIOCore) {
 			locations.add(getEnvBinDir());
@@ -100,13 +100,13 @@ public class Misc {
 //}
 
 	public static boolean isPython2(Path executable) {
-		List <String> pythonLines = Arrays.asList(
-			"import os, sys",
-		    "assert sys.platform != \"cygwin\"",
-		    "assert not sys.platform.startswith(\"win\") or not any(s in sys.executable.lower() for s in (\"msys\", \"mingw\", \"emacs\"))",
-		    "assert not sys.platform.startswith(\"win\") or os.path.isdir(os.path.join(sys.prefix, \"Scripts\"))",
-		    "assert sys.version_info < (3, 0, 0)"
-		);
+		List <String> pythonLines = new ArrayList<String>();
+		pythonLines.add("import os, sys");
+		pythonLines.add("assert sys.platform != \"cygwin\"");
+		pythonLines.add("assert not sys.platform.startswith(\"win\") or not any(s in sys.executable.lower() for s in (\"msys\", \"mingw\", \"emacs\"))");
+		pythonLines.add("assert not sys.platform.startswith(\"win\") or os.path.isdir(os.path.join(sys.prefix, \"Scripts\"))");
+		pythonLines.add("assert sys.version_info < (3, 0, 0)");
+		
 		if (IS_WINDOWS) {
 			pythonLines.add("assert sys.version_info >= (2, 7, 9)");
 		} else {
@@ -168,6 +168,7 @@ public class Misc {
 
 	public static <T> T runCommand(List<String> commandWithArgs, Map<String, String> environment,
 			RunCommandOutputHandler<T> handler) {
+		LOGGER.info("Running: " + String.join(" ", commandWithArgs));
 		ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
 		pb.environment().putAll(environment);
 		Process p = null;
@@ -175,19 +176,19 @@ public class Misc {
 			p = pb.start();
 			if (handler != null) {
 				StringBuilder stdOutBuilder = new StringBuilder();
-				try (@SuppressWarnings("resource")
-				Scanner s = new Scanner(p.getInputStream()).useDelimiter("\n")) {
-					while (s.hasNext())
-						stdOutBuilder.append(s.next());
+				try (@SuppressWarnings("resource") Scanner s = new Scanner(p.getInputStream()).useDelimiter("\n")) {
+					while (s.hasNext()) stdOutBuilder.append(s.next());
 				}
 				int code = p.waitFor();
-				return handler.handle(code, stdOutBuilder.toString(), "");
+				return handler.handle(code, stdOutBuilder.toString(), ""); // TODO: Consider running two scanners independently for stdout and stderr  
 			} else {
 				return null;
 			}
+		} catch (RuntimeException ex1) {
+			throw ex1;
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Failed to run command: " + commandWithArgs.get(0), e);
-			return null;
+//			LOGGER.log(Level.SEVERE, "Failed to run command: " + String.join(" ", commandWithArgs), e);
+			throw new RuntimeException("Failed to run command: " + String.join(" ", commandWithArgs), e);
 		}
 	}
 
