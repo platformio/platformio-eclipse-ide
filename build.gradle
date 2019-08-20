@@ -26,4 +26,9 @@ repositories {
 dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.8'
     compile 'org.apache.commons:commons-compress:1.18'
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.1')
+}
+
+test {
+    useJUnitPlatform()
 }
