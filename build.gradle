@@ -19,6 +19,11 @@ sourceSets {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    compile fileTree(dir: 'lib', include: '*.jar')
+    compile 'org.apache.httpcomponents:httpclient:4.5.8'
+    compile 'org.apache.commons:commons-compress:1.18'
 }
