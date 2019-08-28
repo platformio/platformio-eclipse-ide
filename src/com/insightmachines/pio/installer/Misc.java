@@ -1,5 +1,9 @@
 package com.insightmachines.pio.installer;
 
+import static com.insightmachines.pio.installer.Core.getEnvBinDir;
+import static com.insightmachines.pio.installer.Core.getEnvDir;
+import static com.insightmachines.pio.installer.Core.getHomeDir;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,10 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.insightmachines.pio.installer.Core.*;
 
 public class Misc {
 

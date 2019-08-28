@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Platform IO Plugin
+Bundle-SymbolicName: com.insightmachines.pio;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Require-Bundle: javax.inject,
+ org.eclipse.osgi,
+ org.eclipse.jface,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.e4.ui.di,
+ org.eclipse.e4.ui.services,
+ org.eclipse.e4.core.di.annotations,
+ org.eclipse.core.runtime;bundle-version="3.15.100",
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.ui.browser;bundle-version="3.6.300"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.annotation;version="1.2.0",
+ org.eclipse.ui,
+ org.eclipse.ui.browser
+Automatic-Module-Name: com.insightmachines.pio
+Bundle-Activator: com.insightmachines.pio.activator.PioActivator
+Bundle-ActivationPolicy: lazy
