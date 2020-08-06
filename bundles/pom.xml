@@ -19,31 +19,19 @@
 	Contributors:
 		ArSysOp - initial API and implementation
 -->
-<feature
-      id="org.platformio.eclipse.ide.feature"
-      label="%featureName"
-      version="0.1.0.qualifier"
-      provider-name="%providerName"
-      plugin="org.platformio.eclipse.ide"
-      license-feature="org.platformio.eclipse.ide.license.feature"
-      license-feature-version="0.1.0">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-   <description>
-      %description
-   </description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.platformio.eclipse.ide.bundles</artifactId>
+    <packaging>pom</packaging>
 
-   <copyright>
-      %copyright
-   </copyright>
-
-   <license url="%licenseURL">
-      %license
-   </license>
-
-   <plugin
-         id="org.platformio.eclipse.ide"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-</feature>
+    <parent>
+        <groupId>org.platformio.eclipse.ide</groupId>
+        <artifactId>org.platformio.eclipse.ide.parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+        <relativePath>../releng/org.platformio.eclipse.ide.parent</relativePath>
+    </parent>
+</project>
