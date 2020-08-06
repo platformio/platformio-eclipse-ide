@@ -32,13 +32,11 @@
 
 	<modules>
 		<module>..\..\releng\org.platformio.eclipse.ide.target</module>
-<!-- FIXME: AF: not yet here
 		<module>..\..\features\org.platformio.eclipse.ide.license.feature</module>
-
+<!-- FIXME: AF: not yet here
 		<module>..\..\bundles\org.platformio.eclipse.ide</module>
+		<module>..\..\tests\org.platformio.eclipse.ide.tests</module>
 		<module>..\..\features\org.platformio.eclipse.ide.feature</module>
-
-		<module>..\..\products\org.platformio.eclipse.ide.product</module>
 
 		<module>..\..\releng\org.platformio.eclipse.ide.repository</module>
 -->
