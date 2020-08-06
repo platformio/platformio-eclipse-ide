@@ -20,3 +20,4 @@ git clone https://github.com/platformio/platformio-eclipse-ide.git
 cd platformio-eclipse-ide
 mvn verify
 ```
+Produced p2 repository can be found at `repository/org.platformio.eclipse.ide.repository/target`
