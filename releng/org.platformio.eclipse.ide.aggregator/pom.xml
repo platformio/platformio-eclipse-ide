@@ -36,6 +36,7 @@
 		<module>..\..\features\org.platformio.eclipse.ide.license.feature</module>
 
 		<module>..\..\bundles\org.platformio.eclipse.ide</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.ui</module>
 		<module>..\..\features\org.platformio.eclipse.ide.feature</module>
 
 		<module>..\..\releng\org.platformio.eclipse.ide.repository</module>
