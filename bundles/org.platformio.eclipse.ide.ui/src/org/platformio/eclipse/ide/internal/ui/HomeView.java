@@ -20,18 +20,26 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.internal.ui;
 
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.navigator.resources.ProjectExplorer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.internal.browser.BrowserViewer;
+import org.eclipse.ui.internal.browser.WebBrowserView;
 
-public final class HomePerspectiveFactory implements IPerspectiveFactory {
+@SuppressWarnings("restriction")
+public final class HomeView extends WebBrowserView {
+
+	public static final String HOME_VIEW_ID = "org.platformio.eclipse.ide.ui.views.view.home"; //$NON-NLS-1$
 
 	@Override
-	public void createInitialLayout(IPageLayout layout) {
-		layout.setEditorAreaVisible(false);
-		layout.addView(ProjectExplorer.VIEW_ID, IPageLayout.LEFT, (float) 0.3, layout.getEditorArea());
-		layout.addView(HomeView.HOME_VIEW_ID, IPageLayout.RIGHT, (float) 0.7, layout.getEditorArea());
-		layout.getViewLayout(HomeView.HOME_VIEW_ID).setCloseable(false);
+	public void createPartControl(Composite parent) {
+		viewer = new BrowserViewer(parent, SWT.NONE);
+		viewer.setContainer(this);
+		initDragAndDrop();
+		initUrl();
+	}
+
+	private void initUrl() {
+		viewer.setURL("http://127.0.0.1:8008/"); //$NON-NLS-1$
 	}
 
 }

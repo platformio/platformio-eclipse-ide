@@ -30,5 +30,19 @@
             name="%perspective.home.name">
       </perspective>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.platformio.eclipse.ide.ui.views.category.pio"
+            name="%category.pio.name">
+      </category>
+      <view
+            class="org.platformio.eclipse.ide.internal.ui.HomeView"
+            icon="icons/eview16/platformio.png"
+            id="org.platformio.eclipse.ide.ui.views.view.home"
+            name="%view.home.name"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>
