@@ -21,25 +21,28 @@
 package org.platformio.eclipse.ide.internal.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.internal.browser.BrowserViewer;
-import org.eclipse.ui.internal.browser.WebBrowserView;
+import org.eclipse.ui.part.ViewPart;
 
-@SuppressWarnings("restriction")
-public final class HomeView extends WebBrowserView {
+public final class HomeView extends ViewPart {
 
 	public static final String HOME_VIEW_ID = "org.platformio.eclipse.ide.ui.views.view.home"; //$NON-NLS-1$
+	private Browser viewer;
 
 	@Override
 	public void createPartControl(Composite parent) {
-		viewer = new BrowserViewer(parent, SWT.NONE);
-		viewer.setContainer(this);
-		initDragAndDrop();
+		viewer = new Browser(parent, SWT.CHROMIUM);
 		initUrl();
 	}
 
 	private void initUrl() {
-		viewer.setURL("http://127.0.0.1:8008/"); //$NON-NLS-1$
+		viewer.setUrl("http://127.0.0.1:8008/"); //$NON-NLS-1$
+	}
+
+	@Override
+	public void setFocus() {
+		viewer.setFocus();
 	}
 
 }

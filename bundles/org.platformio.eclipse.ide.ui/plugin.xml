@@ -37,6 +37,7 @@
             name="%category.pio.name">
       </category>
       <view
+            allowMultiple="false"
             class="org.platformio.eclipse.ide.internal.ui.HomeView"
             icon="icons/eview16/platformio.png"
             id="org.platformio.eclipse.ide.ui.views.view.home"

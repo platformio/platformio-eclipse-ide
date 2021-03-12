@@ -29,8 +29,8 @@ public final class HomePerspectiveFactory implements IPerspectiveFactory {
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
-		layout.addView(ProjectExplorer.VIEW_ID, IPageLayout.LEFT, (float) 0.3, layout.getEditorArea());
-		layout.addView(HomeView.HOME_VIEW_ID, IPageLayout.RIGHT, (float) 0.7, layout.getEditorArea());
+		layout.addView(ProjectExplorer.VIEW_ID, IPageLayout.LEFT, 0.2f, layout.getEditorArea());
+		layout.addView(HomeView.HOME_VIEW_ID, IPageLayout.RIGHT, 0.95f, layout.getEditorArea());
 		layout.getViewLayout(HomeView.HOME_VIEW_ID).setCloseable(false);
 	}
 
