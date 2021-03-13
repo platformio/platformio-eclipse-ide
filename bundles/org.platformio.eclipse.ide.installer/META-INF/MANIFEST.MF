@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.platformio.eclipse.ide.installer
+Bundle-Version: 0.1.0.qualifier
+Bundle-Name: %Bundle-Name
+Automatic-Module-Name: org.platformio.eclipse.ide.installer
+Bundle-RequiredExecutionEnvironment: JavaSE-11
