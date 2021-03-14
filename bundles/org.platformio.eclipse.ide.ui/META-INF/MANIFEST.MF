@@ -5,9 +5,12 @@ Bundle-SymbolicName: org.platformio.eclipse.ide.ui;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Automatic-Module-Name: org.platformio.eclipse.ide.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Activator: org.platformio.eclipse.ide.internal.ui.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.ui.browser;bundle-version="0.0.0",
  org.eclipse.ui.navigator.resources;bundle-version="0.0.0",
  org.eclipse.ui.workbench;bundle-version="0.0.0",
- org.eclipse.ui;bundle-version="0.0.0"
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.platformio.eclipse.ide.installer;bundle-version="0.0.0"
+Bundle-ActivationPolicy: lazy
