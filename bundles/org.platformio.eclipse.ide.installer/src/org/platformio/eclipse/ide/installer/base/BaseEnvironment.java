@@ -57,7 +57,7 @@ public final class BaseEnvironment implements Environment {
 		Path directory = Optional.ofNullable(System.getenv("PLATFORMIO_HOME_DIR")).map(s -> Paths.get(s)) //$NON-NLS-1$
 				.orElse(Paths.get(System.getProperty("user.home"), ".platformio")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (OS.Windows.class.isInstance(os())) {
-			if (isASCIIValid(directory)) {
+			if (!isASCIIValid(directory)) {
 				directory = directory.getRoot().resolve(".platformio"); //$NON-NLS-1$
 			}
 		}
@@ -65,7 +65,7 @@ public final class BaseEnvironment implements Environment {
 	}
 
 	private boolean isASCIIValid(Path result) {
-		return result.toAbsolutePath().toString().chars().anyMatch(ch -> ch > 127);
+		return result.toAbsolutePath().toString().chars().anyMatch(ch -> ch <= 127);
 	}
 
 	@Override

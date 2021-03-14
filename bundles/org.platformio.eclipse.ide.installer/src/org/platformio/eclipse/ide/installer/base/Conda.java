@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 import org.platformio.eclipse.ide.installer.api.Environment;
 
-public class Conda {
+public final class Conda {
 
 	private final Environment environment;
 
