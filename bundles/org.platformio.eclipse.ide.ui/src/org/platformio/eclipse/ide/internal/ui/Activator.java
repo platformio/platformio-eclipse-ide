@@ -35,8 +35,7 @@ public class Activator extends AbstractUIPlugin {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(Messages.Virtualenv_creation_message, IProgressMonitor.UNKNOWN);
-				installer.createVirtualEnvironment(monitor);
-				monitor.setTaskName(Messages.Core_installation_message);
+				installer.install(monitor);
 				return Status.OK_STATUS;
 			}
 		};

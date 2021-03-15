@@ -32,7 +32,7 @@ public final class Installer {
 
 	private Optional<Python> python;
 
-	public void createVirtualEnvironment(IProgressMonitor monitor) {
+	public void install(IProgressMonitor monitor) {
 
 		if (conda.installed()) {
 			conda.createEnvironment();
@@ -44,7 +44,7 @@ public final class Installer {
 			monitor.setTaskName(Messages.Python_installation_message);
 			new PythonDistribution(environment, new PythonVersion(3, 9, 2), monitor) //
 					.install(environment.home().resolve("python39")); //$NON-NLS-1$
-			createVirtualEnvironment(monitor);
+			install(monitor);
 			return;
 		}
 		if (!python.get().moduleInstalled("virtualenv")) { //$NON-NLS-1$
