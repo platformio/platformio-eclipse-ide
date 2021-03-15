@@ -20,6 +20,9 @@ public class Messages {
 	public static String Python_installation_message;
 	public static String Virtualenv_installation_message;
 	public static String Setting_workspace_message;
+	public static String Installing_Platformio_message;
+	public static String Launching_Platformio_home_message;
+	public static String Installing_module_message;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

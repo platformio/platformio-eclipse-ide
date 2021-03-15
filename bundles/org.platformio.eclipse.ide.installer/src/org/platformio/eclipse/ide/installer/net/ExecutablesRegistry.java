@@ -25,8 +25,8 @@ import java.util.StringTokenizer;
 
 import org.platformio.eclipse.ide.installer.api.Environment;
 import org.platformio.eclipse.ide.installer.api.OS;
-import org.platformio.eclipse.ide.installer.api.Python;
-import org.platformio.eclipse.ide.installer.base.LocalPython;
+import org.platformio.eclipse.ide.installer.python.LocalPython;
+import org.platformio.eclipse.ide.installer.python.Python;
 
 public final class ExecutablesRegistry {
 
@@ -40,7 +40,7 @@ public final class ExecutablesRegistry {
 		List<String> exeNames = executableNames();
 		List<Path> locations = new ArrayList<Path>(Arrays.asList(customDirs));
 		if (isWindows()) {
-			locations.add(environment.home().resolve("python27")); //$NON-NLS-1$
+			locations.add(environment.home().resolve("python39")); //$NON-NLS-1$
 		}
 		Collections.list(new StringTokenizer(System.getenv("PATH"), File.pathSeparator)).forEach(item -> { //$NON-NLS-1$
 			String itemString = ((String) item).replaceAll("\"", ""); //$NON-NLS-1$//$NON-NLS-2$
@@ -64,7 +64,7 @@ public final class ExecutablesRegistry {
 		if (isWindows()) {
 			return Arrays.asList("python.exe"); //$NON-NLS-1$
 		} else {
-			return Arrays.asList("python2.7", "python2", "python"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return Arrays.asList("python3.9", "python3", "python"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

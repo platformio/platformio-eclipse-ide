@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.base;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,22 +50,6 @@ public final class BaseEnvironment implements Environment {
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
-			return new CommandResult.Failure(-1, e.getMessage());
-		}
-	}
-
-	@Override
-	public CommandResult execute(String command, List<String> arguments, String path) {
-		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
-		Map<String, String> environment = builder.environment();
-		environment.put("Path", environment.get("Path") + path); //$NON-NLS-1$//$NON-NLS-2$
-		environment.put("Path", environment.get("Path") + File.pathSeparator + path + "\\Scripts"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		try {
-			Process process = builder.start();
-			int code = process.waitFor();
-			return new CommandResult.Success(code);
-		} catch (Exception e) {
-			e.printStackTrace();
 			return new CommandResult.Failure(-1, e.getMessage());
 		}
 	}
@@ -112,22 +95,19 @@ public final class BaseEnvironment implements Environment {
 	}
 
 	@Override
-	public void executeLasting(String command, List<String> arguments, String path) {
+	public void executeLasting(String command, List<String> arguments, String id) {
 		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
-		Map<String, String> environment = builder.environment();
-		environment.put("Path", environment.get("Path") + path); //$NON-NLS-1$//$NON-NLS-2$
-		environment.put("Path", environment.get("Path") + File.pathSeparator + path + "\\Scripts"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		try {
 			Process process = builder.start();
-			running.put(command, process);
+			running.put(id, process);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void killProcess(String command) {
-		Process process = running.get(command);
+	public void killProcess(String id) {
+		Process process = running.get(id);
 		if (process != null) {
 			process.destroy();
 		}

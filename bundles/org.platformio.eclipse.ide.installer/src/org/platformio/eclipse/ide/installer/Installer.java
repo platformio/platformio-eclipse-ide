@@ -12,21 +12,17 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.platformio.eclipse.ide.installer.api.Environment;
 import org.platformio.eclipse.ide.installer.api.OS;
-import org.platformio.eclipse.ide.installer.api.Python;
-import org.platformio.eclipse.ide.installer.api.PythonVersion;
 import org.platformio.eclipse.ide.installer.base.BaseEnvironment;
-import org.platformio.eclipse.ide.installer.base.Conda;
 import org.platformio.eclipse.ide.installer.net.ExecutablesRegistry;
-import org.platformio.eclipse.ide.installer.net.RemoteResource;
+import org.platformio.eclipse.ide.installer.python.Conda;
+import org.platformio.eclipse.ide.installer.python.Python;
+import org.platformio.eclipse.ide.installer.python.PythonDistribution;
+import org.platformio.eclipse.ide.installer.python.PythonVersion;
 
 public final class Installer {
 
@@ -34,22 +30,20 @@ public final class Installer {
 	private final ExecutablesRegistry registry = new ExecutablesRegistry(environment);
 	private final Conda conda = new Conda(environment);
 
-	public void installPlatformIOHome(Python python) {
-		environment.executeLasting("pio", //$NON-NLS-1$
-				Arrays.asList("home", "--no-open"), //$NON-NLS-1$ //$NON-NLS-2$
-				python.location().getParent().toString());
-	}
+	private Optional<Python> python;
 
 	public void createVirtualEnvironment(IProgressMonitor monitor) {
+
 		if (conda.installed()) {
 			conda.createEnvironment();
 			return;
 		}
 
-		final Optional<Python> python = registry.findPython();
+		python = registry.findPython();
 		if (!python.isPresent()) {
 			monitor.setTaskName(Messages.Python_installation_message);
-			installPython();
+			new PythonDistribution(environment, new PythonVersion(3, 9, 2), monitor) //
+					.install(environment.home().resolve("python39")); //$NON-NLS-1$
 			createVirtualEnvironment(monitor);
 			return;
 		}
@@ -57,58 +51,19 @@ public final class Installer {
 			monitor.setTaskName(Messages.Virtualenv_installation_message);
 			python.get().installModule("virtualenv"); //$NON-NLS-1$
 		}
+
 		monitor.setTaskName(Messages.Setting_workspace_message);
-		environment.execute("virtualenv", //$NON-NLS-1$
-				Arrays.asList("-p", python.get().location().toString(), environment.env().toString())); //$NON-NLS-1$
+		python.get().execute("virtualenv"); //$NON-NLS-1$
+		monitor.setTaskName(Messages.Installing_Platformio_message);
 		python.get().installModule("platformio"); //$NON-NLS-1$
-		installPlatformIOHome(python.get());
-	}
-
-	private void installPython() {
-		Path pythonDirectory = environment.home().resolve("python27"); //$NON-NLS-1$
-		try {
-			String coreModule = "core"; //$NON-NLS-1$
-			new RemoteResource(source(coreModule)) //
-					.download(target(coreModule)) //
-					.install(environment, pythonDirectory);
-			String exeModule = "exe"; //$NON-NLS-1$
-			new RemoteResource(source(exeModule)) //
-					.download(target(exeModule)) //
-					.install(environment, pythonDirectory);
-			String libModule = "lib"; //$NON-NLS-1$
-			new RemoteResource(source(libModule)) //
-					.download(target(libModule)) //
-					.install(environment, pythonDirectory);
-			String toolsModule = "tools"; //$NON-NLS-1$
-			new RemoteResource(source(toolsModule)) //
-					.download(target(toolsModule)) //
-					.install(environment, pythonDirectory);
-			String pipModule = "pip"; //$NON-NLS-1$
-			new RemoteResource(source(pipModule)) //
-					.download(target(pipModule)) //
-					.install(environment, pythonDirectory);
-			new RemoteResource("https://bootstrap.pypa.io/get-pip.py") //$NON-NLS-1$
-					.download(pythonDirectory.resolve("get-pip.py")); //$NON-NLS-1$
-			environment.execute(pythonDirectory.resolve("python.exe").toString(), //$NON-NLS-1$
-					Arrays.asList(pythonDirectory.resolve("get-pip.py").toAbsolutePath().toString()), //$NON-NLS-1$
-					pythonDirectory.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private Path target(String module) {
-		return environment.cache().resolve("downloads").resolve(module + ".msi"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	private String source(String module) {
-		Supplier<String> version = new PythonVersion(3, 9, 2);
-		return "https://www.python.org/ftp/python/" + version.get() //$NON-NLS-1$
-				+ environment.os().pythonArch() + module + ".msi"; //$NON-NLS-1$
+		monitor.setTaskName(Messages.Launching_Platformio_home_message);
+		python.get().executeLasting("platformio", "home", "--no-open"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}
 
 	public void killPio() {
-		environment.killProcess("pio"); //$NON-NLS-1$
+		if (python.isPresent()) {
+			python.get().killProcess("platformio"); //$NON-NLS-1$
+		}
 	}
 
 }

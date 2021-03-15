@@ -10,16 +10,24 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.api;
+package org.platformio.eclipse.ide.installer.python;
 
 import java.nio.file.Path;
 
+import org.platformio.eclipse.ide.installer.api.CommandResult;
+
 public interface Python {
 
-	Path location();
+	Path executable();
 
 	void installModule(String name);
 
 	boolean moduleInstalled(String module);
+
+	CommandResult execute(String module, String... args);
+
+	void executeLasting(String module, String... args);
+
+	void killProcess(String module);
 
 }

@@ -10,7 +10,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.api;
+package org.platformio.eclipse.ide.installer.python;
 
 import java.util.function.Supplier;
 

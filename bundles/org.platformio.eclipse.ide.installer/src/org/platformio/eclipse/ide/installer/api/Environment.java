@@ -19,11 +19,9 @@ public interface Environment {
 
 	CommandResult execute(String command, List<String> arguments);
 
-	CommandResult execute(String command, List<String> arguments, String path);
+	void executeLasting(String command, List<String> arguments, String id);
 
-	void executeLasting(String command, List<String> arguments, String path);
-
-	void killProcess(String command);
+	void killProcess(String id);
 
 	OS os();
 

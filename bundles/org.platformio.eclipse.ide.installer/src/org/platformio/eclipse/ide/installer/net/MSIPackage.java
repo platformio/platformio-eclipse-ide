@@ -26,7 +26,7 @@ public final class MSIPackage {
 	}
 
 	public void install(Environment environment, Path target) {
-		Path logFile = environment.cache().resolve("python27msi.log"); //$NON-NLS-1$
+		Path logFile = environment.cache().resolve("pythonmsi.log"); //$NON-NLS-1$
 		environment.execute("msiexec.exe", //$NON-NLS-1$
 				Arrays.asList("/a", '"' + location.toString() + '"', "/qn", //$NON-NLS-1$ //$NON-NLS-2$
 						"/li", '"' + logFile.toString() + '"', "TARGETDIR=\"" + target.toString() + '"')); //$NON-NLS-1$//$NON-NLS-2$
