@@ -16,8 +16,6 @@ import java.nio.file.Path;
 
 public interface Python {
 
-	public static final String VERSION = "2.7.13"; //$NON-NLS-1$
-
 	Path location();
 
 	void installModule(String name);

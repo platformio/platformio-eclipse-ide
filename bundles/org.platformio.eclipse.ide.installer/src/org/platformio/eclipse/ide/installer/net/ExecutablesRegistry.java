@@ -69,7 +69,7 @@ public final class ExecutablesRegistry {
 	}
 
 	private boolean isWindows() {
-		return OS.Windows.class.isInstance(environment.os());
+		return OS.Windows32.class.isInstance(environment.os()) || OS.Windows64.class.isInstance(environment.os());
 	}
 
 }

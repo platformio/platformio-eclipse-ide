@@ -37,7 +37,6 @@ public class Activator extends AbstractUIPlugin {
 				monitor.beginTask(Messages.Virtualenv_creation_message, IProgressMonitor.UNKNOWN);
 				installer.createVirtualEnvironment(monitor);
 				monitor.setTaskName(Messages.Core_installation_message);
-				installer.installPlatformIOHome();
 				return Status.OK_STATUS;
 			}
 		};
@@ -48,6 +47,7 @@ public class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		installer.killPio();
 		super.stop(context);
 	}
 

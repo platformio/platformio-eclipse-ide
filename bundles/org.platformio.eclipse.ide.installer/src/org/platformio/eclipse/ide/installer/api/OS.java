@@ -14,23 +14,32 @@ package org.platformio.eclipse.ide.installer.api;
 
 public abstract class OS {
 
-	public abstract Architecture architecture();
+	public abstract String pythonArch();
 
 	public static OS get() {
 		if (System.getProperty("os.name").toLowerCase().contains("windows")) { //$NON-NLS-1$ //$NON-NLS-2$
-			return new Windows();
+			if (System.getenv("ProgramFiles(x86)") != null) { //$NON-NLS-1$
+				return new Windows64();
+			}
+			return new Windows32();
 		}
 		return new Other();
 	}
 
-	public static final class Windows extends OS {
+	public static final class Windows32 extends OS {
 
 		@Override
-		public Architecture architecture() {
-			if (System.getenv("ProgramFiles(x86)") != null) { //$NON-NLS-1$
-				return new Architecture.X64();
-			}
-			return new Architecture.X86();
+		public String pythonArch() {
+			return "/win32/"; //$NON-NLS-1$
+		}
+
+	}
+
+	public static final class Windows64 extends OS {
+
+		@Override
+		public String pythonArch() {
+			return "/amd64/"; //$NON-NLS-1$
 		}
 
 	}
@@ -38,11 +47,11 @@ public abstract class OS {
 	public static final class Other extends OS {
 
 		@Override
-		public Architecture architecture() {
+		public String pythonArch() {
 			if (System.getProperty("os.arch").indexOf("64") != -1) { //$NON-NLS-1$ //$NON-NLS-2$
-				return new Architecture.X64();
+				return "/amd64/"; //$NON-NLS-1$
 			}
-			return new Architecture.X86();
+			return ""; //$NON-NLS-1$
 		}
 
 	}

@@ -30,12 +30,14 @@ public final class LocalPython implements Python {
 
 	@Override
 	public void installModule(String name) {
-		environment.execute("pip", Arrays.asList("install", "-U", name)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		environment.execute("pip", Arrays.asList("install", "-U", name), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				location.getParent().toString());
 	}
 
 	@Override
 	public boolean moduleInstalled(String module) {
-		return environment.execute(module, Arrays.asList("-V")).code() >= 0; //$NON-NLS-1$
+		return environment.execute("python", Arrays.asList("-m", module, "-V"), location.getParent().toString()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.code() >= 0;
 	}
 
 	@Override

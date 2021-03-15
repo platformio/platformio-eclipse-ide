@@ -12,26 +12,19 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.api;
 
-public abstract class Architecture {
+import java.util.function.Supplier;
 
-	public abstract String pythonArch();
+public final class PythonVersion implements Supplier<String> {
 
-	public static final class X64 extends Architecture {
+	private final int[] version;
 
-		@Override
-		public String pythonArch() {
-			return ".amd64"; //$NON-NLS-1$
-		}
-
+	public PythonVersion(int major, int minor, int patch) {
+		version = new int[] { major, minor, patch };
 	}
 
-	public static final class X86 extends Architecture {
-
-		@Override
-		public String pythonArch() {
-			return ""; //$NON-NLS-1$
-		}
-
+	@Override
+	public String get() {
+		return version[0] + "." + version[1] + "." + version[2]; //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }
