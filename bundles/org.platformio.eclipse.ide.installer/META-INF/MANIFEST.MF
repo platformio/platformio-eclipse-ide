@@ -1,7 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: org.platformio.eclipse.ide.installer
+Bundle-SymbolicName: org.platformio.eclipse.ide.installer;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Name: %Bundle-Name
 Automatic-Module-Name: org.platformio.eclipse.ide.installer
 Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.apache.httpcomponents.httpcore;bundle-version="0.0.0",
+ org.eclipse.ui;bundle-version="0.0.0",
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.apache.httpcomponents.httpclient;bundle-version="0.0.0"
+Export-Package: org.platformio.eclipse.ide.installer,
+ org.platformio.eclipse.ide.installer.api
