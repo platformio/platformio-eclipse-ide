@@ -37,6 +37,7 @@
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/2020-12/"/>
 			<unit id="org.apache.commons.compress" version="0.0.0"/>
+			<unit id="com.google.gson" version="0.0.0"/>
 		</location>
 	</locations>
 </target>
