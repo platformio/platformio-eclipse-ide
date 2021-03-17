@@ -30,5 +30,13 @@
 			<repository location="http://dl.maketechnology.io/chromium-cef/rls/repository"/>
 			<unit id="com.make.chromium.cef.feature.feature.group" version="0.0.0"/>
 		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://dl.maketechnology.io/chromium-cef/rls/repository"/>
+			<unit id="com.make.chromium.cef.feature.feature.group" version="0.0.0"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/2020-12/"/>
+			<unit id="org.apache.commons.compress" version="0.0.0"/>
+		</location>
 	</locations>
 </target>

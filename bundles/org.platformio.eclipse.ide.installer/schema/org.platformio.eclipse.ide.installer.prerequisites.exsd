@@ -25,45 +25,19 @@
       <appinfo>
          <meta.schema plugin="org.platformio.eclipse.ide.installer" id="org.platformio.eclipse.ide.installer.prerequisites" name="Installer Prerequisites"/>
       </appinfo>
-      <documentation>
-         [Enter description of this extension point.]
-      </documentation>
    </annotation>
 
    <element name="extension">
-      <annotation>
-         <appinfo>
-            <meta.element />
-         </appinfo>
-      </annotation>
       <complexType>
          <sequence>
             <element ref="locator" minOccurs="1" maxOccurs="unbounded"/>
             <element ref="architecture"/>
          </sequence>
          <attribute name="point" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
          </attribute>
          <attribute name="id" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
          </attribute>
          <attribute name="name" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute translatable="true"/>
-               </appinfo>
-            </annotation>
          </attribute>
       </complexType>
    </element>
@@ -71,17 +45,9 @@
    <element name="locator">
       <complexType>
          <attribute name="type" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
-               <documentation>
-                  
-               </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.platformio.eclipse.ide.installer.python.PythonLocations"/>
                </appinfo>
@@ -93,18 +59,8 @@
    <element name="architecture">
       <complexType>
          <attribute name="id" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
          </attribute>
          <attribute name="url" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
          </attribute>
       </complexType>
    </element>
@@ -113,36 +69,24 @@
       <appinfo>
          <meta.section type="since"/>
       </appinfo>
-      <documentation>
-         [Enter the first release in which this extension point appears.]
-      </documentation>
    </annotation>
 
    <annotation>
       <appinfo>
          <meta.section type="examples"/>
       </appinfo>
-      <documentation>
-         [Enter extension point usage example here.]
-      </documentation>
    </annotation>
 
    <annotation>
       <appinfo>
          <meta.section type="apiinfo"/>
       </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
    </annotation>
 
    <annotation>
       <appinfo>
          <meta.section type="implementation"/>
       </appinfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
    </annotation>
 
 
