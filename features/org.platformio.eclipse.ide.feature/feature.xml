@@ -44,30 +44,41 @@
          id="org.platformio.eclipse.ide"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
          
    <plugin
          id="org.platformio.eclipse.ide.installer"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
          
-   <fragment
+   <plugin
          id="org.platformio.eclipse.ide.installer.win32"
+         os="win32"
+         arch="x86_64"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
          
-   <fragment
+   <plugin
          id="org.platformio.eclipse.ide.installer.macosx"
+         os="macosx"
+         arch="x86_64"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
 
    <plugin
          id="org.platformio.eclipse.ide.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
