@@ -24,16 +24,10 @@ import java.util.Optional;
 
 import org.platformio.eclipse.ide.installer.api.CommandResult;
 import org.platformio.eclipse.ide.installer.api.Environment;
-import org.platformio.eclipse.ide.installer.api.OS;
 
 public final class BaseEnvironment implements Environment {
 
-	private final OS os;
 	private final Map<String, Process> running = new HashMap<>();
-
-	public BaseEnvironment(OS os) {
-		this.os = os;
-	}
 
 	private List<String> input(String command, List<String> args) {
 		List<String> resolved = new LinkedList<>();
@@ -58,10 +52,8 @@ public final class BaseEnvironment implements Environment {
 	public Path home() {
 		Path directory = Optional.ofNullable(System.getenv("PLATFORMIO_HOME_DIR")).map(s -> Paths.get(s)) //$NON-NLS-1$
 				.orElse(Paths.get(System.getProperty("user.home"), ".platformio")); //$NON-NLS-1$ //$NON-NLS-2$
-		if (OS.Windows32.class.isInstance(os()) || OS.Windows64.class.isInstance(os())) {
-			if (!isASCIIValid(directory)) {
-				directory = directory.getRoot().resolve(".platformio"); //$NON-NLS-1$
-			}
+		if (!isASCIIValid(directory)) {
+			directory = directory.getRoot().resolve(".platformio"); //$NON-NLS-1$
 		}
 		return directory;
 	}
@@ -82,16 +74,6 @@ public final class BaseEnvironment implements Environment {
 			}
 		}
 		return dir;
-	}
-
-	@Override
-	public Path env() {
-		return home().resolve("penv"); //$NON-NLS-1$
-	}
-
-	@Override
-	public OS os() {
-		return os;
 	}
 
 	@Override

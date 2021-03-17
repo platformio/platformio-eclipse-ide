@@ -10,21 +10,26 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.api;
+package org.platformio.eclipse.ide.installer.json;
 
 import java.nio.file.Path;
-import java.util.List;
 
-public interface Environment {
+public class EnvironmentPaths {
 
-	CommandResult execute(String command, List<String> arguments);
+	private final Path envBinDir;
+	private final Path envDir;
 
-	void executeLasting(String command, List<String> arguments, String id);
+	public EnvironmentPaths(Path executable, Path envBinDir) {
+		this.envBinDir = envBinDir;
+		this.envDir = executable;
+	}
 
-	void killProcess(String id);
+	public Path envBinDir() {
+		return envBinDir;
+	}
 
-	Path home();
-
-	Path cache();
+	public Path envDir() {
+		return envDir;
+	}
 
 }

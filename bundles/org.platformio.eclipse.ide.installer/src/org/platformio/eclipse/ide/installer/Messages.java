@@ -23,6 +23,8 @@ public class Messages {
 	public static String Installing_Platformio_message;
 	public static String Launching_Platformio_home_message;
 	public static String Installing_module_message;
+	public static String Installation_successful_message;
+	public static String Installation_failed_message;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

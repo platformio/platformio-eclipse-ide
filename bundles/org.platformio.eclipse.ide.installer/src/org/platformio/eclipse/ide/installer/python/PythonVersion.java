@@ -24,7 +24,7 @@ public final class PythonVersion implements Supplier<String> {
 
 	@Override
 	public String get() {
-		return version[0] + "." + version[1] + "." + version[2]; //$NON-NLS-1$//$NON-NLS-2$
+		return "1." + version[0] + "0" + version[1] + "0" + version[2] + ".0"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 }

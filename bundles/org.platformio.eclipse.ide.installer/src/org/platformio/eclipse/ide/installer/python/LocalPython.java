@@ -32,12 +32,12 @@ public final class LocalPython implements Python {
 
 	@Override
 	public void installModule(String name) {
-		execute("pip", "install", "-U", name); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		executeModule("pip", "install", "-U", name); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
 	public boolean moduleInstalled(String module) {
-		return execute(module, "-V").code() >= 0; //$NON-NLS-1$
+		return executeModule(module, "-V").code() >= 0; //$NON-NLS-1$
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public final class LocalPython implements Python {
 	}
 
 	@Override
-	public CommandResult execute(String module, String... moduleArgs) {
+	public CommandResult executeModule(String module, String... moduleArgs) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
@@ -64,6 +64,26 @@ public final class LocalPython implements Python {
 	@Override
 	public void killProcess(String module) {
 		environment.killProcess(module);
+	}
+
+	@Override
+	public CommandResult executeScript(Path location, String... args) {
+		List<String> executionArgs = new LinkedList<>();
+		executionArgs.add(location.toString());
+		executionArgs.addAll(Arrays.asList(args));
+		return environment.execute(executable.toString(), executionArgs);
+	}
+
+	@Override
+	public CommandResult executeCode(String code) {
+		List<String> executionArgs = new LinkedList<>();
+		executionArgs.addAll(Arrays.asList("-c", "\"" + code + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return environment.execute(executable.toString(), executionArgs);
+	}
+
+	@Override
+	public Environment environment() {
+		return environment;
 	}
 
 }

@@ -14,7 +14,6 @@ package org.platformio.eclipse.ide.internal.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -35,8 +34,7 @@ public class Activator extends AbstractUIPlugin {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(Messages.Virtualenv_creation_message, IProgressMonitor.UNKNOWN);
-				installer.install(monitor);
-				return Status.OK_STATUS;
+				return installer.install(monitor);
 			}
 		};
 		installJob.setPriority(Job.LONG);
