@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<!--
+	Copyright (c) 2021 PlatformIO and ArSysOp
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+
+	SPDX-License-Identifier: Apache-2.0
+
+	Contributors:
+		ArSysOp - initial API and implementation
+-->
+<schema targetNamespace="org.platformio.eclipse.ide.installer" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.platformio.eclipse.ide.installer" id="org.platformio.eclipse.ide.installer.prerequisites" name="Installer Prerequisites"/>
+      </appinfo>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="locator" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="architecture"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+         </attribute>
+         <attribute name="id" type="string">
+         </attribute>
+         <attribute name="name" type="string">
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="locator">
+      <complexType>
+         <attribute name="type" type="string" use="required">
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.platformio.eclipse.ide.installer.python.PythonLocations"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="architecture">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+         </attribute>
+         <attribute name="url" type="string" use="required">
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+   </annotation>
+
+
+</schema>
