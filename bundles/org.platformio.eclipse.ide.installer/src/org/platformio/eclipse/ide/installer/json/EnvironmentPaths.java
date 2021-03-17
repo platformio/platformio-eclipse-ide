@@ -14,7 +14,7 @@ package org.platformio.eclipse.ide.installer.json;
 
 import java.nio.file.Path;
 
-public class EnvironmentPaths {
+public final class EnvironmentPaths {
 
 	private final Path envBinDir;
 	private final Path envDir;

@@ -10,21 +10,24 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.python;
+package org.platformio.eclipse.ide.installer.json;
 
-import java.util.function.Supplier;
+public final class Distribution {
 
-public final class PythonVersion implements Supplier<String> {
+	private final String download_url;
+	private final String[] system;
 
-	private final int[] version;
-
-	public PythonVersion(int major, int minor, int patch) {
-		version = new int[] { major, minor, patch };
+	public Distribution(String[] system, String download_url) {
+		this.download_url = download_url;
+		this.system = system;
 	}
 
-	@Override
-	public String get() {
-		return "1." + version[0] + "0" + version[1] + "0" + version[2] + ".0"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	public String url() {
+		return download_url;
+	}
+
+	public String[] system() {
+		return system;
 	}
 
 }

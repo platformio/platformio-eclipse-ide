@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -63,13 +64,8 @@ public final class PythonsRegistry {
 	}
 
 	private void addLocationsFromPath(List<Path> locations) {
-		Collections.list(new StringTokenizer(System.getenv("PATH"), File.pathSeparator)).forEach(item -> { //$NON-NLS-1$
-			String itemString = ((String) item).replaceAll("\"", ""); //$NON-NLS-1$//$NON-NLS-2$
-			Path itemPath = Paths.get(itemString);
-			if (!locations.contains(item)) {
-				locations.add(itemPath);
-			}
-		});
+		locations.addAll(Collections.list(new StringTokenizer(System.getenv("PATH"), File.pathSeparator)).stream() //$NON-NLS-1$
+				.map(object -> Paths.get((String) object)).collect(Collectors.toList()));
 	}
 
 	private List<PythonLocations> pythons() {
@@ -88,7 +84,7 @@ public final class PythonsRegistry {
 							locations.add((PythonLocations) executable);
 						}
 					} catch (CoreException e) {
-						e.printStackTrace();
+						Platform.getLog(getClass()).error(e.getMessage(), e);
 					}
 				}
 			}

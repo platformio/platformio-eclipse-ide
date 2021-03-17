@@ -12,30 +12,38 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.python;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.function.Supplier;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.installer.json.Distribution;
 import org.platformio.eclipse.ide.installer.net.RemoteResource;
 
-public class PythonDistribution {
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
-	private final Supplier<String> version;
+public final class PythonDistribution {
+
+	private static final String DISTRIBUTION_SITE_URL = "https://api.registry.platformio.org/v3/packages/platformio/tool/python-portable"; //$NON-NLS-1$
+
 	private final Environment environment;
 
-	public PythonDistribution(Environment environment, Supplier<String> version) {
-		this.version = version;
+	public PythonDistribution(Environment environment) {
 		this.environment = environment;
 	}
 
 	public void install(Path target) {
 		try {
 			Path packagePath = environment.cache().resolve("downloads").resolve("python3.tar.gz"); //$NON-NLS-1$ //$NON-NLS-2$
-			new RemoteResource(source()) //
+			new RemoteResource(distributionUrl()) //
 					.download(packagePath) //
 					.extract(target);
 		} catch (IOException e) {
@@ -43,12 +51,33 @@ public class PythonDistribution {
 		}
 	}
 
-	private String source() {
-		return "https://dl.registry.platformio.org/download/platformio/tool/python-portable/" + version.get() //$NON-NLS-1$
-				+ "/python-portable-" + distribution() + "-" + version.get() + ".tar.gz"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private String distributionUrl() throws IOException {
+		List<Distribution> readDistributives = readDistributives();
+		for (Distribution distributive : readDistributives) {
+			for (String supported : distributive.system()) {
+				if (supported.equals(system())) {
+					return distributive.url();
+				}
+			}
+		}
+		throw new IOException();
 	}
 
-	private String distribution() {
+	private List<Distribution> readDistributives() throws IOException {
+		Path target = environment.cache().resolve("info"); //$NON-NLS-1$
+		new RemoteResource(DISTRIBUTION_SITE_URL).download(target);
+		try (BufferedReader fileReader = Files.newBufferedReader(target);) {
+			JsonElement element = JsonParser.parseReader(fileReader);
+			return new Gson().fromJson(
+					element.getAsJsonObject().get("version").getAsJsonObject().get("files").getAsJsonArray(), //$NON-NLS-1$ //$NON-NLS-2$
+					new TypeToken<List<Distribution>>() {
+					}.getType());
+
+		}
+
+	}
+
+	private String system() {
 		return Arrays
 				.asList(Platform.getExtensionRegistry()
 						.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions()) //$NON-NLS-1$

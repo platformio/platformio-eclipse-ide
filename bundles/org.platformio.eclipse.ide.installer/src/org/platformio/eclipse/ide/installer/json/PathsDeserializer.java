@@ -21,7 +21,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-public class PathsDeserializer implements JsonDeserializer<EnvironmentPaths> {
+public final class PathsDeserializer implements JsonDeserializer<EnvironmentPaths> {
 
 	@Override
 	public EnvironmentPaths deserialize(JsonElement json, Type type, JsonDeserializationContext context)
