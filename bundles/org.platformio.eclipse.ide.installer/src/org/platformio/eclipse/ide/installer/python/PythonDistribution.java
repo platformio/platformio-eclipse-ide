@@ -67,7 +67,7 @@ public final class PythonDistribution {
 		Path target = environment.cache().resolve("info"); //$NON-NLS-1$
 		new RemoteResource(DISTRIBUTION_SITE_URL).download(target);
 		try (BufferedReader fileReader = Files.newBufferedReader(target);) {
-			JsonElement element = JsonParser.parseReader(fileReader);
+			JsonElement element = new JsonParser().parse(fileReader);
 			return new Gson().fromJson(
 					element.getAsJsonObject().get("version").getAsJsonObject().get("files").getAsJsonArray(), //$NON-NLS-1$ //$NON-NLS-2$
 					new TypeToken<List<Distribution>>() {
