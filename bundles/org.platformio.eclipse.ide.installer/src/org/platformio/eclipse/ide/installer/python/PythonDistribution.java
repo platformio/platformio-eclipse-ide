@@ -12,61 +12,80 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.python;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.platformio.eclipse.ide.installer.Messages;
+import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.installer.json.Distribution;
 import org.platformio.eclipse.ide.installer.net.RemoteResource;
 
-public class PythonDistribution {
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
-	private final List<String> requiredParts = Arrays.asList("core", "tools", "exe", "lib"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-	private final Supplier<String> version;
+public final class PythonDistribution {
+
+	private static final String DISTRIBUTION_SITE_URL = "https://api.registry.platformio.org/v3/packages/platformio/tool/python-portable"; //$NON-NLS-1$
+
 	private final Environment environment;
-	private final IProgressMonitor monitor;
 
-	public PythonDistribution(Environment environment, Supplier<String> version, IProgressMonitor monitor) {
-		this.version = version;
+	public PythonDistribution(Environment environment) {
 		this.environment = environment;
-		this.monitor = monitor;
 	}
 
 	public void install(Path target) {
-		requiredParts.forEach(part -> installPart(part, target));
-		installPip(target); // The way we install pip is kinda different
-	}
-
-	private void installPart(String part, Path target) {
 		try {
-			monitor.setTaskName(String.format(Messages.Installing_module_message, part));
-			new RemoteResource(source(part)) //
-					.download(environment.cache().resolve("downloads").resolve(part + ".msi")) // //$NON-NLS-1$ //$NON-NLS-2$
-					.install(environment, target);
+			Path packagePath = environment.cache().resolve("downloads").resolve("python3.tar.gz"); //$NON-NLS-1$ //$NON-NLS-2$
+			new RemoteResource(distributionUrl()) //
+					.download(packagePath) //
+					.extract(target);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void installPip(Path target) {
-		try {
-			monitor.setTaskName(String.format(Messages.Installing_module_message, "pip")); //$NON-NLS-1$
-			new RemoteResource("https://bootstrap.pypa.io/get-pip.py") //$NON-NLS-1$
-					.download(target.resolve("get-pip.py")); //$NON-NLS-1$
-			environment.execute(target.resolve("python.exe").toString(), //$NON-NLS-1$
-					Arrays.asList(target.resolve("get-pip.py").toString())); //$NON-NLS-1$
-		} catch (IOException e) {
-			e.printStackTrace();
+	private String distributionUrl() throws IOException {
+		List<Distribution> readDistributives = readDistributives();
+		for (Distribution distributive : readDistributives) {
+			for (String supported : distributive.system()) {
+				if (supported.equals(system())) {
+					return distributive.url();
+				}
+			}
 		}
+		throw new IOException();
 	}
 
-	private String source(String module) {
-		return "https://www.python.org/ftp/python/" + version.get() //$NON-NLS-1$
-				+ environment.os().pythonArch() + module + ".msi"; //$NON-NLS-1$
+	private List<Distribution> readDistributives() throws IOException {
+		Path target = environment.cache().resolve("info"); //$NON-NLS-1$
+		new RemoteResource(DISTRIBUTION_SITE_URL).download(target);
+		try (BufferedReader fileReader = Files.newBufferedReader(target);) {
+			JsonElement element = new JsonParser().parse(fileReader);
+			return new Gson().fromJson(
+					element.getAsJsonObject().get("version").getAsJsonObject().get("files").getAsJsonArray(), //$NON-NLS-1$ //$NON-NLS-2$
+					new TypeToken<List<Distribution>>() {
+					}.getType());
+
+		}
+
+	}
+
+	private String system() {
+		return Arrays
+				.asList(Platform.getExtensionRegistry()
+						.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions()) //$NON-NLS-1$
+				.stream() //
+				.flatMap(extension -> Stream.of(extension.getConfigurationElements())) //
+				.filter(element -> "architecture".equals(element.getName())).findFirst() //$NON-NLS-1$
+				.map(element -> element.getAttribute("url")) //$NON-NLS-1$
+				.get();
 	}
 
 }

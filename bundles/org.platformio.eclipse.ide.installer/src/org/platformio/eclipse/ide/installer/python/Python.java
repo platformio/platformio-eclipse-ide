@@ -15,6 +15,7 @@ package org.platformio.eclipse.ide.installer.python;
 import java.nio.file.Path;
 
 import org.platformio.eclipse.ide.installer.api.CommandResult;
+import org.platformio.eclipse.ide.installer.api.Environment;
 
 public interface Python {
 
@@ -24,10 +25,16 @@ public interface Python {
 
 	boolean moduleInstalled(String module);
 
-	CommandResult execute(String module, String... args);
+	CommandResult executeCode(String code);
+
+	CommandResult executeScript(Path name, String... args);
+
+	CommandResult executeModule(String module, String... args);
 
 	void executeLasting(String module, String... args);
 
 	void killProcess(String module);
+
+	Environment environment();
 
 }

@@ -33,7 +33,7 @@ public final class RemoteResource {
 		this.url = url;
 	}
 
-	public MSIPackage download(Path target) throws IOException {
+	public TarGzPackage download(Path target) throws IOException {
 		String httpsProxy = System.getenv("HTTPS_PROXY"); //$NON-NLS-1$
 		String httpProxy = System.getenv("HTTP_PROXY"); //$NON-NLS-1$
 		String proxy = httpsProxy != null ? httpsProxy.trim() : httpProxy != null ? httpProxy.trim() : ""; //$NON-NLS-1$
@@ -58,7 +58,7 @@ public final class RemoteResource {
 			response.close();
 			httpClient.close();
 		}
-		return new MSIPackage(target);
+		return new TarGzPackage(target);
 	}
 
 }

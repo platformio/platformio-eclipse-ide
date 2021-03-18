@@ -20,6 +20,8 @@ public class Messages {
 	public static String PlatformIO_installation_message;
 	public static String Virtualenv_creation_message;
 	public static String Core_installation_message;
+	public static String Installation_successful_message;
+	public static String Installation_failed_message;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -10,21 +10,24 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.api;
+package org.platformio.eclipse.ide.installer.json;
 
-import java.nio.file.Path;
-import java.util.List;
+public final class Distribution {
 
-public interface Environment {
+	private final String download_url;
+	private final String[] system;
 
-	CommandResult execute(String command, List<String> arguments);
+	public Distribution(String[] system, String download_url) {
+		this.download_url = download_url;
+		this.system = system;
+	}
 
-	void executeLasting(String command, List<String> arguments, String id);
+	public String url() {
+		return download_url;
+	}
 
-	void killProcess(String id);
-
-	Path home();
-
-	Path cache();
+	public String[] system() {
+		return system;
+	}
 
 }

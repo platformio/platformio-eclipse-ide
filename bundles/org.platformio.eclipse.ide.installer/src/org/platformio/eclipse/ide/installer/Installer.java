@@ -12,57 +12,51 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.platformio.eclipse.ide.installer.api.Environment;
-import org.platformio.eclipse.ide.installer.api.OS;
+import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
 import org.platformio.eclipse.ide.installer.base.BaseEnvironment;
-import org.platformio.eclipse.ide.installer.net.ExecutablesRegistry;
-import org.platformio.eclipse.ide.installer.python.Conda;
+import org.platformio.eclipse.ide.installer.piocore.LocalPioCoreDistribution;
+import org.platformio.eclipse.ide.installer.piocore.PioCoreDistribution;
 import org.platformio.eclipse.ide.installer.python.Python;
 import org.platformio.eclipse.ide.installer.python.PythonDistribution;
-import org.platformio.eclipse.ide.installer.python.PythonVersion;
 
 public final class Installer {
 
-	private final Environment environment = new BaseEnvironment(OS.get());
-	private final ExecutablesRegistry registry = new ExecutablesRegistry(environment);
-	private final Conda conda = new Conda(environment);
+	private final Environment environment = new BaseEnvironment();
+	private final PythonsRegistry registry;
 
 	private Optional<Python> python;
 
-	public void install(IProgressMonitor monitor) {
+	public Installer() {
+		this.registry = new PythonsRegistry(environment);
+	}
 
-		if (conda.installed()) {
-			conda.createEnvironment();
-			return;
-		}
-
+	public void install(IProgressMonitor monitor) throws IOException {
 		python = registry.findPython();
 		if (!python.isPresent()) {
 			monitor.setTaskName(Messages.Python_installation_message);
-			new PythonDistribution(environment, new PythonVersion(3, 9, 2), monitor) //
-					.install(environment.home().resolve("python39")); //$NON-NLS-1$
+			new PythonDistribution(environment).install(environment.home().resolve("python39")); //$NON-NLS-1$
 			install(monitor);
 			return;
 		}
-		if (!python.get().moduleInstalled("virtualenv")) { //$NON-NLS-1$
-			monitor.setTaskName(Messages.Virtualenv_installation_message);
-			python.get().installModule("virtualenv"); //$NON-NLS-1$
-		}
 
-		monitor.setTaskName(Messages.Setting_workspace_message);
-		python.get().execute("virtualenv"); //$NON-NLS-1$
 		monitor.setTaskName(Messages.Installing_Platformio_message);
-		python.get().installModule("platformio"); //$NON-NLS-1$
+		PioCoreDistribution pio = new LocalPioCoreDistribution(python.get());
+		if (!pio.installed()) {
+			pio.install();
+		}
 		monitor.setTaskName(Messages.Launching_Platformio_home_message);
-		python.get().executeLasting("platformio", "home", "--no-open"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		pio.home();
+
 	}
 
 	public void killPio() {
 		if (python.isPresent()) {
-			python.get().killProcess("platformio"); //$NON-NLS-1$
+			python.get().killProcess("pio"); //$NON-NLS-1$
 		}
 	}
 

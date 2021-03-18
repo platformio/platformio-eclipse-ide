@@ -10,21 +10,16 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.python;
+package org.platformio.eclipse.ide.installer.piocore;
 
-import java.util.function.Supplier;
+import java.io.IOException;
 
-public final class PythonVersion implements Supplier<String> {
+public interface PioCoreDistribution {
 
-	private final int[] version;
+	boolean installed();
 
-	public PythonVersion(int major, int minor, int patch) {
-		version = new int[] { major, minor, patch };
-	}
+	void install() throws IOException;
 
-	@Override
-	public String get() {
-		return version[0] + "." + version[1] + "." + version[2]; //$NON-NLS-1$//$NON-NLS-2$
-	}
+	void home() throws IOException;
 
 }
