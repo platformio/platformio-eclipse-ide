@@ -23,11 +23,10 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
-import org.platformio.eclipse.ide.installer.python.PythonLocations;
 
 public final class WindowsPythonsRegistry implements PythonsRegistry {
 
-	private final PythonLocations python;
+	private final WindowsPythonLocations python;
 
 	public WindowsPythonsRegistry() {
 		this.python = new WindowsPythonLocations();

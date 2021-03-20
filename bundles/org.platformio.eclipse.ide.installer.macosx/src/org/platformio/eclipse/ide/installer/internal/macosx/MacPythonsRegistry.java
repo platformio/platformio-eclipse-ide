@@ -12,15 +12,25 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.internal.macosx;
 
+import java.io.IOException;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
 
 public class MacPythonsRegistry implements PythonsRegistry {
 
 	@Override
 	public Optional<String> findPython() {
-		return Optional.of("python3"); //$NON-NLS-1$
+		try {
+			if (Runtime.getRuntime().exec("python3 -V").waitFor() == 0) //$NON-NLS-1$
+				return Optional.of("python3"); //$NON-NLS-1$
+			if (Runtime.getRuntime().exec("python -V").waitFor() == 0) //$NON-NLS-1$
+				return Optional.of("python"); //$NON-NLS-1$
+		} catch (InterruptedException | IOException e) {
+			Platform.getLog(getClass()).error(e.getMessage());
+		}
+		return Optional.empty();
 	}
 
 	@Override
