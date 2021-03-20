@@ -14,6 +14,7 @@ package org.platformio.eclipse.ide.internal.ui;
 
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -40,7 +41,7 @@ public class Activator extends AbstractUIPlugin {
 				try {
 					installer.install(monitor);
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
-				} catch (IOException e) {
+				} catch (IOException | CoreException e) {
 					return new Status(IStatus.ERROR, getClass(),
 							String.format(Messages.Installation_failed_message, e.getMessage()));
 				}

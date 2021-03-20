@@ -13,6 +13,7 @@
 package org.platformio.eclipse.ide.installer.python;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,9 +24,14 @@ import org.platformio.eclipse.ide.installer.api.Environment;
 public final class LocalPython implements Python {
 
 	private final Environment environment;
-	private final Path executable;
+	private final String executable;
 
 	public LocalPython(Environment environment, Path location) {
+		this.environment = environment;
+		this.executable = location.toString();
+	}
+
+	public LocalPython(Environment environment, String location) {
 		this.environment = environment;
 		this.executable = location;
 	}
@@ -42,7 +48,7 @@ public final class LocalPython implements Python {
 
 	@Override
 	public Path executable() {
-		return executable;
+		return Paths.get(executable);
 	}
 
 	@Override
@@ -50,7 +56,7 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
-		return environment.execute(executable.toString(), executionArgs);
+		return environment.execute(executable, executionArgs);
 	}
 
 	@Override
@@ -58,7 +64,7 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
-		environment.executeLasting(executable.toString(), executionArgs, module);
+		environment.executeLasting(executable, executionArgs, module);
 	}
 
 	@Override
@@ -71,14 +77,14 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.add(location.toString());
 		executionArgs.addAll(Arrays.asList(args));
-		return environment.execute(executable.toString(), executionArgs);
+		return environment.execute(executable, executionArgs);
 	}
 
 	@Override
 	public CommandResult executeCode(String code) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-c", "\"" + code + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return environment.execute(executable.toString(), executionArgs);
+		return environment.execute(executable, executionArgs);
 	}
 
 	@Override

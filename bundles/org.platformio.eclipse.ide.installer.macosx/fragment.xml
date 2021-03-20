@@ -23,14 +23,13 @@
 <fragment>
    <extension
          point="org.platformio.eclipse.ide.installer.prerequisites">
-      <locator
-            class="org.platformio.eclipse.ide.installer.internal.macosx.MacPythonLocations"
-            type="org.platformio.eclipse.ide.installer.macosx.locator">
-      </locator>
       <architecture
             id="org.platformio.eclipse.ide.installer.macosx.darwin_x86_64"
             url="darwin_x86_64">
       </architecture>
+      <registry
+            class="org.platformio.eclipse.ide.installer.internal.macosx.MacPythonsRegistry">
+      </registry>
    </extension>
 
 </fragment>

@@ -10,14 +10,22 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.api;
+package org.platformio.eclipse.ide.installer.internal.macosx;
 
 import java.util.Optional;
 
-public interface PythonsRegistry {
+import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
 
-	Optional<String> findPython();
+public class MacPythonsRegistry implements PythonsRegistry {
 
-	String executableSuffix();
+	@Override
+	public Optional<String> findPython() {
+		return Optional.of("python3"); //$NON-NLS-1$
+	}
+
+	@Override
+	public String executableSuffix() {
+		return ""; //$NON-NLS-1$
+	}
 
 }
