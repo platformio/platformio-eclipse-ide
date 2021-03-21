@@ -32,7 +32,8 @@ import org.platformio.eclipse.ide.installer.python.PythonDistribution;
 public final class Installer {
 
 	private final Environment environment = new BaseEnvironment();
-	private Python python;
+
+	private Optional<Python> python;
 
 	public void install(IProgressMonitor monitor) throws IOException, CoreException {
 
@@ -43,10 +44,10 @@ public final class Installer {
 			install(monitor);
 			return;
 		}
-		python = new LocalPython(environment, registry().findPython().get());
+		python = Optional.of(new LocalPython(environment, executable.get()));
 
 		monitor.setTaskName(Messages.Installing_Platformio_message);
-		PioCoreDistribution pio = new LocalPioCoreDistribution(python, registry().executableSuffix());
+		PioCoreDistribution pio = new LocalPioCoreDistribution(python.get(), registry().executableSuffix());
 		if (!pio.installed()) {
 			pio.install();
 		}
@@ -56,7 +57,9 @@ public final class Installer {
 	}
 
 	public void killPio() {
-		python.killProcess("pio"); //$NON-NLS-1$
+		if (python.isPresent()) {
+			python.get().killProcess("pio"); //$NON-NLS-1$
+		}
 	}
 
 	private PythonsRegistry registry() throws CoreException {

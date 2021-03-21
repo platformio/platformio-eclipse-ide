@@ -41,9 +41,11 @@ public class Activator extends AbstractUIPlugin {
 				try {
 					installer.install(monitor);
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
-				} catch (IOException | CoreException e) {
+				} catch (IOException e) {
 					return new Status(IStatus.ERROR, getClass(),
 							String.format(Messages.Installation_failed_message, e.getMessage()));
+				} catch (CoreException e) {
+					return e.getStatus();
 				}
 			}
 		};

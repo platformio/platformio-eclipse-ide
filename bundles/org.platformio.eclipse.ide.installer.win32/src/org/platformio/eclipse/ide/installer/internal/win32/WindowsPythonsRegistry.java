@@ -36,15 +36,11 @@ public final class WindowsPythonsRegistry implements PythonsRegistry {
 	public Optional<String> findPython() {
 		List<Path> locations = python.customLocations();
 		addLocationsFromPath(locations);
-		for (Path location : locations) {
-			for (String exeName : python.names()) {
-				Path executable = location.resolve(exeName).toAbsolutePath();
-				if (Files.exists(executable)) {
-					return Optional.of(executable.toString());
-				}
-			}
-		}
-		return Optional.empty();
+		return locations.stream() //
+				.flatMap(location -> python.names().stream().map(location::resolve)) //
+				.filter(Files::exists) //
+				.map(Path::toString) //
+				.findAny();
 	}
 
 	private void addLocationsFromPath(List<Path> locations) {

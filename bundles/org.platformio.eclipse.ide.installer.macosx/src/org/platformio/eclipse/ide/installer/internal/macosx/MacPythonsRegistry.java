@@ -18,7 +18,7 @@ import java.util.Optional;
 import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
 
-public class MacPythonsRegistry implements PythonsRegistry {
+public final class MacPythonsRegistry implements PythonsRegistry {
 
 	@Override
 	public Optional<String> findPython() {
