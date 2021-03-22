@@ -30,9 +30,11 @@ public final class LocalPioCoreDistribution implements PioCoreDistribution {
 	private final Python python;
 	private final Path location;
 	private final Path dump;
+	private final String suffix;
 
-	public LocalPioCoreDistribution(Python python) {
+	public LocalPioCoreDistribution(Python python, String suffix) {
 		this.python = python;
+		this.suffix = suffix;
 		this.location = python.environment().cache().resolve("get-platformio.py"); //$NON-NLS-1$
 		this.dump = python.environment().cache().resolve("tmpdir/pioinstaller-state.json"); //$NON-NLS-1$
 	}
@@ -67,7 +69,7 @@ public final class LocalPioCoreDistribution implements PioCoreDistribution {
 			EnvironmentPaths installation = new GsonBuilder()
 					.registerTypeAdapter(EnvironmentPaths.class, new PathsDeserializer()) // s
 					.create().fromJson(reader, EnvironmentPaths.class);
-			python.environment().executeLasting(installation.envBinDir().resolve("platformio.exe").toString(), //$NON-NLS-1$
+			python.environment().executeLasting(installation.envBinDir().resolve("platformio" + suffix).toString(), //$NON-NLS-1$
 					Arrays.asList("home", "--no-open"), "pio"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}

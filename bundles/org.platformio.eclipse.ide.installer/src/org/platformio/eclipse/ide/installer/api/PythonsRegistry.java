@@ -12,84 +12,12 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.api;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.installer.python.LocalPython;
-import org.platformio.eclipse.ide.installer.python.Python;
-import org.platformio.eclipse.ide.installer.python.PythonLocations;
+public interface PythonsRegistry {
 
-public final class PythonsRegistry {
+	Optional<String> findPython();
 
-	private final Environment environment;
-
-	public PythonsRegistry(Environment environment) {
-		this.environment = environment;
-	}
-
-	public Optional<Python> findPython() {
-		for (PythonLocations locations : pythons()) {
-			Optional<Python> found = findPython(locations);
-			if (found.isPresent()) {
-				return found;
-			}
-		}
-		return Optional.empty();
-	}
-
-	private Optional<Python> findPython(PythonLocations python) {
-		List<Path> locations = python.customLocations();
-		addLocationsFromPath(locations);
-		for (Path location : locations) {
-			for (String exeName : python.names()) {
-				Path executable = location.resolve(exeName).toAbsolutePath();
-				if (Files.exists(executable)) {
-					return Optional.of(new LocalPython(environment, executable));
-				}
-			}
-		}
-		return Optional.empty();
-	}
-
-	private void addLocationsFromPath(List<Path> locations) {
-		locations.addAll(Collections.list(new StringTokenizer(System.getenv("PATH"), File.pathSeparator)).stream() //$NON-NLS-1$
-				.map(object -> Paths.get((String) object)).collect(Collectors.toList()));
-	}
-
-	private List<PythonLocations> pythons() {
-		List<PythonLocations> locations = new LinkedList<>();
-		IExtension[] extensions = Platform.getExtensionRegistry()
-				.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions(); //$NON-NLS-1$
-		for (IExtension extension : extensions) {
-			IConfigurationElement[] prereqs = extension.getConfigurationElements();
-			for (IConfigurationElement ce : prereqs) {
-				String type = ce.getAttribute("type"); //$NON-NLS-1$
-				if ("python".equals(type)) { //$NON-NLS-1$
-					Object executable;
-					try {
-						executable = ce.createExecutableExtension("class"); //$NON-NLS-1$
-						if (executable instanceof PythonLocations) {
-							locations.add((PythonLocations) executable);
-						}
-					} catch (CoreException e) {
-						Platform.getLog(getClass()).error(e.getMessage(), e);
-					}
-				}
-			}
-		}
-		return locations;
-	}
+	String executableSuffix();
 
 }
