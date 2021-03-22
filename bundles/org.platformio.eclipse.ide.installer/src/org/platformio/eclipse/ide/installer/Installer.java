@@ -33,10 +33,7 @@ public final class Installer {
 
 	private final Environment environment = new BaseEnvironment();
 
-	private Optional<Python> python;
-
 	public void install(IProgressMonitor monitor) throws IOException, CoreException {
-
 		Optional<String> executable = registry().findPython();
 		if (!executable.isPresent()) {
 			monitor.setTaskName(Messages.Python_installation_message);
@@ -44,22 +41,15 @@ public final class Installer {
 			install(monitor);
 			return;
 		}
-		python = Optional.of(new LocalPython(environment, executable.get()));
+		Python python = new LocalPython(environment, executable.get());
 
 		monitor.setTaskName(Messages.Installing_Platformio_message);
-		PioCoreDistribution pio = new LocalPioCoreDistribution(python.get(), registry().executableSuffix());
+		PioCoreDistribution pio = new LocalPioCoreDistribution(python, registry().executableSuffix());
 		if (!pio.installed()) {
 			pio.install();
 		}
 		monitor.setTaskName(Messages.Launching_Platformio_home_message);
 		pio.home();
-
-	}
-
-	public void killPio() {
-		if (python.isPresent()) {
-			python.get().killProcess("pio"); //$NON-NLS-1$
-		}
 	}
 
 	private PythonsRegistry registry() throws CoreException {

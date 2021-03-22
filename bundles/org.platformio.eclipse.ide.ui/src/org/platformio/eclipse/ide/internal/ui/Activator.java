@@ -25,11 +25,7 @@ import org.platformio.eclipse.ide.installer.Installer;
 
 public class Activator extends AbstractUIPlugin {
 
-	private final Installer installer;
-
-	public Activator() {
-		this.installer = new Installer();
-	}
+	private final Installer installer = new Installer();
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -52,12 +48,6 @@ public class Activator extends AbstractUIPlugin {
 		installJob.setPriority(Job.LONG);
 		installJob.setUser(true);
 		installJob.schedule();
-	}
-
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		installer.killPio();
-		super.stop(context);
 	}
 
 }
