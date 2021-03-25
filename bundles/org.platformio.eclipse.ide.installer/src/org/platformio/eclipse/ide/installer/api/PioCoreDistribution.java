@@ -12,19 +12,12 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.installer.api;
 
-import java.nio.file.Path;
-import java.util.List;
+import java.io.IOException;
 
-public interface Environment {
+public interface PioCoreDistribution {
 
-	CommandResult execute(String command, List<String> arguments);
+	boolean installed();
 
-	void executeLasting(String command, List<String> arguments, String id);
-
-	void killProcess(String id);
-
-	Path home();
-
-	Path cache();
+	void install() throws IOException;
 
 }

@@ -10,16 +10,21 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.piocore;
+package org.platformio.eclipse.ide.home.api;
 
-import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 
-public interface PioCoreDistribution {
+public interface Environment {
 
-	boolean installed();
+	CommandResult execute(String command, List<String> arguments);
 
-	void install() throws IOException;
+	void executeLasting(String command, List<String> arguments, String id);
 
-	void home() throws IOException;
+	void killProcess(String id);
+
+	Path home();
+
+	Path cache();
 
 }

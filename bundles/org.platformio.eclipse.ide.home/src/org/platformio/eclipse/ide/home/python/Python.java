@@ -10,12 +10,12 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.python;
+package org.platformio.eclipse.ide.home.python;
 
 import java.nio.file.Path;
 
-import org.platformio.eclipse.ide.installer.api.CommandResult;
-import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.home.api.CommandResult;
+import org.platformio.eclipse.ide.home.api.Environment;
 
 public interface Python {
 

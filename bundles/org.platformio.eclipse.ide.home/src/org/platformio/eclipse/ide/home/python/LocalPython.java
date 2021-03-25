@@ -10,7 +10,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.python;
+package org.platformio.eclipse.ide.home.python;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,8 +18,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.platformio.eclipse.ide.installer.api.CommandResult;
-import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.home.api.CommandResult;
+import org.platformio.eclipse.ide.home.api.Environment;
 
 public final class LocalPython implements Python {
 

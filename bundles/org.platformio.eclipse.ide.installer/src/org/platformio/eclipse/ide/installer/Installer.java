@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.home.api.Environment;
+import org.platformio.eclipse.ide.home.core.BaseEnvironment;
+import org.platformio.eclipse.ide.home.python.LocalPython;
+import org.platformio.eclipse.ide.home.python.Python;
+import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
 import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
-import org.platformio.eclipse.ide.installer.base.BaseEnvironment;
 import org.platformio.eclipse.ide.installer.piocore.LocalPioCoreDistribution;
-import org.platformio.eclipse.ide.installer.piocore.PioCoreDistribution;
-import org.platformio.eclipse.ide.installer.python.LocalPython;
-import org.platformio.eclipse.ide.installer.python.Python;
 import org.platformio.eclipse.ide.installer.python.PythonDistribution;
 
 public final class Installer {
@@ -48,8 +48,6 @@ public final class Installer {
 		if (!pio.installed()) {
 			pio.install();
 		}
-		monitor.setTaskName(Messages.Launching_Platformio_home_message);
-		pio.home();
 	}
 
 	private PythonsRegistry registry() throws CoreException {

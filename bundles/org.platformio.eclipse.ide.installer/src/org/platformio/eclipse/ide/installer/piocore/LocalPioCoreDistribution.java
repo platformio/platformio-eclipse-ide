@@ -18,10 +18,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
+import org.platformio.eclipse.ide.home.python.Python;
+import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
 import org.platformio.eclipse.ide.installer.json.EnvironmentPaths;
 import org.platformio.eclipse.ide.installer.json.PathsDeserializer;
 import org.platformio.eclipse.ide.installer.net.RemoteResource;
-import org.platformio.eclipse.ide.installer.python.Python;
 
 import com.google.gson.GsonBuilder;
 
@@ -62,7 +63,6 @@ public final class LocalPioCoreDistribution implements PioCoreDistribution {
 		python.executeScript(location, "check", "core", "--dump-state", dump.toString()); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}
 
-	@Override
 	public void home() throws IOException {
 		dump();
 		try (Reader reader = Files.newBufferedReader(dump)) {
