@@ -21,11 +21,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.installer.Installer;
 
 public class Activator extends AbstractUIPlugin {
 
-	private final Installer installer = new Installer();
+	private PlatformIO pio;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -35,9 +36,11 @@ public class Activator extends AbstractUIPlugin {
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(Messages.Virtualenv_creation_message, IProgressMonitor.UNKNOWN);
 				try {
-					installer.install(monitor);
+					pio = new Installer().install(monitor);
+					pio.home();
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
 				} catch (IOException e) {
+					e.printStackTrace();
 					return new Status(IStatus.ERROR, getClass(),
 							String.format(Messages.Installation_failed_message, e.getMessage()));
 				} catch (CoreException e) {
@@ -48,6 +51,12 @@ public class Activator extends AbstractUIPlugin {
 		installJob.setPriority(Job.LONG);
 		installJob.setUser(true);
 		installJob.schedule();
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		pio.stop();
 	}
 
 }

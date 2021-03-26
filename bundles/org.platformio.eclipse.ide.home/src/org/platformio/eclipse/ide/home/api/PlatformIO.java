@@ -12,8 +12,12 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
+import java.io.IOException;
+
 public interface PlatformIO {
 
-	void home();
+	void home() throws IOException;
+
+	void stop() throws IOException;
 
 }

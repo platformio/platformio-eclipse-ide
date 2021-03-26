@@ -14,10 +14,14 @@ package org.platformio.eclipse.ide.installer.api;
 
 import java.io.IOException;
 
+import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
+
 public interface PioCoreDistribution {
 
 	boolean installed();
 
 	void install() throws IOException;
+
+	EnvironmentPaths paths() throws IOException;
 
 }

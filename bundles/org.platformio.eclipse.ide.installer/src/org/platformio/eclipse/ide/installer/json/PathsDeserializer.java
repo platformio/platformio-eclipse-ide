@@ -15,6 +15,8 @@ package org.platformio.eclipse.ide.installer.json;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 
+import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

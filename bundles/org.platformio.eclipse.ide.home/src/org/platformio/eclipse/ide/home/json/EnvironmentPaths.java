@@ -10,7 +10,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.json;
+package org.platformio.eclipse.ide.home.json;
 
 import java.nio.file.Path;
 
