@@ -40,7 +40,6 @@ public class Activator extends AbstractUIPlugin {
 					pio.home();
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
 				} catch (IOException e) {
-					e.printStackTrace();
 					return new Status(IStatus.ERROR, getClass(),
 							String.format(Messages.Installation_failed_message, e.getMessage()));
 				} catch (CoreException e) {
@@ -55,8 +54,10 @@ public class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		if (pio != null) {
+			pio.stop();
+		}
 		super.stop(context);
-		pio.stop();
 	}
 
 }
