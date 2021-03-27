@@ -10,7 +10,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.base;
+package org.platformio.eclipse.ide.home.core;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.platformio.eclipse.ide.installer.api.CommandResult;
-import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.home.api.CommandResult;
+import org.platformio.eclipse.ide.home.api.Environment;
 
 public final class BaseEnvironment implements Environment {
 

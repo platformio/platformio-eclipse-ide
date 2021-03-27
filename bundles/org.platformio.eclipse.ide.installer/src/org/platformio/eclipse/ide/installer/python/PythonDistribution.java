@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.installer.api.Environment;
+import org.platformio.eclipse.ide.home.api.Environment;
 import org.platformio.eclipse.ide.installer.json.Distribution;
 import org.platformio.eclipse.ide.installer.net.RemoteResource;
 

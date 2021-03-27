@@ -10,9 +10,11 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.piocore;
+package org.platformio.eclipse.ide.installer.api;
 
 import java.io.IOException;
+
+import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
 
 public interface PioCoreDistribution {
 
@@ -20,6 +22,6 @@ public interface PioCoreDistribution {
 
 	void install() throws IOException;
 
-	void home() throws IOException;
+	EnvironmentPaths paths() throws IOException;
 
 }
