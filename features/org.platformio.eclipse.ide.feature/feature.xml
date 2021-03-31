@@ -40,11 +40,8 @@
       %license
    </license>
 
-   <includes
-         id="com.make.chromium.cef.feature"
-         version="0.0.0"/>
-
    <requires>
+      <import feature="com.make.chromium.cef.feature" version="0.0.0"/>
       <import feature="org.eclipse.platform" version="4.19.0.v20210303-1800"/>
    </requires>
 

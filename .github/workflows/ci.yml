@@ -1,6 +1,11 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
 
 jobs:
   build:
@@ -22,7 +27,10 @@ jobs:
         cache-name: cache-maven-repo
       with:
         # maven files are stored in `~/.m2/repository` on Linux/macOS
-        path: ~/.m2/repository
+        path: |
+          ~/.m2/repository
+          !~/.m2/repository/org/platformio/eclipse/ide
+          !~/.m2/repository/.cache/tycho
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.sha1') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
