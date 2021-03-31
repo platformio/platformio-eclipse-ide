@@ -12,11 +12,21 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net.requests;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.function.Consumer;
+
 import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.home.net.Handler;
 import org.platformio.eclipse.ide.home.net.Request;
 
 public final class ListenCommandsRequest implements Request {
+
+	private final Consumer<Path> openProjectHandler;
+
+	public ListenCommandsRequest(Consumer<Path> createProject) {
+		this.openProjectHandler = createProject;
+	}
 
 	@Override
 	public String method() {
@@ -28,7 +38,7 @@ public final class ListenCommandsRequest implements Request {
 		return element -> {
 			switch (element.getAsJsonObject().get("method").getAsString()) { //$NON-NLS-1$
 			case "open_project": //$NON-NLS-1$
-				Platform.getLog(getClass()).info(element.getAsJsonObject().get("params").getAsString()); //$NON-NLS-1$
+				openProjectHandler.accept(Paths.get(element.getAsJsonObject().get("params").getAsString())); //$NON-NLS-1$
 				break;
 			default:
 				Platform.getLog(getClass()).error("Unsupported operation"); //$NON-NLS-1$

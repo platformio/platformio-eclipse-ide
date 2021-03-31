@@ -26,7 +26,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.platformio.eclipse.ide.home.net.json.RawResult;
-import org.platformio.eclipse.ide.home.net.requests.ListenCommandsRequest;
 import org.platformio.eclipse.ide.home.net.requests.VersionRequest;
 
 import com.google.gson.Gson;
@@ -37,11 +36,16 @@ public final class IDEWebSocket {
 	private final CountDownLatch latch = new CountDownLatch(1);
 	private final Map<Long, Handler> handlers = new HashMap<>();
 	private Optional<Session> session = Optional.empty();
+	private final Request listenRequest;
+
+	public IDEWebSocket(Request listenRequest) {
+		this.listenRequest = listenRequest;
+	}
 
 	@OnWebSocketConnect
 	public void onConnect(Session session) {
 		this.session = Optional.of(session);
-		sendRequest(new VersionRequest(result -> sendRequest(new ListenCommandsRequest())));
+		sendRequest(new VersionRequest(result -> sendRequest(listenRequest)));
 		latch.countDown();
 	}
 
@@ -59,7 +63,7 @@ public final class IDEWebSocket {
 
 	@OnWebSocketError
 	public void onError(Throwable error) {
-		Platform.getLog(getClass()).error("Error: " + error.getMessage()); //$NON-NLS-1$
+		Platform.getLog(getClass()).error("Error: " + error.toString()); //$NON-NLS-1$
 	}
 
 	public void sendMessage(String message) throws IOException {

@@ -14,6 +14,7 @@ package org.platformio.eclipse.ide.installer;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.CoreException;
@@ -35,12 +36,13 @@ public final class Installer {
 
 	private final Environment environment = new BaseEnvironment();
 
-	public PlatformIO install(IProgressMonitor monitor) throws IOException, CoreException {
+	public PlatformIO install(IProgressMonitor monitor, Consumer<String> importProject)
+			throws IOException, CoreException {
 		Optional<String> executable = registry().findPython();
 		if (!executable.isPresent()) {
 			monitor.setTaskName(Messages.Python_installation_message);
 			new PythonDistribution(environment).install(environment.home().resolve("python39")); //$NON-NLS-1$
-			return install(monitor);
+			return install(monitor, importProject);
 		}
 		Python python = new LocalPython(environment, executable.get());
 
@@ -49,7 +51,7 @@ public final class Installer {
 		if (!pio.installed()) {
 			pio.install();
 		}
-		return new LocalPlatformIO(python, registry().executableSuffix(), pio.paths());
+		return new LocalPlatformIO(python, registry().executableSuffix(), pio.paths(), importProject);
 	}
 
 	private PythonsRegistry registry() throws CoreException {

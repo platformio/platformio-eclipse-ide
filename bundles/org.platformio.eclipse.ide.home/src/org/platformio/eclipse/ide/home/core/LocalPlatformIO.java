@@ -14,13 +14,16 @@ package org.platformio.eclipse.ide.home.core;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
+import org.platformio.eclipse.ide.home.net.requests.ListenCommandsRequest;
 import org.platformio.eclipse.ide.home.python.Python;
 
 public final class LocalPlatformIO implements PlatformIO {
@@ -29,11 +32,14 @@ public final class LocalPlatformIO implements PlatformIO {
 	private final Python python;
 	private final String suffix;
 	private final EnvironmentPaths installation;
+	private final Consumer<String> importProject;
 
-	public LocalPlatformIO(Python python, String suffix, EnvironmentPaths installation) {
+	public LocalPlatformIO(Python python, String suffix, EnvironmentPaths installation,
+			Consumer<String> importProject) {
 		this.python = python;
 		this.suffix = suffix;
 		this.installation = installation;
+		this.importProject = importProject;
 	}
 
 	@Override
@@ -43,26 +49,26 @@ public final class LocalPlatformIO implements PlatformIO {
 				PROCESS_ID);
 		WebSocketClient client = new WebSocketClient();
 		try {
-			IDEWebSocket socket = socket();
+			IDEWebSocket socket = new IDEWebSocket(new ListenCommandsRequest(this::initEclipseProject));
 			client.start();
 			URI address = new URI("ws://localhost:8008/wsrpc"); //$NON-NLS-1$
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
 			client.connect(socket, address, request);
 			socket.latch().await();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private IDEWebSocket socket() {
-		IDEWebSocket socket = new IDEWebSocket();
-		return socket;
-	}
-
 	@Override
 	public void stop() throws IOException {
 		python.environment().killProcess(PROCESS_ID);
+	}
+
+	private void initEclipseProject(Path path) {
+		python.environment().execute(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
+				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse")); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+		importProject.accept(path.toString());
 	}
 
 }
