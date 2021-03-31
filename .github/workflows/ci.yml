@@ -5,13 +5,15 @@ on:
     branches:
       - master
       - develop
+    tags:
+      - "**"
   pull_request:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    name: Build Repository
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -38,3 +40,62 @@ jobs:
           ${{ runner.os }}-
     - name: Build with Maven
       run: mvn clean verify --no-transfer-progress -U
+
+    - name: Archive snapshot
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        tar -C ./releng/org.platformio.eclipse.ide.repository/target -czvf repository.tar.gz repository
+
+    - name: Preserve snapshot
+      if: ${{ github.event_name == 'push' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: snapshot
+        path: ./repository.tar.gz
+
+  deploy:
+
+    name: Deploy to Github Pages
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: snapshot
+
+      - name: Prepare Composite
+        run: |
+          mkdir ./composite
+          tar -xzf ./repository.tar.gz -C ./composite
+          cp ./releng/org.platformio.eclipse.ide.releng/compositeArtifacts.xml ./composite
+          cp ./releng/org.platformio.eclipse.ide.releng/compositeContent.xml ./composite
+
+      - name: Detect build type
+        id: get-destination-dir
+        env:
+          RELEASE_BUILD: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          if ${RELEASE_BUILD} == true; then
+            echo "::set-output name=destination_dir::release"
+          else
+            echo "::set-output name=destination_dir::integration"
+          fi
+
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./composite
+          destination_dir: ${{ steps.get-destination-dir.outputs.destination_dir }}
+          cname: eclipse.dl.platformio.org
+          keep_files: true
+
+      - name: Delete Artifact
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: snapshot
