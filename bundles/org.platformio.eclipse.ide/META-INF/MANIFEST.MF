@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.platformio.eclipse.ide
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.platformio.eclipse.ide
+Bundle-Version: 0.1.0.qualifier
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
