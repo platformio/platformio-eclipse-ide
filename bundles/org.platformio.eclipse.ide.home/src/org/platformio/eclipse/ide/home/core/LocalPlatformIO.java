@@ -13,10 +13,14 @@
 package org.platformio.eclipse.ide.home.core;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
+import org.platformio.eclipse.ide.home.net.IDEWebSocket;
 import org.platformio.eclipse.ide.home.python.Python;
 
 public final class LocalPlatformIO implements PlatformIO {
@@ -34,8 +38,26 @@ public final class LocalPlatformIO implements PlatformIO {
 
 	@Override
 	public void home() throws IOException {
-		python.environment().executeLasting(installation.envBinDir().resolve("platformio" + suffix).toString(), //$NON-NLS-1$
-				Arrays.asList("home", "--no-open"), PROCESS_ID); //$NON-NLS-1$//$NON-NLS-2$
+		python.environment().executeLasting(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
+				Arrays.asList("home", "--no-open"), //$NON-NLS-1$//$NON-NLS-2$
+				PROCESS_ID);
+		WebSocketClient client = new WebSocketClient();
+		try {
+			IDEWebSocket socket = socket();
+			client.start();
+			URI address = new URI("ws://localhost:8008/wsrpc"); //$NON-NLS-1$
+			ClientUpgradeRequest request = new ClientUpgradeRequest();
+			client.connect(socket, address, request);
+			socket.latch().await();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private IDEWebSocket socket() {
+		IDEWebSocket socket = new IDEWebSocket();
+		return socket;
 	}
 
 	@Override

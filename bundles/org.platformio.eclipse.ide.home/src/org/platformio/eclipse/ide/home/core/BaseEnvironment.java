@@ -39,8 +39,10 @@ public final class BaseEnvironment implements Environment {
 	@Override
 	public CommandResult execute(String command, List<String> arguments) {
 		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
+		builder.directory(home().toFile());
 		try {
 			Process process = builder.start();
+			new StreamGobbler(process.getInputStream()).start();
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
@@ -79,9 +81,16 @@ public final class BaseEnvironment implements Environment {
 	@Override
 	public void executeLasting(String command, List<String> arguments, String id) {
 		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
+		builder.directory(home().toFile());
 		try {
 			Process process = builder.start();
 			running.put(id, process);
+			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());
+			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream());
+
+			// kick them off concurrently
+			errorGobbler.start();
+			outputGobbler.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
