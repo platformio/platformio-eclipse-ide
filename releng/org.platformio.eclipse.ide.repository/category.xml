@@ -26,6 +26,10 @@
 		id="org.platformio.eclipse.ide.feature">
 		<category name="org.platformio.eclipse.ide.category" />
 	</feature>
+	<feature
+		id="org.platformio.eclipse.ide.license.feature">
+		<category name="org.platformio.eclipse.ide.category" />
+	</feature>
 	<category-def
 		name="org.platformio.eclipse.ide.category"
 		label="PlatformIO Eclipse IDE">
