@@ -6,7 +6,15 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-Name: %Bundle-Name
 Automatic-Module-Name: org.platformio.eclipse.ide.home
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.osgi;bundle-version="0.0.0"
+Require-Bundle: org.eclipse.osgi;bundle-version="0.0.0",
+ org.apache.commons.io;bundle-version="2.6.0",
+ org.eclipse.core.runtime;bundle-version="3.20.100",
+ javax.servlet;bundle-version="3.1.0",
+ org.eclipse.jetty.websocket.api;bundle-version="9.4.37",
+ org.eclipse.jetty.websocket.client;bundle-version="9.4.37",
+ org.eclipse.jetty.websocket.common;bundle-version="9.4.37",
+ org.eclipse.jetty.util;bundle-version="9.4.37",
+ com.google.gson;bundle-version="2.8.6"
 Export-Package: org.platformio.eclipse.ide.home.api,
  org.platformio.eclipse.ide.home.core,
  org.platformio.eclipse.ide.home.json,
