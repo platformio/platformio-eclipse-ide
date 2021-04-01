@@ -50,7 +50,8 @@ public final class BaseEnvironment implements Environment {
 		builder.directory(home().toFile());
 		try {
 			Process process = builder.start();
-			new StreamGobbler(process.getInputStream()).start();
+			new ReadStream(process.getErrorStream()).start();
+			new ReadStream(process.getInputStream()).start();
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
@@ -93,8 +94,8 @@ public final class BaseEnvironment implements Environment {
 		try {
 			Process process = builder.start();
 			running.put(id, process);
-			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());
-			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream());
+			ReadStream errorGobbler = new ReadStream(process.getErrorStream());
+			ReadStream outputGobbler = new ReadStream(process.getInputStream());
 
 			// kick them off concurrently
 			errorGobbler.start();
