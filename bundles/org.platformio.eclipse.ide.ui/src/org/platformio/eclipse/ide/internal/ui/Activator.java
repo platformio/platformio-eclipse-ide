@@ -27,13 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.wizards.datatransfer.ExternalProjectImportWizard;
 import org.osgi.framework.BundleContext;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.installer.Installer;
@@ -45,13 +39,13 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		Job installJob = new Job(Messages.PlatformIO_installation_message) {
+		Job install = new Job(Messages.PlatformIO_installation_message) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(Messages.Virtualenv_creation_message, IProgressMonitor.UNKNOWN);
 
 				try {
-					pio = new Installer().install(monitor, path -> importProject(path));
+					pio = new Installer().install(monitor);
 					pio.home();
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
 				} catch (IOException e) {
@@ -62,18 +56,9 @@ public class Activator extends AbstractUIPlugin {
 				}
 			}
 		};
-		installJob.setPriority(Job.LONG);
-		installJob.setUser(true);
-		installJob.schedule();
-	}
-
-	private void importProject(String path) {
-		Display.getDefault().syncExec(() -> {
-			ExternalProjectImportWizard importWizard = new ExternalProjectImportWizard(path);
-			importWizard.init(PlatformUI.getWorkbench(), new StructuredSelection());
-			Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getShell();
-			new WizardDialog(shell, importWizard).open();
-		});
+		install.setPriority(Job.LONG);
+		install.setUser(true);
+		install.schedule();
 	}
 
 	@Override
