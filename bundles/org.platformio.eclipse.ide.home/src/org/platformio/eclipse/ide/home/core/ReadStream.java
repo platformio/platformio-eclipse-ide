@@ -24,24 +24,37 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-public final class StreamGobbler extends Thread {
-	private final InputStream is;
+public final class ReadStream extends Thread {
+	private final InputStream stream;
+	private final Consumer<String> consumer;
+	private final Consumer<Exception> handler;
 
-	StreamGobbler(InputStream is) {
-		this.is = is;
+	public ReadStream(InputStream input) {
+		this(input, System.out::println, t -> t.printStackTrace());
+	}
+
+	@SuppressWarnings("resource")
+	public ReadStream(InputStream input, Consumer<String> consumer, Consumer<Exception> handler) {
+		Objects.requireNonNull(input, "ReadStream::stream"); //$NON-NLS-1$
+		Objects.requireNonNull(consumer, "ReadStream::consumer"); //$NON-NLS-1$
+		Objects.requireNonNull(handler, "ReadStream::handler"); //$NON-NLS-1$
+		this.stream = input;
+		this.consumer = consumer;
+		this.handler = handler;
 	}
 
 	@Override
 	public void run() {
-		try {
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null)
-				System.out.println(line);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				consumer.accept(line);
+			}
+		} catch (final IOException e) {
+			handler.accept(e);
 		}
 	}
 }

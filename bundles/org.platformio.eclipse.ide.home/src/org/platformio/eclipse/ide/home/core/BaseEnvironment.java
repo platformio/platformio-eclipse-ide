@@ -46,11 +46,8 @@ public final class BaseEnvironment implements Environment {
 
 	@Override
 	public CommandResult execute(String command, List<String> arguments) {
-		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
-		builder.directory(home().toFile());
 		try {
-			Process process = builder.start();
-			new StreamGobbler(process.getInputStream()).start();
+			Process process = start(command, arguments);
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
@@ -80,6 +77,7 @@ public final class BaseEnvironment implements Environment {
 				Files.createDirectories(dir);
 				Files.createDirectory(dir.resolve("downloads")); //$NON-NLS-1$
 			} catch (IOException e) {
+				// TODO: handle exception
 				e.printStackTrace();
 			}
 		}
@@ -88,20 +86,23 @@ public final class BaseEnvironment implements Environment {
 
 	@Override
 	public void executeLasting(String command, List<String> arguments, String id) {
-		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
-		builder.directory(home().toFile());
 		try {
-			Process process = builder.start();
+			Process process = start(command, arguments);
 			running.put(id, process);
-			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());
-			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream());
-
-			// kick them off concurrently
-			errorGobbler.start();
-			outputGobbler.start();
 		} catch (Exception e) {
+			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+
+	@SuppressWarnings("resource")
+	private Process start(String command, List<String> arguments) throws IOException {
+		ProcessBuilder builder = new ProcessBuilder(input(command, arguments))//
+				.directory(home().resolve("penv").resolve("Scripts").toFile()); //$NON-NLS-1$ //$NON-NLS-2$
+		Process process = builder.start();
+		new ReadStream(process.getErrorStream()).start();
+		new ReadStream(process.getInputStream()).start();
+		return process;
 	}
 
 	@Override
