@@ -24,7 +24,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.platformio.eclipse.ide.internal.ui.HomePerspectiveFactory"
+            class="org.platformio.eclipse.ide.home.internal.ui.HomePerspectiveFactory"
             icon="platform:/plugin/org.platformio.eclipse.ide.ui/icons/eview16/platformio.png"
             id="org.platformio.eclipse.ide.home.ui.perspectives.perspective.home"
             name="%perspective.home.name">
@@ -34,7 +34,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="org.platformio.eclipse.ide.internal.ui.HomeView"
+            class="org.platformio.eclipse.ide.home.internal.ui.HomeView"
             icon="platform:/plugin/org.platformio.eclipse.ide.ui/icons/eview16/platformio.png"
             id="org.platformio.eclipse.ide.home.ui.views.view.home"
             name="%view.home.name"
