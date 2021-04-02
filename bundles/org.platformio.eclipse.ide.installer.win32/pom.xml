@@ -28,9 +28,7 @@
 		<groupId>org.platformio.eclipse.ide</groupId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.platformio.eclipse.ide</groupId>
 	<artifactId>org.platformio.eclipse.ide.installer.win32</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
