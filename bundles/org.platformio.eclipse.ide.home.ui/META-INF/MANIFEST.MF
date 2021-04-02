@@ -1,8 +1,12 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.platformio.eclipse.ide.home.ui
-Bundle-Version: 0.1.0.qualifier
 Automatic-Module-Name: org.platformio.eclipse.ide.home.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.platformio.eclipse.ide.home.ui;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.20.100",
+ org.eclipse.ui;bundle-version="3.119.0",
+ org.eclipse.ui.workbench;bundle-version="3.122.100",
+ org.platformio.eclipse.ide.ui;bundle-version="0.1.0"
