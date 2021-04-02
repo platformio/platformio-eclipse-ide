@@ -20,52 +20,19 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.internal.ui;
 
-import java.io.IOException;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.installer.Installer;
 
-public class Activator extends AbstractUIPlugin {
-
-	private PlatformIO pio;
+//FIXME: AF: remove if we don't need it
+public final class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		Job install = new Job(Messages.PlatformIO_installation_message) {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(Messages.Virtualenv_creation_message, IProgressMonitor.UNKNOWN);
-
-				try {
-					pio = new Installer().install(monitor);
-					pio.home();
-					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
-				} catch (IOException e) {
-					return new Status(IStatus.ERROR, getClass(),
-							String.format(Messages.Installation_failed_message, e.getMessage()));
-				} catch (CoreException e) {
-					return e.getStatus();
-				}
-			}
-		};
-		install.setPriority(Job.LONG);
-		install.setUser(true);
-		install.schedule();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		if (pio != null) {
-			pio.stop();
-		}
 		super.stop(context);
 	}
 
