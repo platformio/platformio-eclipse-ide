@@ -96,6 +96,20 @@
          version="0.0.0"
          unpack="false"/>
 
+	<plugin
+         id="org.platformio.eclipse.ide.home.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+	<plugin
+         id="org.platformio.eclipse.ide.home.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
    <plugin
          id="org.platformio.eclipse.ide.ui"
          download-size="0"

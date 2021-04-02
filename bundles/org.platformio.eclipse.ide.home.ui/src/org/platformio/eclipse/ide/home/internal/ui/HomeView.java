@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.internal.ui;
+package org.platformio.eclipse.ide.home.internal.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -27,16 +27,17 @@ import org.eclipse.ui.part.ViewPart;
 
 public final class HomeView extends ViewPart {
 
-	public static final String HOME_VIEW_ID = "org.platformio.eclipse.ide.ui.views.view.home"; //$NON-NLS-1$
+	static final String HOME_VIEW_ID = "org.platformio.eclipse.ide.home.ui.views.view.home"; //$NON-NLS-1$
 	private Browser viewer;
 
 	@Override
 	public void createPartControl(Composite parent) {
 		viewer = new Browser(parent, SWT.CHROMIUM);
-		initUrl();
+		initControls();
 	}
 
-	private void initUrl() {
+	private void initControls() {
+		// FIXME: get from Home service
 		viewer.setUrl("http://127.0.0.1:8008/"); //$NON-NLS-1$
 	}
 
