@@ -20,14 +20,23 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net;
 
-public interface Request {
+public abstract class BaseRequest implements Request {
 
-	long identifier();
+	private final long identifier;
 
-	String message();
+	public BaseRequest() {
+		this.identifier = Math.round(Math.random() * 100000);
+	}
 
-	String method();
+	@Override
+	public final long identifier() {
+		return identifier;
+	}
 
-	Handler handler();
+	@Override
+	public final String message() {
+		return "{\"jsonrpc\": \"2.0\", \"id\": " + identifier() //$NON-NLS-1$
+				+ ", \"method\": \"" + method() + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
 
 }

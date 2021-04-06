@@ -32,12 +32,14 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
 import org.platformio.eclipse.ide.home.net.requests.ListenCommandsRequest;
+import org.platformio.eclipse.ide.home.net.requests.VersionRequest;
 import org.platformio.eclipse.ide.home.python.Python;
 
 public final class LocalPlatformIO implements PlatformIO {
@@ -46,11 +48,13 @@ public final class LocalPlatformIO implements PlatformIO {
 	private final Python python;
 	private final String suffix;
 	private final EnvironmentPaths installation;
+	private final IDEWebSocket socket;
 
 	public LocalPlatformIO(Python python, String suffix, EnvironmentPaths installation) {
 		this.python = python;
 		this.suffix = suffix;
 		this.installation = installation;
+		this.socket = new IDEWebSocket(this::listen);
 	}
 
 	@Override
@@ -60,7 +64,6 @@ public final class LocalPlatformIO implements PlatformIO {
 				PROCESS_ID);
 		WebSocketClient client = new WebSocketClient();
 		try {
-			IDEWebSocket socket = new IDEWebSocket(new ListenCommandsRequest(this::initEclipseProject));
 			client.start();
 			URI address = new URI("ws://localhost:8008/wsrpc"); //$NON-NLS-1$
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
@@ -74,6 +77,12 @@ public final class LocalPlatformIO implements PlatformIO {
 	@Override
 	public void stop() throws IOException {
 		python.environment().killProcess(PROCESS_ID);
+	}
+
+	private void listen(Session session) {
+		ListenCommandsRequest listenRequest = new ListenCommandsRequest(this::initEclipseProject,
+				request -> socket.sendRequest(session, request));
+		socket.sendRequest(session, new VersionRequest(result -> socket.sendRequest(session, listenRequest))); // $NON-NLS-1$
 	}
 
 	private void initEclipseProject(Path path) {

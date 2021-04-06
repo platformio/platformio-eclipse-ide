@@ -21,9 +21,9 @@
 package org.platformio.eclipse.ide.home.net.requests;
 
 import org.platformio.eclipse.ide.home.net.Handler;
-import org.platformio.eclipse.ide.home.net.Request;
+import org.platformio.eclipse.ide.home.net.BaseRequest;
 
-public final class VersionRequest implements Request {
+public final class VersionRequest extends BaseRequest {
 
 	private final Handler handler;
 

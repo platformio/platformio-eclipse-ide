@@ -23,8 +23,8 @@ package org.platformio.eclipse.ide.home.net;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jetty.websocket.api.Session;
@@ -34,7 +34,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.platformio.eclipse.ide.home.net.json.RawResult;
-import org.platformio.eclipse.ide.home.net.requests.VersionRequest;
 
 import com.google.gson.Gson;
 
@@ -43,30 +42,28 @@ public final class IDEWebSocket {
 
 	private final CountDownLatch latch = new CountDownLatch(1);
 	private final Map<Long, Handler> handlers = new HashMap<>();
-	private Optional<Session> session = Optional.empty();
-	private final Request listenRequest;
+	private final Consumer<Session> onConnect;
 
-	public IDEWebSocket(Request listenRequest) {
-		this.listenRequest = listenRequest;
+	public IDEWebSocket(Consumer<Session> onConnect) {
+		this.onConnect = onConnect;
 	}
 
 	@OnWebSocketConnect
 	public void onConnect(Session session) {
-		this.session = Optional.of(session);
-		sendRequest(new VersionRequest(result -> sendRequest(listenRequest)));
+		onConnect.accept(session);
 		latch.countDown();
 	}
 
 	@OnWebSocketMessage
-	public void onMessage(Session session, String message) {
+	public void onMessage(String message) {
 		RawResult result = new Gson().fromJson(message, RawResult.class);
 		Platform.getLog(getClass()).info(message);
 		handlers.get(result.id()).handle(result.result());
 	}
 
 	@OnWebSocketClose
-	public void onClose(Session session, int status, String reason) {
-		Platform.getLog(getClass()).info("Closed"); //$NON-NLS-1$
+	public void onClose(int status, String reason) {
+		Platform.getLog(getClass()).info("Closed with status " + status + " for reason: " + reason); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@OnWebSocketError
@@ -74,22 +71,23 @@ public final class IDEWebSocket {
 		Platform.getLog(getClass()).error("Error: " + error.toString()); //$NON-NLS-1$
 	}
 
-	public void sendMessage(String message) throws IOException {
-		if (session.isPresent()) {
+	public void sendRequest(Session session, Request request) {
+		refreshHandlers(request);
+		sendMessage(session, request.message());
+	}
+
+	private void sendMessage(Session session, String message) {
+		try {
 			Platform.getLog(getClass()).info("Sending to server: " + message); //$NON-NLS-1$
-			session.get().getRemote().sendString(message);
+			session.getRemote().sendString(message);
+		} catch (IOException e) {
+			Platform.getLog(getClass()).info(e.toString());
 		}
 	}
 
-	public void sendRequest(Request request) {
-		long identifier = Math.round(Math.random() * 100000);
-		try {
-			sendMessage("{\"jsonrpc\": \"2.0\", \"id\": " + identifier //$NON-NLS-1$
-					+ ", \"method\": \"" + request.method() + "\"}"); //$NON-NLS-1$ //$NON-NLS-2$
-			handlers.put(identifier, request.handler());
-		} catch (IOException e) {
-			Platform.getLog(getClass()).info(e.getMessage());
-		}
+	private void refreshHandlers(Request request) {
+		handlers.clear();
+		handlers.put(request.identifier(), request.handler());
 	}
 
 	public CountDownLatch latch() {
