@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,8 +98,11 @@ public final class BaseEnvironment implements Environment {
 
 	@SuppressWarnings("resource")
 	private Process start(String command, List<String> arguments) throws IOException {
-		ProcessBuilder builder = new ProcessBuilder(input(command, arguments))//
-				.directory(home().resolve("penv").resolve("Scripts").toFile()); //$NON-NLS-1$ //$NON-NLS-2$
+		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
+		File directory = home().resolve("penv").resolve("Scripts").toFile(); //$NON-NLS-1$//$NON-NLS-2$
+		if (directory.exists()) {
+			builder.directory(directory);
+		}
 		Process process = builder.start();
 		new ReadStream(process.getErrorStream()).start();
 		new ReadStream(process.getInputStream()).start();

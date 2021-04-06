@@ -28,12 +28,14 @@ import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.home.net.Handler;
 import org.platformio.eclipse.ide.home.net.Request;
 
-public final class ListenCommandsRequest implements Request {
+public final class ListenCommandsRequest extends Request {
 
 	private final Consumer<Path> openProjectHandler;
+	private final Consumer<Request> sendRequest;
 
-	public ListenCommandsRequest(Consumer<Path> createProject) {
+	public ListenCommandsRequest(Consumer<Path> createProject, Consumer<Request> sendRequest) {
 		this.openProjectHandler = createProject;
+		this.sendRequest = sendRequest;
 	}
 
 	@Override
@@ -44,6 +46,7 @@ public final class ListenCommandsRequest implements Request {
 	@Override
 	public Handler handler() {
 		return element -> {
+			refresh();
 			switch (element.getAsJsonObject().get("method").getAsString()) { //$NON-NLS-1$
 			case "open_project": //$NON-NLS-1$
 				openProjectHandler.accept(Paths.get(element.getAsJsonObject().get("params").getAsString())); //$NON-NLS-1$
@@ -53,6 +56,10 @@ public final class ListenCommandsRequest implements Request {
 				break;
 			}
 		};
+	}
+
+	private void refresh() {
+		sendRequest.accept(new ListenCommandsRequest(openProjectHandler, sendRequest));
 	}
 
 }

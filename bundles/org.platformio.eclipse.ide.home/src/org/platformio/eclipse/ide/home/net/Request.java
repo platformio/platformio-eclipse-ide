@@ -20,10 +20,25 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net;
 
-public interface Request {
+public abstract class Request {
 
-	String method();
+	private final long identifier;
 
-	Handler handler();
+	public Request() {
+		this.identifier = Math.round(Math.random() * 100000);
+	}
+
+	public final long identifier() {
+		return identifier;
+	}
+
+	public final String message() {
+		return "{\"jsonrpc\": \"2.0\", \"id\": " + identifier() //$NON-NLS-1$
+				+ ", \"method\": \"" + method() + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public abstract String method();
+
+	public abstract Handler handler();
 
 }

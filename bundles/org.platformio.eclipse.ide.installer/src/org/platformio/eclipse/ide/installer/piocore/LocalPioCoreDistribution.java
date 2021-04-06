@@ -50,7 +50,7 @@ public final class LocalPioCoreDistribution implements PioCoreDistribution {
 
 	@Override
 	public EnvironmentPaths paths() throws IOException {
-		final Path dump = python.environment().cache().resolve("tmpdir/pioinstaller-state.json"); //$NON-NLS-1$ ;
+		final Path dump = python.environment().cache().resolve("tmpdir/state.json"); //$NON-NLS-1$ ;
 		python.executeScript(location, "check", "core", "--dump-state", dump.toString()); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		try (Reader reader = Files.newBufferedReader(dump)) {
 			EnvironmentPaths installation = new GsonBuilder()

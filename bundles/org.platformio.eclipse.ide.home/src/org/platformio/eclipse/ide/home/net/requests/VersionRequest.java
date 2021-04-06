@@ -23,7 +23,7 @@ package org.platformio.eclipse.ide.home.net.requests;
 import org.platformio.eclipse.ide.home.net.Handler;
 import org.platformio.eclipse.ide.home.net.Request;
 
-public final class VersionRequest implements Request {
+public final class VersionRequest extends Request {
 
 	private final Handler handler;
 
