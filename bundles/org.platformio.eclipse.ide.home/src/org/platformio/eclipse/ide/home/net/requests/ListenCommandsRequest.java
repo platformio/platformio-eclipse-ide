@@ -25,10 +25,11 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 import org.eclipse.core.runtime.Platform;
+import org.platformio.eclipse.ide.home.net.BaseRequest;
 import org.platformio.eclipse.ide.home.net.Handler;
 import org.platformio.eclipse.ide.home.net.Request;
 
-public final class ListenCommandsRequest extends Request {
+public final class ListenCommandsRequest extends BaseRequest {
 
 	private final Consumer<Path> openProjectHandler;
 	private final Consumer<Request> sendRequest;
