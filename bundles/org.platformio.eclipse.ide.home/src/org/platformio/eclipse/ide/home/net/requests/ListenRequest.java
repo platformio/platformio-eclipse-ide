@@ -20,8 +20,8 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net.requests;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.eclipse.core.runtime.Platform;
@@ -29,14 +29,14 @@ import org.platformio.eclipse.ide.home.net.BaseRequest;
 import org.platformio.eclipse.ide.home.net.Handler;
 import org.platformio.eclipse.ide.home.net.Request;
 
-public final class ListenCommandsRequest extends BaseRequest {
+public final class ListenRequest extends BaseRequest {
 
-	private final Consumer<Path> openProjectHandler;
 	private final Consumer<Request> sendRequest;
+	private final Map<String, Handler> handlers;
 
-	public ListenCommandsRequest(Consumer<Path> createProject, Consumer<Request> sendRequest) {
-		this.openProjectHandler = createProject;
+	public ListenRequest(Consumer<Request> sendRequest) {
 		this.sendRequest = sendRequest;
+		this.handlers = new HashMap<>();
 	}
 
 	@Override
@@ -44,23 +44,31 @@ public final class ListenCommandsRequest extends BaseRequest {
 		return "ide.listen_commands"; //$NON-NLS-1$
 	}
 
+	public void registerHandler(String method, Handler handler) {
+		handlers.put(method, handler);
+	}
+
+	public void unregisterHandler(String method) {
+		handlers.remove(method);
+	}
+
 	@Override
 	public Handler handler() {
 		return element -> {
 			refresh();
-			switch (element.getAsJsonObject().get("method").getAsString()) { //$NON-NLS-1$
-			case "open_project": //$NON-NLS-1$
-				openProjectHandler.accept(Paths.get(element.getAsJsonObject().get("params").getAsString())); //$NON-NLS-1$
-				break;
-			default:
+			String method = element.getAsJsonObject().get("method").getAsString(); //$NON-NLS-1$
+			if (handlers.containsKey(method)) {
+				handlers.get(method).handle(element);
+			} else {
 				Platform.getLog(getClass()).error("Unsupported operation"); //$NON-NLS-1$
-				break;
 			}
 		};
 	}
 
 	private void refresh() {
-		sendRequest.accept(new ListenCommandsRequest(openProjectHandler, sendRequest));
+		ListenRequest request = new ListenRequest(sendRequest);
+		handlers.forEach((key, value) -> request.registerHandler(key, value));
+		sendRequest.accept(request);
 	}
 
 }

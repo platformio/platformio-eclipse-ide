@@ -22,23 +22,16 @@ package org.platformio.eclipse.ide.home.core;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Path;
 import java.util.Arrays;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
-import org.platformio.eclipse.ide.home.net.requests.ListenCommandsRequest;
+import org.platformio.eclipse.ide.home.net.handlers.OpenProjectHandler;
+import org.platformio.eclipse.ide.home.net.requests.ListenRequest;
 import org.platformio.eclipse.ide.home.net.requests.VersionRequest;
 import org.platformio.eclipse.ide.home.python.Python;
 
@@ -80,26 +73,9 @@ public final class LocalPlatformIO implements PlatformIO {
 	}
 
 	private void listen(Session session) {
-		ListenCommandsRequest listenRequest = new ListenCommandsRequest(this::initEclipseProject,
-				request -> socket.sendRequest(session, request));
+		ListenRequest listenRequest = new ListenRequest(request -> socket.sendRequest(session, request));
+		listenRequest.registerHandler("open_project", new OpenProjectHandler(python, suffix, installation)); //$NON-NLS-1$
 		socket.sendRequest(session, new VersionRequest(result -> socket.sendRequest(session, listenRequest))); // $NON-NLS-1$
-	}
-
-	private void initEclipseProject(Path path) {
-		python.environment().execute(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
-				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
-		try {
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			IProjectDescription description = workspace.loadProjectDescription(
-					new org.eclipse.core.runtime.Path(path.toString() + java.io.File.separator + ".project")); //$NON-NLS-1$
-			IProject project = workspace.getRoot().getProject(path.toFile().getName());
-			NullProgressMonitor monitor = new NullProgressMonitor();
-			project.create(description, monitor);
-			project.open(monitor);
-		} catch (CoreException e) {
-			Platform.getLog(getClass()).log(e.getStatus());
-		}
 	}
 
 }
