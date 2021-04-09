@@ -20,14 +20,14 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net.requests;
 
-import org.platformio.eclipse.ide.home.net.Handler;
+import org.platformio.eclipse.ide.home.net.ResultHandler;
 import org.platformio.eclipse.ide.home.net.BaseRequest;
 
 public final class VersionRequest extends BaseRequest {
 
-	private final Handler handler;
+	private final ResultHandler handler;
 
-	public VersionRequest(Handler handler) {
+	public VersionRequest(ResultHandler handler) {
 		this.handler = handler;
 	}
 
@@ -37,7 +37,7 @@ public final class VersionRequest extends BaseRequest {
 	}
 
 	@Override
-	public Handler handler() {
+	public ResultHandler handler() {
 		return handler;
 	}
 

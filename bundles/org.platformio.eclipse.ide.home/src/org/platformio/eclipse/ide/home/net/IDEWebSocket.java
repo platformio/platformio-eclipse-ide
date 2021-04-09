@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.function.Consumer;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jetty.websocket.api.Session;
@@ -34,6 +33,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.platformio.eclipse.ide.home.net.json.RawResult;
+import org.platformio.eclipse.ide.home.net.requests.ListenRequest;
+import org.platformio.eclipse.ide.home.net.requests.VersionRequest;
 
 import com.google.gson.Gson;
 
@@ -41,24 +42,25 @@ import com.google.gson.Gson;
 public final class IDEWebSocket {
 
 	private final CountDownLatch latch = new CountDownLatch(1);
-	private final Map<Long, Handler> handlers = new HashMap<>();
-	private final Consumer<Session> onConnect;
+	private final Map<Long, ResultHandler> handlers = new HashMap<>();
+	private final HandlerRegistry registry;
 
-	public IDEWebSocket(Consumer<Session> onConnect) {
-		this.onConnect = onConnect;
+	public IDEWebSocket(HandlerRegistry registry) {
+		this.registry = registry;
 	}
 
 	@OnWebSocketConnect
 	public void onConnect(Session session) {
-		onConnect.accept(session);
+		sendRequest(session, new VersionRequest(result -> listen(session))); // $NON-NLS-1$
 		latch.countDown();
 	}
 
 	@OnWebSocketMessage
-	public void onMessage(String message) {
+	public void onMessage(Session session, String message) {
 		RawResult result = new Gson().fromJson(message, RawResult.class);
 		Platform.getLog(getClass()).info(message);
 		handlers.get(result.id()).handle(result.result());
+		listen(session);
 	}
 
 	@OnWebSocketClose
@@ -68,12 +70,17 @@ public final class IDEWebSocket {
 
 	@OnWebSocketError
 	public void onError(Throwable error) {
+		error.printStackTrace();
 		Platform.getLog(getClass()).error("Error: " + error.toString()); //$NON-NLS-1$
 	}
 
-	public void sendRequest(Session session, Request request) {
+	private void sendRequest(Session session, Request request) {
 		refreshHandlers(request);
 		sendMessage(session, request.message());
+	}
+
+	private void listen(Session session) {
+		sendRequest(session, new ListenRequest(registry));
 	}
 
 	private void sendMessage(Session session, String message) {

@@ -15,8 +15,14 @@ Require-Bundle: org.eclipse.osgi;bundle-version="0.0.0",
  org.eclipse.jetty.websocket.client;bundle-version="9.4.37",
  org.eclipse.jetty.websocket.common;bundle-version="9.4.37",
  org.eclipse.jetty.util;bundle-version="9.4.37",
- com.google.gson;bundle-version="2.8.6"
+ com.google.gson;bundle-version="2.8.6",
+ org.eclipse.ui.ide;bundle-version="3.18.100",
+ org.eclipse.ui;bundle-version="3.119.0",
+ org.eclipse.osgi.services;bundle-version="0.0.0"
 Export-Package: org.platformio.eclipse.ide.home.api,
  org.platformio.eclipse.ide.home.core,
  org.platformio.eclipse.ide.home.json,
+ org.platformio.eclipse.ide.home.net,
  org.platformio.eclipse.ide.home.python
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/org.platformio.eclipse.ide.home.net.BaseHandlerRegistry.xml

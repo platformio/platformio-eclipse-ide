@@ -24,15 +24,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
-import org.platformio.eclipse.ide.home.net.handlers.OpenProjectHandler;
-import org.platformio.eclipse.ide.home.net.requests.ListenRequest;
-import org.platformio.eclipse.ide.home.net.requests.VersionRequest;
 import org.platformio.eclipse.ide.home.python.Python;
 
 public final class LocalPlatformIO implements PlatformIO {
@@ -43,11 +39,11 @@ public final class LocalPlatformIO implements PlatformIO {
 	private final EnvironmentPaths installation;
 	private final IDEWebSocket socket;
 
-	public LocalPlatformIO(Python python, String suffix, EnvironmentPaths installation) {
+	public LocalPlatformIO(Python python, String suffix, EnvironmentPaths installation, IDEWebSocket socket) {
 		this.python = python;
 		this.suffix = suffix;
 		this.installation = installation;
-		this.socket = new IDEWebSocket(this::listen);
+		this.socket = socket;
 	}
 
 	@Override
@@ -70,12 +66,6 @@ public final class LocalPlatformIO implements PlatformIO {
 	@Override
 	public void stop() throws IOException {
 		python.environment().killProcess(PROCESS_ID);
-	}
-
-	private void listen(Session session) {
-		ListenRequest listenRequest = new ListenRequest(request -> socket.sendRequest(session, request));
-		listenRequest.registerHandler("open_project", new OpenProjectHandler(python, suffix, installation)); //$NON-NLS-1$
-		socket.sendRequest(session, new VersionRequest(result -> socket.sendRequest(session, listenRequest))); // $NON-NLS-1$
 	}
 
 }

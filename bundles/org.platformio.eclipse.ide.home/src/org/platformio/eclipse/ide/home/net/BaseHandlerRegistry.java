@@ -18,36 +18,37 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.net.requests;
+package org.platformio.eclipse.ide.home.net;
 
-import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.home.net.BaseRequest;
-import org.platformio.eclipse.ide.home.net.HandlerRegistry;
-import org.platformio.eclipse.ide.home.net.ResultHandler;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class ListenRequest extends BaseRequest {
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 
-	private final HandlerRegistry handlers;
+@Component
+public class BaseHandlerRegistry implements HandlerRegistry {
 
-	public ListenRequest(HandlerRegistry handlers) {
-		this.handlers = handlers;
+	private final Map<String, IDECommandHandler> handlers = new HashMap<>();
+
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE)
+	public void bind(IDECommandHandler handler) {
+		handlers.put(handler.method(), handler);
+	}
+
+	public void unbind(IDECommandHandler handler) {
+		handlers.remove(handler.method());
 	}
 
 	@Override
-	public String method() {
-		return "ide.listen_commands"; //$NON-NLS-1$
+	public IDECommandHandler get(String method) {
+		return handlers.get(method);
 	}
 
 	@Override
-	public ResultHandler handler() {
-		return element -> {
-			String method = element.getAsJsonObject().get("method").getAsString(); //$NON-NLS-1$
-			if (handlers.contains(method)) {
-				handlers.get(method).handle(element);
-			} else {
-				Platform.getLog(getClass()).error("Unsupported operation"); //$NON-NLS-1$
-			}
-		};
+	public boolean contains(String method) {
+		return handlers.containsKey(method);
 	}
 
 }

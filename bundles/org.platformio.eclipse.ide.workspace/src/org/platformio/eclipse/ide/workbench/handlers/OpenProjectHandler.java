@@ -18,11 +18,10 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.net.handlers;
+package org.platformio.eclipse.ide.workbench.handlers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -31,36 +30,36 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
-import org.platformio.eclipse.ide.home.net.Handler;
-import org.platformio.eclipse.ide.home.python.Python;
+import org.osgi.service.component.annotations.Component;
+import org.platformio.eclipse.ide.home.net.IDECommandHandler;
 
 import com.google.gson.JsonElement;
 
-public class OpenProjectHandler implements Handler {
+@Component
+public final class OpenProjectHandler implements IDECommandHandler {
 
-	private final Python python;
-	private final String suffix;
-	private final EnvironmentPaths installation;
-
-	public OpenProjectHandler(Python python, String suffix, EnvironmentPaths installation) {
-		this.python = python;
-		this.suffix = suffix;
-		this.installation = installation;
-	}
+//	private final Python python;
+//	private final String suffix;
+//	private final EnvironmentPaths installation;
+//
+//	public OpenProjectHandler(Python python, String suffix, EnvironmentPaths installation) {
+//		this.python = python;
+//		this.suffix = suffix;
+//		this.installation = installation;
+//	}
 
 	@Override
 	public void handle(JsonElement element) {
 		Path location = Paths.get(element.getAsJsonObject().get("params").getAsString()); //$NON-NLS-1$
-		init(location);
+//		init(location);
 		open(location);
 	}
 
-	private void init(Path path) {
-		python.environment().execute(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
-				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
-	}
+//	private void init(Path path) {
+//		python.environment().execute(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
+//				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+//						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
+//	}
 
 	private void open(Path path) {
 		try {
@@ -74,6 +73,11 @@ public class OpenProjectHandler implements Handler {
 		} catch (CoreException e) {
 			Platform.getLog(getClass()).log(e.getStatus());
 		}
+	}
+
+	@Override
+	public String method() {
+		return "open_project"; //$NON-NLS-1$
 	}
 
 }

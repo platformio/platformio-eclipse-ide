@@ -18,36 +18,12 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.net.requests;
+package org.platformio.eclipse.ide.home.net;
 
-import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.home.net.BaseRequest;
-import org.platformio.eclipse.ide.home.net.HandlerRegistry;
-import org.platformio.eclipse.ide.home.net.ResultHandler;
+public interface HandlerRegistry {
 
-public final class ListenRequest extends BaseRequest {
+	IDECommandHandler get(String method);
 
-	private final HandlerRegistry handlers;
-
-	public ListenRequest(HandlerRegistry handlers) {
-		this.handlers = handlers;
-	}
-
-	@Override
-	public String method() {
-		return "ide.listen_commands"; //$NON-NLS-1$
-	}
-
-	@Override
-	public ResultHandler handler() {
-		return element -> {
-			String method = element.getAsJsonObject().get("method").getAsString(); //$NON-NLS-1$
-			if (handlers.contains(method)) {
-				handlers.get(method).handle(element);
-			} else {
-				Platform.getLog(getClass()).error("Unsupported operation"); //$NON-NLS-1$
-			}
-		};
-	}
+	boolean contains(String method);
 
 }
