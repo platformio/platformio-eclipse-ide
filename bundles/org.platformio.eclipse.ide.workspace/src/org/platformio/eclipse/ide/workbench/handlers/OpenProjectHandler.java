@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.workbench.handlers;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -30,7 +31,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
+import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.net.IDECommandHandler;
 
 import com.google.gson.JsonElement;
@@ -38,28 +42,27 @@ import com.google.gson.JsonElement;
 @Component
 public final class OpenProjectHandler implements IDECommandHandler {
 
-//	private final Python python;
-//	private final String suffix;
-//	private final EnvironmentPaths installation;
-//
-//	public OpenProjectHandler(Python python, String suffix, EnvironmentPaths installation) {
-//		this.python = python;
-//		this.suffix = suffix;
-//		this.installation = installation;
-//	}
+	private final PlatformIO installation;
+
+	public OpenProjectHandler() {
+		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
+		this.installation = context.getService(context.getServiceReference(PlatformIO.class));
+	}
 
 	@Override
 	public void handle(JsonElement element) {
 		Path location = Paths.get(element.getAsJsonObject().get("params").getAsString()); //$NON-NLS-1$
-//		init(location);
+		init(location);
 		open(location);
 	}
 
-//	private void init(Path path) {
-//		python.environment().execute(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
-//				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-//						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
-//	}
+	private void init(Path path) {
+		try {
+			installation.initProject(path);
+		} catch (IOException e) {
+			Platform.getLog(getClass()).error(e.toString());
+		}
+	}
 
 	private void open(Path path) {
 		try {

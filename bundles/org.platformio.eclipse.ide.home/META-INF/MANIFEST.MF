@@ -25,4 +25,7 @@ Export-Package: org.platformio.eclipse.ide.home.api,
  org.platformio.eclipse.ide.home.net,
  org.platformio.eclipse.ide.home.python
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/org.platformio.eclipse.ide.home.net.BaseHandlerRegistry.xml
+Service-Component: OSGI-INF/org.platformio.eclipse.ide.home.net.BaseHandlerRegistry.xml,
+ OSGI-INF/org.platformio.eclipse.ide.home.core.BaseEnvironment.xml,
+ OSGI-INF/org.platformio.eclipse.ide.home.python.LocalPython.xml,
+ OSGI-INF/org.platformio.eclipse.ide.home.core.LocalPlatformIO.xml

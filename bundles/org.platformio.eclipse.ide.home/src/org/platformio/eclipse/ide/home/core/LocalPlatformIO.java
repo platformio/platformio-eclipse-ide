@@ -22,33 +22,40 @@ package org.platformio.eclipse.ide.home.core;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
+import org.platformio.eclipse.ide.home.json.Dump;
+import org.platformio.eclipse.ide.home.net.HandlerRegistry;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
 import org.platformio.eclipse.ide.home.python.Python;
 
+@Component
 public final class LocalPlatformIO implements PlatformIO {
 
 	private static final String PROCESS_ID = "pio"; //$NON-NLS-1$
 	private final Python python;
-	private final String suffix;
-	private final EnvironmentPaths installation;
+	private final Dump installation;
 	private final IDEWebSocket socket;
 
-	public LocalPlatformIO(Python python, String suffix, EnvironmentPaths installation, IDEWebSocket socket) {
-		this.python = python;
-		this.suffix = suffix;
-		this.installation = installation;
-		this.socket = socket;
+	public LocalPlatformIO() throws IOException {
+		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
+		HandlerRegistry registry = context.getService(context.getServiceReference(HandlerRegistry.class));
+		this.python = context.getService(context.getServiceReference(Python.class));
+		this.socket = new IDEWebSocket(registry);
+		this.installation = new Dump();
+
 	}
 
 	@Override
 	public void home() throws IOException {
-		python.environment().executeLasting(installation.envBinDir().resolve("pio" + suffix).toString(), //$NON-NLS-1$
+		python.environment().executeLasting(installation.envBinDir().resolve("pio" + python.suffix()).toString(), //$NON-NLS-1$
 				Arrays.asList("home", "--no-open"), //$NON-NLS-1$//$NON-NLS-2$
 				PROCESS_ID);
 		WebSocketClient client = new WebSocketClient();
@@ -66,6 +73,13 @@ public final class LocalPlatformIO implements PlatformIO {
 	@Override
 	public void stop() throws IOException {
 		python.environment().killProcess(PROCESS_ID);
+	}
+
+	@Override
+	public void initProject(Path path) throws IOException {
+		python.environment().execute(installation.envBinDir().resolve("pio" + python.suffix()).toString(), //$NON-NLS-1$
+				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }

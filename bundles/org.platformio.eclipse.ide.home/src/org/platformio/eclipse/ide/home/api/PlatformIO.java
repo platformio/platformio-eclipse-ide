@@ -21,10 +21,13 @@
 package org.platformio.eclipse.ide.home.api;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public interface PlatformIO {
 
 	void home() throws IOException;
+
+	void initProject(Path path) throws IOException;
 
 	void stop() throws IOException;
 

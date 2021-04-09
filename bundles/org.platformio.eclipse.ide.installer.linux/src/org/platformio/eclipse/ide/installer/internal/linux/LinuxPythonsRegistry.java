@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
+import org.platformio.eclipse.ide.home.python.PythonsRegistry;
 
 public final class LinuxPythonsRegistry implements PythonsRegistry {
 

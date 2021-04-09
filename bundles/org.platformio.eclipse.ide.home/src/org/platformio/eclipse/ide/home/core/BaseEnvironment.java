@@ -31,9 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.CommandResult;
 import org.platformio.eclipse.ide.home.api.Environment;
 
+@Component
 public final class BaseEnvironment implements Environment {
 
 	private final Map<String, Process> running = new HashMap<>();

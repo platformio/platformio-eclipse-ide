@@ -19,7 +19,9 @@
 
 	Contributors:
 		ArSysOp - initial API and implementation
---><target includeMode="feature" name="org.platformio.eclipse.ide.target" sequenceNumber="2">
+-->
+
+<target includeMode="feature" name="org.platformio.eclipse.ide.target" sequenceNumber="2">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://dl.maketechnology.io/chromium-cef/rls/repository"/>

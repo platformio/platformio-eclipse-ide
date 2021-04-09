@@ -21,17 +21,12 @@
 package org.platformio.eclipse.ide.installer.piocore;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.platformio.eclipse.ide.home.json.EnvironmentPaths;
 import org.platformio.eclipse.ide.home.python.Python;
 import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
-import org.platformio.eclipse.ide.installer.json.PathsDeserializer;
 import org.platformio.eclipse.ide.installer.net.RemoteResource;
-
-import com.google.gson.GsonBuilder;
 
 public final class LocalPioCoreDistribution implements PioCoreDistribution {
 
@@ -46,18 +41,6 @@ public final class LocalPioCoreDistribution implements PioCoreDistribution {
 	@Override
 	public boolean installed() {
 		return python.executeScript(location, "check", "core").code() == 0; //$NON-NLS-1$//$NON-NLS-2$
-	}
-
-	@Override
-	public EnvironmentPaths paths() throws IOException {
-		final Path dump = python.environment().cache().resolve("tmpdir/state.json"); //$NON-NLS-1$ ;
-		python.executeScript(location, "check", "core", "--dump-state", dump.toString()); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		try (Reader reader = Files.newBufferedReader(dump)) {
-			EnvironmentPaths installation = new GsonBuilder()
-					.registerTypeAdapter(EnvironmentPaths.class, new PathsDeserializer()) // s
-					.create().fromJson(reader, EnvironmentPaths.class);
-			return installation;
-		}
 	}
 
 	@Override

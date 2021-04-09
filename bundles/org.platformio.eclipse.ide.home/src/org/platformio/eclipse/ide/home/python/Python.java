@@ -45,4 +45,6 @@ public interface Python {
 
 	Environment environment();
 
+	String suffix();
+
 }

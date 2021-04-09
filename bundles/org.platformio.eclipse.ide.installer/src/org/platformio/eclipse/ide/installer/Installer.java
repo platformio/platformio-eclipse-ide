@@ -28,18 +28,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.platformio.eclipse.ide.home.api.Environment;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.core.BaseEnvironment;
 import org.platformio.eclipse.ide.home.core.LocalPlatformIO;
-import org.platformio.eclipse.ide.home.net.HandlerRegistry;
-import org.platformio.eclipse.ide.home.net.IDEWebSocket;
 import org.platformio.eclipse.ide.home.python.LocalPython;
 import org.platformio.eclipse.ide.home.python.Python;
+import org.platformio.eclipse.ide.home.python.PythonsRegistry;
 import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
-import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
 import org.platformio.eclipse.ide.installer.piocore.LocalPioCoreDistribution;
 import org.platformio.eclipse.ide.installer.python.PythonDistribution;
 
@@ -61,10 +57,7 @@ public final class Installer {
 		if (!pio.installed()) {
 			pio.install();
 		}
-		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
-		HandlerRegistry registry = context.getService(context.getServiceReference(HandlerRegistry.class));
-		IDEWebSocket socket = new IDEWebSocket(registry);
-		return new LocalPlatformIO(python, registry().executableSuffix(), pio.paths(), socket);
+		return new LocalPlatformIO();
 	}
 
 	private PythonsRegistry registry() throws CoreException {
