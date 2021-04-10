@@ -36,7 +36,7 @@ import org.platformio.eclipse.ide.home.api.CommandResult;
 import org.platformio.eclipse.ide.home.api.Environment;
 
 @Component
-public final class BaseEnvironment implements Environment {
+public final class DefaultEnvironment implements Environment {
 
 	private final Map<String, Process> running = new HashMap<>();
 

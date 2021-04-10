@@ -70,7 +70,6 @@ public final class IDEWebSocket {
 
 	@OnWebSocketError
 	public void onError(Throwable error) {
-		error.printStackTrace();
 		Platform.getLog(getClass()).error("Error: " + error.toString()); //$NON-NLS-1$
 	}
 

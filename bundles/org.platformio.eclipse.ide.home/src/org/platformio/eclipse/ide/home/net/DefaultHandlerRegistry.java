@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
 @Component
-public class BaseHandlerRegistry implements HandlerRegistry {
+public class DefaultHandlerRegistry implements HandlerRegistry {
 
 	private final Map<String, IDECommandHandler> handlers = new HashMap<>();
 
