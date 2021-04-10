@@ -64,6 +64,7 @@ public final class OpenFileHandler implements IDECommand {
 							.setSelection(new TextSelection(region.getOffset(), region.getLength()));
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				Platform.getLog(getClass()).info(e.toString());
 			}
 		});
