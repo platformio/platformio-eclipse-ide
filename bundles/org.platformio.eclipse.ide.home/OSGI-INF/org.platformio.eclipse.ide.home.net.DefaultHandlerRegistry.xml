@@ -3,6 +3,6 @@
    <service>
       <provide interface="org.platformio.eclipse.ide.home.net.HandlerRegistry"/>
    </service>
-   <reference bind="bind" cardinality="0..n" interface="org.platformio.eclipse.ide.home.net.IDECommandHandler" unbind="unbind"/>
+   <reference bind="bind" cardinality="0..n" interface="org.platformio.eclipse.ide.home.net.IDECommand" unbind="unbind"/>
    <implementation class="org.platformio.eclipse.ide.home.net.DefaultHandlerRegistry"/>
 </scr:component>

@@ -44,9 +44,11 @@ public final class IDEWebSocket {
 	private final CountDownLatch latch = new CountDownLatch(1);
 	private final Map<Long, ResultHandler> handlers = new HashMap<>();
 	private final HandlerRegistry registry;
+	private final Gson gson;
 
 	public IDEWebSocket(HandlerRegistry registry) {
 		this.registry = registry;
+		this.gson = new Gson();
 	}
 
 	@OnWebSocketConnect
@@ -57,9 +59,8 @@ public final class IDEWebSocket {
 
 	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
-		RawResult result = new Gson().fromJson(message, RawResult.class);
 		Platform.getLog(getClass()).info(message);
-		handlers.get(result.id()).handle(result.result());
+		handle(gson.fromJson(message, RawResult.class));
 		listen(session);
 	}
 
@@ -94,6 +95,14 @@ public final class IDEWebSocket {
 	private void refreshHandlers(Request request) {
 		handlers.clear();
 		handlers.put(request.identifier(), request.handler());
+	}
+
+	private void handle(RawResult result) {
+		if (handlers.containsKey(result.id())) {
+			handlers.get(result.id()).handle(result.result());
+		} else {
+			Platform.getLog(getClass()).warn("No handler found for id: " + result.id()); //$NON-NLS-1$
+		}
 	}
 
 	public CountDownLatch latch() {

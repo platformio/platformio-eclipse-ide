@@ -21,33 +21,58 @@
 package org.platformio.eclipse.ide.workbench.handlers;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.osgi.service.component.annotations.Component;
-import org.platformio.eclipse.ide.home.net.IDECommandHandler;
+import org.platformio.eclipse.ide.home.net.IDECommand;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 @Component
-public final class OpenFileHandler implements IDECommandHandler {
+public final class OpenFileHandler implements IDECommand {
 
 	@Override
-	public void handle(JsonElement element) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+	public void execute(JsonElement element) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getDisplay().syncExec(() -> {
 			try {
 				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				String path = element.getAsJsonObject().get("params").getAsJsonObject().get("path").getAsString(); //$NON-NLS-1$ //$NON-NLS-2$
+				JsonObject result = element.getAsJsonObject().get("params").getAsJsonObject(); //$NON-NLS-1$
+				String path = result.get("path").getAsString(); //$NON-NLS-1$
+				int line = result.get("line").getAsInt(); //$NON-NLS-1$
 				IFile file = workspace.getRoot().getFileForLocation(new Path(path));
-				IDE.openEditor(PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage(), file);
+				IMarker marker = file.createMarker(IMarker.TEXT);
+				marker.setAttribute(IMarker.LINE_NUMBER, line);
+				IWorkbenchWindow window = window(workbench);
+				IDE.openEditor(window.getActivePage(), marker);
+				marker.delete();
 			} catch (Exception e) {
-				e.printStackTrace();
 				Platform.getLog(getClass()).info(e.toString());
 			}
 		});
+	}
+
+	private IWorkbenchWindow window(IWorkbench workbench) throws CoreException {
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		if (window == null) {
+			if (workbench.getWorkbenchWindowCount() > 0) {
+				window = workbench.getWorkbenchWindows()[0];
+			} else {
+				throw new CoreException(new Status(IStatus.ERROR, getClass(), "No workbench windows")); //$NON-NLS-1$
+			}
+		}
+		return window;
 	}
 
 	@Override

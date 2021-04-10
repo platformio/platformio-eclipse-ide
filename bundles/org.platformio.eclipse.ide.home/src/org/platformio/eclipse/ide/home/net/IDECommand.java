@@ -22,9 +22,9 @@ package org.platformio.eclipse.ide.home.net;
 
 import com.google.gson.JsonElement;
 
-public interface IDECommandHandler {
+public interface IDECommand {
 
-	void handle(JsonElement element);
+	void execute(JsonElement element);
 
 	String method();
 

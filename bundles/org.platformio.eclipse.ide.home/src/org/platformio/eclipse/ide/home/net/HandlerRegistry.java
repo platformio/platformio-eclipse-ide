@@ -20,10 +20,10 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net;
 
+import java.util.Optional;
+
 public interface HandlerRegistry {
 
-	IDECommandHandler get(String method);
-
-	boolean contains(String method);
+	Optional<IDECommand> get(String method);
 
 }

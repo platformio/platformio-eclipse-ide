@@ -22,6 +22,7 @@ package org.platformio.eclipse.ide.home.net;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -30,25 +31,24 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 @Component
 public class DefaultHandlerRegistry implements HandlerRegistry {
 
-	private final Map<String, IDECommandHandler> handlers = new HashMap<>();
+	private final Map<String, IDECommand> handlers = new HashMap<>();
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE)
-	public void bind(IDECommandHandler handler) {
+	public void bind(IDECommand handler) {
+		System.out.println("bound: " + handler.method()); //$NON-NLS-1$
 		handlers.put(handler.method(), handler);
 	}
 
-	public void unbind(IDECommandHandler handler) {
+	public void unbind(IDECommand handler) {
 		handlers.remove(handler.method());
 	}
 
 	@Override
-	public IDECommandHandler get(String method) {
-		return handlers.get(method);
-	}
-
-	@Override
-	public boolean contains(String method) {
-		return handlers.containsKey(method);
+	public Optional<IDECommand> get(String method) {
+		if (handlers.containsKey(method)) {
+			return Optional.of(handlers.get(method));
+		}
+		return Optional.empty();
 	}
 
 }

@@ -35,12 +35,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.home.net.IDECommandHandler;
+import org.platformio.eclipse.ide.home.net.IDECommand;
 
 import com.google.gson.JsonElement;
 
 @Component
-public final class OpenProjectHandler implements IDECommandHandler {
+public final class OpenProjectHandler implements IDECommand {
 
 	private final PlatformIO installation;
 
@@ -50,7 +50,7 @@ public final class OpenProjectHandler implements IDECommandHandler {
 	}
 
 	@Override
-	public void handle(JsonElement element) {
+	public void execute(JsonElement element) {
 		Path location = Paths.get(element.getAsJsonObject().get("params").getAsString()); //$NON-NLS-1$
 		init(location);
 		open(location);

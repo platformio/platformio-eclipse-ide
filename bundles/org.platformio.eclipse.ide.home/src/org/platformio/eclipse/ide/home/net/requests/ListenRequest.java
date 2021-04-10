@@ -20,9 +20,12 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net.requests;
 
+import java.util.Optional;
+
 import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.home.net.BaseRequest;
 import org.platformio.eclipse.ide.home.net.HandlerRegistry;
+import org.platformio.eclipse.ide.home.net.IDECommand;
 import org.platformio.eclipse.ide.home.net.ResultHandler;
 
 public final class ListenRequest extends BaseRequest {
@@ -42,8 +45,9 @@ public final class ListenRequest extends BaseRequest {
 	public ResultHandler handler() {
 		return element -> {
 			String method = element.getAsJsonObject().get("method").getAsString(); //$NON-NLS-1$
-			if (handlers.contains(method)) {
-				handlers.get(method).handle(element);
+			Optional<IDECommand> handler = handlers.get(method);
+			if (handler.isPresent()) {
+				handler.get().execute(element);
 			} else {
 				Platform.getLog(getClass()).error("Unsupported operation"); //$NON-NLS-1$
 			}
