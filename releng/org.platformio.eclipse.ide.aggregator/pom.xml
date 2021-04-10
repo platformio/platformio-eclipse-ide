@@ -42,7 +42,7 @@
 		<module>..\..\bundles\org.platformio.eclipse.ide.home</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.home.core</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.home.ui</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.ui</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.workbench</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.workspace</module>
 		<module>..\..\features\org.platformio.eclipse.ide.feature</module>
 

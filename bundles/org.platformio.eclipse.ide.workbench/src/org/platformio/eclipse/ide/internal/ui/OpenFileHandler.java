@@ -18,10 +18,9 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.workbench.handlers;
+package org.platformio.eclipse.ide.internal.ui;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -29,10 +28,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.net.IDECommand;
 
@@ -52,11 +55,14 @@ public final class OpenFileHandler implements IDECommand {
 				String path = result.get("path").getAsString(); //$NON-NLS-1$
 				int line = result.get("line").getAsInt(); //$NON-NLS-1$
 				IFile file = workspace.getRoot().getFileForLocation(new Path(path));
-				IMarker marker = file.createMarker(IMarker.TEXT);
-				marker.setAttribute(IMarker.LINE_NUMBER, line);
 				IWorkbenchWindow window = window(workbench);
-				IDE.openEditor(window.getActivePage(), marker);
-				marker.delete();
+				IEditorPart editor = IDE.openEditor(window.getActivePage(), file);
+				if (editor instanceof ITextEditor) {
+					IRegion region = ((ITextEditor) editor).getDocumentProvider().getDocument(editor.getEditorInput())
+							.getLineInformation(line - 1);
+					((ITextEditor) editor).getSelectionProvider()
+							.setSelection(new TextSelection(region.getOffset(), region.getLength()));
+				}
 			} catch (Exception e) {
 				Platform.getLog(getClass()).info(e.toString());
 			}
