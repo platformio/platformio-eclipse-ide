@@ -25,23 +25,41 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.CommandResult;
 import org.platformio.eclipse.ide.home.api.Environment;
 
+@Component
 public final class LocalPython implements Python {
 
 	private final Environment environment;
 	private final String executable;
+	private final String suffix;
 
-	public LocalPython(Environment environment, Path location) {
-		this.environment = environment;
-		this.executable = location.toString();
+	public LocalPython() throws CoreException {
+		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
+		PythonsRegistry registry = registry();
+		this.environment = context.getService(context.getServiceReference(Environment.class));
+		this.executable = registry.findPython().get();
+		this.suffix = registry.executableSuffix();
 	}
 
-	public LocalPython(Environment environment, String location) {
+	public LocalPython(Environment environment, Path location) throws CoreException {
+		this(environment, location.toString());
+	}
+
+	public LocalPython(Environment environment, String location) throws CoreException {
 		this.environment = environment;
 		this.executable = location;
+		this.suffix = registry().executableSuffix();
 	}
 
 	@Override
@@ -98,6 +116,21 @@ public final class LocalPython implements Python {
 	@Override
 	public Environment environment() {
 		return environment;
+	}
+
+	private PythonsRegistry registry() throws CoreException {
+		Optional<IConfigurationElement> extensionItem = Stream
+				.of(Platform.getExtensionRegistry()
+						.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions()) //$NON-NLS-1$
+				.flatMap(extension -> Stream.of(extension.getConfigurationElements())) //
+				.filter(element -> "registry".equals(element.getName())) // //$NON-NLS-1$
+				.findAny();
+		return (PythonsRegistry) extensionItem.get().createExecutableExtension("class"); //$NON-NLS-1$
+	}
+
+	@Override
+	public String suffix() {
+		return suffix;
 	}
 
 }

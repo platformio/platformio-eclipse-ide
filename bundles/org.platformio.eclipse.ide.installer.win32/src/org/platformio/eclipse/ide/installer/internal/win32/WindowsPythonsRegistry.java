@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
-import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
+import org.platformio.eclipse.ide.home.python.PythonsRegistry;
 
 public final class WindowsPythonsRegistry implements PythonsRegistry {
 

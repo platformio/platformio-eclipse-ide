@@ -28,6 +28,6 @@ public interface Request {
 
 	String method();
 
-	Handler handler();
+	ResultHandler handler();
 
 }

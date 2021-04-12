@@ -22,24 +22,17 @@
 -->
 <plugin>
    <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.platformio.eclipse.ide.home.internal.ui.HomePerspectiveFactory"
-            icon="platform:/plugin/org.platformio.eclipse.ide.ui/icons/eview16/platformio.png"
-            id="org.platformio.eclipse.ide.home.ui.perspectives.perspective.home"
-            name="%perspective.home.name">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            class="org.platformio.eclipse.ide.home.internal.ui.HomeView"
-            icon="platform:/plugin/org.platformio.eclipse.ide.ui/icons/eview16/platformio.png"
-            id="org.platformio.eclipse.ide.home.ui.views.view.home"
-            name="%view.home.name"
-            restorable="true">
-      </view>
+         id="id1"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            apply="notexists"
+            uri="fragment.e4xmi">
+      </fragment>
+      <processor
+            apply="always"
+            beforefragment="false"
+            class="org.platformio.eclipse.ide.home.internal.ui.Processor">
+      </processor>
    </extension>
 
 </plugin>

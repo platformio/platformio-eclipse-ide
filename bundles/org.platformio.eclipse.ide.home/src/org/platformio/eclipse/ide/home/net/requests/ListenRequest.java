@@ -20,23 +20,20 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.net.requests;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.home.net.BaseRequest;
-import org.platformio.eclipse.ide.home.net.Handler;
-import org.platformio.eclipse.ide.home.net.Request;
+import org.platformio.eclipse.ide.home.net.HandlerRegistry;
+import org.platformio.eclipse.ide.home.net.IDECommand;
+import org.platformio.eclipse.ide.home.net.ResultHandler;
 
 public final class ListenRequest extends BaseRequest {
 
-	private final Consumer<Request> sendRequest;
-	private final Map<String, Handler> handlers;
+	private final HandlerRegistry handlers;
 
-	public ListenRequest(Consumer<Request> sendRequest) {
-		this.sendRequest = sendRequest;
-		this.handlers = new HashMap<>();
+	public ListenRequest(HandlerRegistry handlers) {
+		this.handlers = handlers;
 	}
 
 	@Override
@@ -44,31 +41,17 @@ public final class ListenRequest extends BaseRequest {
 		return "ide.listen_commands"; //$NON-NLS-1$
 	}
 
-	public void registerHandler(String method, Handler handler) {
-		handlers.put(method, handler);
-	}
-
-	public void unregisterHandler(String method) {
-		handlers.remove(method);
-	}
-
 	@Override
-	public Handler handler() {
+	public ResultHandler handler() {
 		return element -> {
-			refresh();
 			String method = element.getAsJsonObject().get("method").getAsString(); //$NON-NLS-1$
-			if (handlers.containsKey(method)) {
-				handlers.get(method).handle(element);
+			Optional<IDECommand> handler = handlers.get(method);
+			if (handler.isPresent()) {
+				handler.get().execute(element);
 			} else {
 				Platform.getLog(getClass()).error("Unsupported operation"); //$NON-NLS-1$
 			}
 		};
-	}
-
-	private void refresh() {
-		ListenRequest request = new ListenRequest(sendRequest);
-		handlers.forEach((key, value) -> request.registerHandler(key, value));
-		sendRequest.accept(request);
 	}
 
 }

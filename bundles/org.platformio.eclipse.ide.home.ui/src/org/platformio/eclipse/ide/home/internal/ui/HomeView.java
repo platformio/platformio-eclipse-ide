@@ -20,17 +20,24 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui;
 
+import javax.annotation.PostConstruct;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.EditorPart;
 
-public final class HomeView extends ViewPart {
+public final class HomeView extends EditorPart {
 
 	static final String HOME_VIEW_ID = "org.platformio.eclipse.ide.home.ui.views.view.home"; //$NON-NLS-1$
 	private Browser viewer;
 
 	@Override
+	@PostConstruct
 	public void createPartControl(Composite parent) {
 		viewer = new Browser(parent, SWT.CHROMIUM);
 		initControls();
@@ -39,6 +46,33 @@ public final class HomeView extends ViewPart {
 	private void initControls() {
 		// FIXME: get from Home service
 		viewer.setUrl("http://127.0.0.1:8008/"); //$NON-NLS-1$
+	}
+
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void doSaveAs() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+
+	}
+
+	@Override
+	public boolean isDirty() {
+		return false;
+	}
+
+	@Override
+	public boolean isSaveAsAllowed() {
+		return false;
 	}
 
 	@Override

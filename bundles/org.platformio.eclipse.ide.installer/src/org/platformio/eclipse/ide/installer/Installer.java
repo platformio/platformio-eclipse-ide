@@ -30,18 +30,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.home.api.Environment;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.home.core.BaseEnvironment;
+import org.platformio.eclipse.ide.home.core.DefaultEnvironment;
 import org.platformio.eclipse.ide.home.core.LocalPlatformIO;
 import org.platformio.eclipse.ide.home.python.LocalPython;
 import org.platformio.eclipse.ide.home.python.Python;
+import org.platformio.eclipse.ide.home.python.PythonsRegistry;
 import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
-import org.platformio.eclipse.ide.installer.api.PythonsRegistry;
 import org.platformio.eclipse.ide.installer.piocore.LocalPioCoreDistribution;
 import org.platformio.eclipse.ide.installer.python.PythonDistribution;
 
 public final class Installer {
 
-	private final Environment environment = new BaseEnvironment();
+	private final Environment environment = new DefaultEnvironment();
 
 	public PlatformIO install(IProgressMonitor monitor) throws IOException, CoreException {
 		Optional<String> executable = registry().findPython();
@@ -57,7 +57,7 @@ public final class Installer {
 		if (!pio.installed()) {
 			pio.install();
 		}
-		return new LocalPlatformIO(python, registry().executableSuffix(), pio.paths());
+		return new LocalPlatformIO();
 	}
 
 	private PythonsRegistry registry() throws CoreException {
