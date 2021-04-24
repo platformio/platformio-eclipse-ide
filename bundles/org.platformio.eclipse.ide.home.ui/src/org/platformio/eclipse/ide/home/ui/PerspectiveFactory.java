@@ -22,8 +22,6 @@ package org.platformio.eclipse.ide.home.ui;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.platformio.eclipse.ide.home.internal.ui.OpenHomeAction;
 
@@ -33,14 +31,7 @@ public final class PerspectiveFactory implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow != null) {
-			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-			if (activePage != null) {
-				new OpenHomeAction().accept(activePage);
-			}
-		}
-
+		new OpenHomeAction().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
 
 }

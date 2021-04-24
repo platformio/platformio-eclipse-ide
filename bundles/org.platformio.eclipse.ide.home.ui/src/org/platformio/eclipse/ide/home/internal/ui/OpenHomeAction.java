@@ -21,21 +21,31 @@
 package org.platformio.eclipse.ide.home.internal.ui;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
+import org.platformio.eclipse.ide.home.core.Messages;
 
-public final class OpenHomeAction implements Consumer<IWorkbenchPage> {
+public final class OpenHomeAction implements Consumer<Supplier<IWorkbenchWindow>> {
 
 	@Override
-	public void accept(IWorkbenchPage activePage) {
-		try {
-			IDE.openEditor(activePage, new HomeInput(), new HomeViewId().get());
-		} catch (PartInitException e) {
-			Platform.getLog(getClass()).error(e.toString(), e);
+	public void accept(Supplier<IWorkbenchWindow> window) {
+		if (window.get() != null) {
+			IWorkbenchPage activePage = window.get().getActivePage();
+			if (activePage != null) {
+				try {
+					IDE.openEditor(activePage, new HomeInput(), new HomeViewId().get());
+					return;
+				} catch (PartInitException e) {
+					Platform.getLog(getClass()).error(e.toString(), e);
+				}
+			}
 		}
+		Platform.getLog(getClass()).error(Messages.View_Not_Opened_Error_text);
 	}
 
 }
