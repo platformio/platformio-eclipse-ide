@@ -20,52 +20,13 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui;
 
-import java.util.Objects;
+import java.util.function.Supplier;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IPersistableElement;
-import org.platformio.eclipse.ide.home.core.Messages;
-
-public final class HomeInput implements IEditorInput {
+public final class HomeViewId implements Supplier<String> {
 
 	@Override
-	public <T> T getAdapter(Class<T> adapter) {
-		return null;
+	public String get() {
+		return "org.platformio.eclipse.ide.home.ui.view"; //$NON-NLS-1$
 	}
 
-	@Override
-	public boolean exists() {
-		return false;
-	}
-
-	@Override
-	public ImageDescriptor getImageDescriptor() {
-		return null;
-	}
-
-	@Override
-	public String getName() {
-		return Messages.View_Tooltip_text;
-	}
-
-	@Override
-	public IPersistableElement getPersistable() {
-		return null;
-	}
-
-	@Override
-	public String getToolTipText() {
-		return Messages.View_Tooltip_text; // $NON-NLS-1$
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return obj != null && obj.getClass().equals(HomeInput.class);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getName());
-	}
 }

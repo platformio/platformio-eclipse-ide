@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
+import org.platformio.eclipse.ide.home.core.Messages;
 import org.platformio.eclipse.ide.installer.Installer;
 
 //FIXME: AF: "ensureServerStarted" should be implemented here

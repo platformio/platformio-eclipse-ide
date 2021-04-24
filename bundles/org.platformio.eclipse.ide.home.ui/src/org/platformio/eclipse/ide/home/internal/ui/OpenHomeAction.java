@@ -18,29 +18,24 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.ui;
+package org.platformio.eclipse.ide.home.internal.ui;
 
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveFactory;
+import java.util.function.Consumer;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.platformio.eclipse.ide.home.internal.ui.OpenHomeAction;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.ide.IDE;
 
-public final class PerspectiveFactory implements IPerspectiveFactory {
+public final class OpenHomeAction implements Consumer<IWorkbenchPage> {
 
 	@Override
-	public void createInitialLayout(IPageLayout layout) {
-		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
-		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow != null) {
-			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-			if (activePage != null) {
-				new OpenHomeAction().accept(activePage);
-			}
+	public void accept(IWorkbenchPage activePage) {
+		try {
+			IDE.openEditor(activePage, new HomeInput(), new HomeViewId().get());
+		} catch (PartInitException e) {
+			Platform.getLog(getClass()).error(e.toString(), e);
 		}
-
 	}
 
 }

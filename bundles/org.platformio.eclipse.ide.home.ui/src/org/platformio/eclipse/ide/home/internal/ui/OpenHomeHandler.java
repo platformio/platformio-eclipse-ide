@@ -20,52 +20,25 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-public class OpenHomeHandler implements IHandler {
-
-	@Override
-	public void addHandlerListener(IHandlerListener handlerListener) {
-		// Do nothing
-	}
-
-	@Override
-	public void dispose() {
-		// Do nothing
-	}
+public final class OpenHomeHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		try {
-			IDE.openEditor(activePage, new HomeInput(), "org.platformio.eclipse.ide.home.ui.view"); //$NON-NLS-1$
-		} catch (PartInitException e) {
-			Platform.getLog(getClass()).error(e.toString(), e);
+		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+		if (window != null) {
+			IWorkbenchPage activePage = window.getActivePage();
+			if (activePage != null) {
+				new OpenHomeAction().accept(activePage);
+			}
 		}
-		return new String();
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
-	public boolean isHandled() {
-		return true;
-	}
-
-	@Override
-	public void removeHandlerListener(IHandlerListener handlerListener) {
-		// Do nothing
+		return null;
 	}
 
 }

@@ -18,19 +18,20 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.core;
+package org.platformio.eclipse.ide.home.core;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages {
 
-	private static final String BUNDLE_NAME = "org.platformio.eclipse.ide.home.internal.core.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.platformio.eclipse.ide.home.core.messages"; //$NON-NLS-1$
 	public static String PlatformIO_installation_message;
 	public static String PlatformIO_stop_message;
 	public static String Virtualenv_creation_message;
 	public static String Core_installation_message;
 	public static String Installation_successful_message;
 	public static String Installation_failed_message;
+	public static String View_Tooltip_text;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
