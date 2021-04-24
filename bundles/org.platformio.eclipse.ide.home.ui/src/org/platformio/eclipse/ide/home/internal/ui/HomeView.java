@@ -20,8 +20,6 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui;
 
-import javax.annotation.PostConstruct;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -37,7 +35,6 @@ public final class HomeView extends EditorPart {
 	private Browser viewer;
 
 	@Override
-	@PostConstruct
 	public void createPartControl(Composite parent) {
 		viewer = new Browser(parent, SWT.CHROMIUM);
 		initControls();
@@ -62,7 +59,8 @@ public final class HomeView extends EditorPart {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-
+		setSite(site);
+		setInput(input);
 	}
 
 	@Override
