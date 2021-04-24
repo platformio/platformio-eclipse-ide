@@ -22,17 +22,52 @@
 -->
 <plugin>
    <extension
-         id="id1"
-         point="org.eclipse.e4.workbench.model">
-      <fragment
-            apply="notexists"
-            uri="fragment.e4xmi">
-      </fragment>
-      <processor
-            apply="always"
-            beforefragment="false"
-            class="org.platformio.eclipse.ide.home.internal.ui.Processor">
-      </processor>
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.platformio.eclipse.ide.home.ui.PerspectiveFactory"
+            icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
+            id="org.platformio.eclipse.ide.home.ui.perspective"
+            name="%perspective.name">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.platformio.eclipse.ide.home.internal.ui.HomeView"
+            default="false"
+            icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
+            id="org.platformio.eclipse.ide.home.ui.view"
+            name="%view.name">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.platformio.eclipse.ide.home.internal.ui.OpenHomeHandler"
+            commandId="org.platformio.eclipse.ide.home.ui.openView">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.platformio.eclipse.ide.home.ui.openView"
+            name="%command.name">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="org.platformio.eclipse.ide.home.ui.toolbar">
+            <command
+                  commandId="org.platformio.eclipse.ide.home.ui.openView"
+                  icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
+                  label="%command.name"
+                  style="push">
+            </command>
+         </toolbar>
+      </menuContribution>
    </extension>
 
 </plugin>
