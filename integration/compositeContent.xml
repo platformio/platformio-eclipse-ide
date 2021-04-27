@@ -27,7 +27,7 @@
 		<property name='p2.timestamp' value='1243822502499' />
 	</properties>
 	<children size='2'>
-		<child location='https://dl.maketechnology.io/chromium-cef/rls/repository' />
+		<child location='https://eclipse.dl.platformio.org/chromium-cef' />
 		<child location='repository' />
 	</children>
 </repository>
