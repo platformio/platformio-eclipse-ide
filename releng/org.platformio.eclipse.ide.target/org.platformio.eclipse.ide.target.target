@@ -24,7 +24,7 @@
 <target includeMode="feature" name="org.platformio.eclipse.ide.target" sequenceNumber="2">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://eclipse.dl.platformio.org/chromium-cef"/>
+			<repository location="https://dl.maketechnology.io/chromium-cef/rls/repository"/>
 			<unit id="com.make.chromium.cef.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
