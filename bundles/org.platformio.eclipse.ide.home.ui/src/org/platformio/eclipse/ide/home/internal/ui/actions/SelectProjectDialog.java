@@ -45,6 +45,7 @@ public final class SelectProjectDialog implements Supplier<Optional<IProject>> {
 	public Optional<IProject> get() {
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new ProjectsLabelProvider());
 		dialog.setTitle(Messages.Select_Project_Title);
+		dialog.setMultipleSelection(false);
 		dialog.setMessage(Messages.Select_Project_Message);
 		dialog.setElements(projects().toArray());
 		if (dialog.open() != Window.OK) {
