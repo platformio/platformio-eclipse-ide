@@ -82,4 +82,22 @@ public final class LocalPlatformIO implements PlatformIO {
 						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
+	@Override
+	public void build(Path path) {
+		python.environment().execute(installation.envBinDir().resolve("pio" + python.suffix()).toString(), //$NON-NLS-1$
+				Arrays.asList("run"), path.toFile()); //$NON-NLS-1$
+	}
+
+	@Override
+	public void clean(Path path) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void upload(Path path) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

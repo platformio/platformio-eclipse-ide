@@ -49,8 +49,13 @@ public final class DefaultEnvironment implements Environment {
 
 	@Override
 	public CommandResult execute(String command, List<String> arguments) {
+		return execute(command, arguments, home().resolve("penv").resolve("Scripts").toFile()); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	@Override
+	public CommandResult execute(String command, List<String> arguments, File workingDirectory) {
 		try {
-			Process process = start(command, arguments);
+			Process process = start(command, arguments, workingDirectory);
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
@@ -90,7 +95,7 @@ public final class DefaultEnvironment implements Environment {
 	@Override
 	public void executeLasting(String command, List<String> arguments, String id) {
 		try {
-			Process process = start(command, arguments);
+			Process process = start(command, arguments, home().resolve("penv").resolve("Scripts").toFile()); //$NON-NLS-1$//$NON-NLS-2$
 			running.put(id, process);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -99,9 +104,8 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@SuppressWarnings("resource")
-	private Process start(String command, List<String> arguments) throws IOException {
+	private Process start(String command, List<String> arguments, File directory) throws IOException {
 		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
-		File directory = home().resolve("penv").resolve("Scripts").toFile(); //$NON-NLS-1$//$NON-NLS-2$
 		if (directory.exists()) {
 			builder.directory(directory);
 		}

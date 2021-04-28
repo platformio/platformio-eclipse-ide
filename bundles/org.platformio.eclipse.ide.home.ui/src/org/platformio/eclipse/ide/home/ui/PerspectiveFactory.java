@@ -23,7 +23,7 @@ package org.platformio.eclipse.ide.home.ui;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.PlatformUI;
-import org.platformio.eclipse.ide.home.internal.ui.OpenHomeAction;
+import org.platformio.eclipse.ide.home.internal.ui.actions.OpenHome;
 
 public final class PerspectiveFactory implements IPerspectiveFactory {
 
@@ -31,7 +31,7 @@ public final class PerspectiveFactory implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		new OpenHomeAction().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		new OpenHome().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
 
 }

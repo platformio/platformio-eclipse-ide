@@ -31,4 +31,10 @@ public interface PlatformIO {
 
 	void stop() throws IOException;
 
+	void build(Path path);
+
+	void clean(Path path);
+
+	void upload(Path path);
+
 }

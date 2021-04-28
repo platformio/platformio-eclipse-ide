@@ -18,19 +18,30 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui;
+package org.platformio.eclipse.ide.home.internal.ui.actions;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE.SharedImages;
 
-public final class OpenHomeHandler extends AbstractHandler {
+public final class ProjectsLabelProvider extends LabelProvider {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		new OpenHomeAction().accept(() -> HandlerUtil.getActiveWorkbenchWindow(event));
+	public Image getImage(Object element) {
+		if (element instanceof IProject) {
+			return PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJ_PROJECT);
+		}
 		return null;
+	}
+
+	@Override
+	public String getText(Object element) {
+		if (element instanceof IProject) {
+			return ((IProject) element).getName();
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 }

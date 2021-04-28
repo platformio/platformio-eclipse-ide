@@ -18,34 +18,19 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui;
+package org.platformio.eclipse.ide.home.internal.ui.actions;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.ide.IDE;
-import org.platformio.eclipse.ide.home.core.Messages;
-
-public final class OpenHomeAction implements Consumer<Supplier<IWorkbenchWindow>> {
+public final class OpenHomeHandler extends AbstractHandler {
 
 	@Override
-	public void accept(Supplier<IWorkbenchWindow> window) {
-		if (window.get() != null) {
-			IWorkbenchPage activePage = window.get().getActivePage();
-			if (activePage != null) {
-				try {
-					IDE.openEditor(activePage, new HomeInput(), new HomeViewId().get());
-					return;
-				} catch (PartInitException e) {
-					Platform.getLog(getClass()).error(e.toString(), e);
-				}
-			}
-		}
-		Platform.getLog(getClass()).error(Messages.View_Not_Opened_Error_text);
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		new OpenHome().accept(() -> HandlerUtil.getActiveWorkbenchWindow(event));
+		return null;
 	}
 
 }

@@ -43,15 +43,23 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.OpenHomeHandler"
+            class="org.platformio.eclipse.ide.home.internal.ui.actions.OpenHomeHandler"
             commandId="org.platformio.eclipse.ide.home.ui.openView">
+      </handler>
+      <handler
+            class="org.platformio.eclipse.ide.home.internal.ui.actions.BuildHandler"
+            commandId="org.platformio.eclipse.ide.home.ui.build">
       </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
             id="org.platformio.eclipse.ide.home.ui.openView"
-            name="%command.name">
+            name="%command.home.name">
+      </command>
+      <command
+            id="org.platformio.eclipse.ide.home.ui.build"
+            name="%command.build.name">
       </command>
    </extension>
    <extension
@@ -63,7 +71,13 @@
             <command
                   commandId="org.platformio.eclipse.ide.home.ui.openView"
                   icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
-                  label="%command.name"
+                  label="%command.home.name"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.platformio.eclipse.ide.home.ui.build"
+                  icon="platform:/plugin/org.eclipse.ui.browser/icons/clcl16/nav_go.png"
+                  label="%command.build.name"
                   style="push">
             </command>
          </toolbar>
