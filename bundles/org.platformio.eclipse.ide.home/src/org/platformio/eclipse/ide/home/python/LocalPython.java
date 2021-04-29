@@ -82,7 +82,7 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
-		return environment.execute(executable, executionArgs);
+		return environment.execute(executable, executionArgs, environment.defaultWorkingDirectory().toFile());
 	}
 
 	@Override
@@ -103,14 +103,14 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.add(location.toString());
 		executionArgs.addAll(Arrays.asList(args));
-		return environment.execute(executable, executionArgs);
+		return environment.execute(executable, executionArgs, environment.defaultWorkingDirectory().toFile());
 	}
 
 	@Override
 	public CommandResult executeCode(String code) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-c", "\"" + code + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return environment.execute(executable, executionArgs);
+		return environment.execute(executable, executionArgs, environment.defaultWorkingDirectory().toFile());
 	}
 
 	@Override

@@ -48,11 +48,6 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@Override
-	public CommandResult execute(String command, List<String> arguments) {
-		return execute(command, arguments, home().resolve("penv").resolve("Scripts").toFile()); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	@Override
 	public CommandResult execute(String command, List<String> arguments, File workingDirectory) {
 		try {
 			Process process = start(command, arguments, workingDirectory);
@@ -121,6 +116,11 @@ public final class DefaultEnvironment implements Environment {
 		if (process != null) {
 			process.destroy();
 		}
+	}
+
+	@Override
+	public Path defaultWorkingDirectory() {
+		return home().resolve("penv").resolve("Scripts"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

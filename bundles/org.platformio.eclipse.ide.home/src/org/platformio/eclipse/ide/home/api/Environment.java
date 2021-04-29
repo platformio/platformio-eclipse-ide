@@ -26,8 +26,6 @@ import java.util.List;
 
 public interface Environment {
 
-	CommandResult execute(String command, List<String> arguments);
-
 	CommandResult execute(String command, List<String> arguments, File workingDirectory);
 
 	void executeLasting(String command, List<String> arguments, String id);
@@ -37,5 +35,7 @@ public interface Environment {
 	Path home();
 
 	Path cache();
+
+	Path defaultWorkingDirectory();
 
 }
