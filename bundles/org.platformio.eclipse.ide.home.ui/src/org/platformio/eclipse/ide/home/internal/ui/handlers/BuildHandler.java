@@ -29,26 +29,26 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.ServiceCaller;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 
 public final class BuildHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
-		PlatformIO pio = context.getService(context.getServiceReference(PlatformIO.class));
+		ServiceCaller<PlatformIO> caller = new ServiceCaller<>(getClass(), PlatformIO.class);
 		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
 		Optional<IProject> project = new SelectProject(selection).get();
 		if (project.isPresent()) {
-			try {
-				pio.build(Paths.get(project.get().getDescription().getLocationURI()));
-			} catch (CoreException e) {
-				Platform.getLog(getClass()).error(e.toString());
-			}
+			caller.call(pio -> {
+				try {
+					pio.build(Paths.get(project.get().getDescription().getLocationURI()));
+				} catch (CoreException e) {
+					Platform.getLog(getClass()).error(e.toString());
+				}
+			});
 		}
 		return null;
 	}
