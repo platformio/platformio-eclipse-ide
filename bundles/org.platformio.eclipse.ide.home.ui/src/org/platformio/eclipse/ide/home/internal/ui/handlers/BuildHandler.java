@@ -38,11 +38,10 @@ public final class BuildHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ServiceCaller<PlatformIO> caller = new ServiceCaller<>(getClass(), PlatformIO.class);
 		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
 		Optional<IProject> project = new SelectProject(selection).get();
 		if (project.isPresent()) {
-			caller.call(pio -> {
+			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
 				try {
 					pio.build(Paths.get(project.get().getDescription().getLocationURI()));
 				} catch (CoreException e) {
