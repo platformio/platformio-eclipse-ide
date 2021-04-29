@@ -20,30 +20,47 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui.actions;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.platformio.eclipse.ide.home.core.Messages;
 
-public final class SelectProjectDialog implements Supplier<Optional<IProject>> {
-
-	private final Shell shell;
-
-	public SelectProjectDialog(Shell shell) {
-		this.shell = shell;
-	}
+public final class SelectProject implements Supplier<Optional<IProject>> {
 
 	@Override
 	public Optional<IProject> get() {
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new ProjectsLabelProvider());
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		ISelectionService selectionService = window.getActivePage();
+		ISelection selection = selectionService.getSelection("org.eclipse.ui.navigator.ProjectExplorer"); //$NON-NLS-1$
+		if (selection instanceof IStructuredSelection) {
+			Object element = ((IStructuredSelection) selection).getFirstElement();
+			if (element instanceof IResource) {
+				IProject project = ((IResource) element).getProject();
+				if (project.exists(new Path("platformio.ini"))) {//$NON-NLS-1$
+					return Optional.of(project);
+				}
+			}
+		}
+		return ask(window);
+	}
+
+	private Optional<IProject> ask(IWorkbenchWindow window) {
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(window.getShell(),
+				new ProjectsLabelProvider());
 		dialog.setTitle(Messages.Select_Project_Title);
 		dialog.setMultipleSelection(false);
 		dialog.setMessage(Messages.Select_Project_Message);
@@ -56,14 +73,9 @@ public final class SelectProjectDialog implements Supplier<Optional<IProject>> {
 	}
 
 	private List<IProject> projects() {
-		List<IProject> projects = new LinkedList<>();
-		IProject[] all = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		for (IProject project : all) {
-			if (project.isOpen() && project.exists(new Path("platformio.ini"))) { //$NON-NLS-1$
-				projects.add(project);
-			}
-		}
-		return projects;
+		return Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects()) //
+				.filter(project -> project.isOpen() && project.exists(new Path("platformio.ini"))) //$NON-NLS-1$
+				.collect(Collectors.toList());
 	}
 
 }

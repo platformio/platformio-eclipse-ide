@@ -21,20 +21,12 @@
 package org.platformio.eclipse.ide.home.internal.ui.actions;
 
 import java.nio.file.Paths;
-import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
@@ -45,28 +37,10 @@ public final class BuildHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		PlatformIO pio = context.getService(context.getServiceReference(PlatformIO.class));
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		ISelectionService selectionService = window.getActivePage();
-		ISelection selection = selectionService.getSelection("org.eclipse.ui.navigator.ProjectExplorer"); //$NON-NLS-1$
-		if (selection instanceof IStructuredSelection) {
-			IProject project;
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-
-			if (element instanceof IResource) {
-				project = ((IResource) element).getProject();
-			} else {
-				Optional<IProject> explicit = new SelectProjectDialog(window.getShell()).get();
-				if (explicit.isPresent()) {
-					project = explicit.get();
-				} else {
-					return null;
-				}
-			}
-			try {
-				pio.build(Paths.get(project.getDescription().getLocationURI()));
-			} catch (CoreException e) {
-				Platform.getLog(getClass()).error(e.toString());
-			}
+		try {
+			pio.build(Paths.get(new SelectProject().get().get().getDescription().getLocationURI()));
+		} catch (CoreException e) {
+			Platform.getLog(getClass()).error(e.toString());
 		}
 		return null;
 	}
