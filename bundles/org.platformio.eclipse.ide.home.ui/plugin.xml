@@ -24,7 +24,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.platformio.eclipse.ide.home.ui.PerspectiveFactory"
+            class="org.platformio.eclipse.ide.home.internal.ui.PerspectiveFactory"
             icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
             id="org.platformio.eclipse.ide.home.ui.perspective"
             name="%perspective.name">
@@ -43,11 +43,11 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.actions.OpenHomeHandler"
+            class="org.platformio.eclipse.ide.home.internal.ui.handlers.OpenHomeHandler"
             commandId="org.platformio.eclipse.ide.home.ui.openView">
       </handler>
       <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.actions.BuildHandler"
+            class="org.platformio.eclipse.ide.home.internal.ui.handlers.BuildHandler"
             commandId="org.platformio.eclipse.ide.home.ui.build">
       </handler>
    </extension>

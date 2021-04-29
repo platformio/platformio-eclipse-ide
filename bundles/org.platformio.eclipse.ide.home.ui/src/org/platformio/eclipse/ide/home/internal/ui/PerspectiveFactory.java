@@ -18,12 +18,12 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.ui;
+package org.platformio.eclipse.ide.home.internal.ui;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.PlatformUI;
-import org.platformio.eclipse.ide.home.internal.ui.actions.OpenHome;
+import org.platformio.eclipse.ide.home.internal.ui.handlers.OpenHome;
 
 public final class PerspectiveFactory implements IPerspectiveFactory {
 

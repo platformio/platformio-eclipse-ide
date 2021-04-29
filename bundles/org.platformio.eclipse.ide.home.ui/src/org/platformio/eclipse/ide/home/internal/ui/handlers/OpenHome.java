@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui.actions;
+package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

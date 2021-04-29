@@ -18,19 +18,18 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui.actions;
+package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.handlers.HandlerUtil;
+import java.util.function.Predicate;
 
-public final class OpenHomeHandler extends AbstractHandler {
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Path;
+
+public final class IsPlatformIOProject implements Predicate<IProject> {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		new OpenHome().accept(() -> HandlerUtil.getActiveWorkbenchWindow(event));
-		return null;
+	public boolean test(IProject project) {
+		return project.exists(new Path("platformio.ini")); //$NON-NLS-1$
 	}
 
 }

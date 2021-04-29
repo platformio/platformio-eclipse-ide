@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui.actions;
+package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,24 +30,34 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.platformio.eclipse.ide.home.core.Messages;
 
 public final class SelectProject implements Supplier<Optional<IProject>> {
 
+	private final IStructuredSelection selection;
+
+	public SelectProject(IStructuredSelection selection) {
+		this.selection = selection;
+	}
+
 	@Override
 	public Optional<IProject> get() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		ISelectionService selectionService = window.getActivePage();
-		ISelection selection = selectionService.getSelection("org.eclipse.ui.navigator.ProjectExplorer"); //$NON-NLS-1$
-		if (selection instanceof IStructuredSelection) {
-			Object element = ((IStructuredSelection) selection).getFirstElement();
+		Optional<IProject> selected = selected();
+		if (selected.isPresent()) {
+			return selected;
+		}
+		return ask();
+	}
+
+	private Optional<IProject> selected() {
+		if (!StructuredSelection.EMPTY.equals(selection)) {
+			Object element = selection.getFirstElement();
 			if (element instanceof IResource) {
 				IProject project = ((IResource) element).getProject();
 				if (project.exists(new Path("platformio.ini"))) {//$NON-NLS-1$
@@ -55,12 +65,12 @@ public final class SelectProject implements Supplier<Optional<IProject>> {
 				}
 			}
 		}
-		return ask(window);
+		return Optional.empty();
 	}
 
-	private Optional<IProject> ask(IWorkbenchWindow window) {
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(window.getShell(),
-				new ProjectsLabelProvider());
+	private Optional<IProject> ask() {
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), new WorkbenchLabelProvider());
 		dialog.setTitle(Messages.Select_Project_Title);
 		dialog.setMultipleSelection(false);
 		dialog.setMessage(Messages.Select_Project_Message);
@@ -68,13 +78,13 @@ public final class SelectProject implements Supplier<Optional<IProject>> {
 		if (dialog.open() != Window.OK) {
 			return Optional.empty();
 		}
-		IProject selection = (IProject) dialog.getFirstResult();
-		return Optional.of(selection);
+		return Optional.of((IProject) dialog.getFirstResult());
 	}
 
 	private List<IProject> projects() {
 		return Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects()) //
-				.filter(project -> project.isOpen() && project.exists(new Path("platformio.ini"))) //$NON-NLS-1$
+				.filter(IProject::isOpen) //
+				.filter(new IsPlatformIOProject()) //
 				.collect(Collectors.toList());
 	}
 
