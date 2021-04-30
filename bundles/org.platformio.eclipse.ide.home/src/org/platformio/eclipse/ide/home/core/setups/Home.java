@@ -25,9 +25,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.platformio.eclipse.ide.home.core.BaseLongCommand;
+import org.platformio.eclipse.ide.home.core.BaseCommand;
 
-public final class Home extends BaseLongCommand {
+public final class Home extends BaseCommand {
 
 	public Home(Supplier<String> executable, File workingDirectory) {
 		super(executable.get(), workingDirectory);
