@@ -31,8 +31,10 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.core.setups.Build;
+import org.platformio.eclipse.ide.home.core.setups.Clean;
 import org.platformio.eclipse.ide.home.core.setups.Home;
 import org.platformio.eclipse.ide.home.core.setups.InitProject;
+import org.platformio.eclipse.ide.home.core.setups.Upload;
 import org.platformio.eclipse.ide.home.json.Dump;
 import org.platformio.eclipse.ide.home.net.HandlerRegistry;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
@@ -90,14 +92,13 @@ public final class LocalPlatformIO implements PlatformIO {
 
 	@Override
 	public void clean(Path path) {
-		// TODO Auto-generated method stub
-
+		python.environment().execute(new Clean(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()));
 	}
 
 	@Override
 	public void upload(Path path) {
-		// TODO Auto-generated method stub
-
+		python.environment()
+				.execute(new Upload(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()));
 	}
 
 }
