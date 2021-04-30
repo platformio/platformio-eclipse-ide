@@ -31,6 +31,4 @@ public interface Command {
 
 	File workingDirectory();
 
-	void execute(Environment environment);
-
 }

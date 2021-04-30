@@ -58,9 +58,8 @@ public final class LocalPlatformIO implements PlatformIO {
 
 	@Override
 	public void home() throws IOException {
-		new Home(new PIOExecutable.OfDump(installation, python.suffix()),
-				python.environment().defaultWorkingDirectory().toFile(), PROCESS_ID) //
-						.execute(python.environment());
+		python.environment().executeLasting(new Home(new PIOExecutable.OfDump(installation, python.suffix()),
+				python.environment().defaultWorkingDirectory().toFile()), PROCESS_ID);
 		WebSocketClient client = new WebSocketClient();
 		try {
 			client.start();
@@ -80,15 +79,13 @@ public final class LocalPlatformIO implements PlatformIO {
 
 	@Override
 	public void initProject(Path path) throws IOException {
-		new InitProject(new PIOExecutable.OfDump(installation, python.suffix()), path.toString(),
-				python.environment().defaultWorkingDirectory().toFile()) //
-						.execute(python.environment());
+		python.environment().execute(new InitProject(new PIOExecutable.OfDump(installation, python.suffix()),
+				path.toString(), python.environment().defaultWorkingDirectory().toFile()));
 	}
 
 	@Override
 	public void build(Path path) {
-		new Build(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()) //
-				.execute(python.environment());
+		python.environment().execute(new Build(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()));
 	}
 
 	@Override

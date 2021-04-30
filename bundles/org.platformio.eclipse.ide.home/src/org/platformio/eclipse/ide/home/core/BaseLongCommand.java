@@ -23,18 +23,15 @@ package org.platformio.eclipse.ide.home.core;
 import java.io.File;
 
 import org.platformio.eclipse.ide.home.api.Command;
-import org.platformio.eclipse.ide.home.api.Environment;
 
 public abstract class BaseLongCommand implements Command {
 
 	private final String command;
 	private final File workingDirectory;
-	private final String identifier;
 
-	public BaseLongCommand(String command, File workingDirectory, String identifier) {
+	public BaseLongCommand(String command, File workingDirectory) {
 		this.command = command;
 		this.workingDirectory = workingDirectory;
-		this.identifier = identifier;
 	}
 
 	@Override
@@ -45,11 +42,6 @@ public abstract class BaseLongCommand implements Command {
 	@Override
 	public final File workingDirectory() {
 		return workingDirectory;
-	}
-
-	@Override
-	public final void execute(Environment environment) {
-		environment.executeLasting(command(), arguments(), identifier);
 	}
 
 }

@@ -29,8 +29,8 @@ import org.platformio.eclipse.ide.home.core.BaseLongCommand;
 
 public final class Home extends BaseLongCommand {
 
-	public Home(Supplier<String> executable, File workingDirectory, String identifier) {
-		super(executable.get(), workingDirectory, identifier);
+	public Home(Supplier<String> executable, File workingDirectory) {
+		super(executable.get(), workingDirectory);
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
+import org.platformio.eclipse.ide.home.api.Command;
 import org.platformio.eclipse.ide.home.api.CommandResult;
 import org.platformio.eclipse.ide.home.api.Environment;
 
@@ -48,9 +49,9 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@Override
-	public CommandResult execute(String command, List<String> arguments, File workingDirectory) {
+	public CommandResult execute(Command command) {
 		try {
-			Process process = start(command, arguments, workingDirectory);
+			Process process = start(command.command(), command.arguments(), command.workingDirectory());
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
@@ -88,9 +89,9 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@Override
-	public void executeLasting(String command, List<String> arguments, String id) {
+	public void executeLasting(Command command, String id) {
 		try {
-			Process process = start(command, arguments, home().resolve("penv").resolve("Scripts").toFile()); //$NON-NLS-1$//$NON-NLS-2$
+			Process process = start(command.command(), command.arguments(), command.workingDirectory());
 			running.put(id, process);
 		} catch (Exception e) {
 			// TODO: handle exception

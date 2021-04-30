@@ -20,15 +20,13 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 public interface Environment {
 
-	CommandResult execute(String command, List<String> arguments, File workingDirectory);
+	CommandResult execute(Command command);
 
-	void executeLasting(String command, List<String> arguments, String id);
+	void executeLasting(Command command, String id);
 
 	void killProcess(String id);
 

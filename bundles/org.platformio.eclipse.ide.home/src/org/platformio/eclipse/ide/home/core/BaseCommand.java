@@ -23,7 +23,6 @@ package org.platformio.eclipse.ide.home.core;
 import java.io.File;
 
 import org.platformio.eclipse.ide.home.api.Command;
-import org.platformio.eclipse.ide.home.api.Environment;
 
 public abstract class BaseCommand implements Command {
 
@@ -43,11 +42,6 @@ public abstract class BaseCommand implements Command {
 	@Override
 	public final File workingDirectory() {
 		return workingDirectory;
-	}
-
-	@Override
-	public final void execute(Environment environment) {
-		environment.execute(command(), arguments(), workingDirectory());
 	}
 
 }
