@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -29,9 +30,7 @@ import java.util.stream.Stream;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
@@ -56,16 +55,10 @@ public final class SelectProject implements Supplier<Optional<IProject>> {
 	}
 
 	private Optional<IProject> selected() {
-		if (!StructuredSelection.EMPTY.equals(selection)) {
-			Object element = selection.getFirstElement();
-			if (element instanceof IResource) {
-				IProject project = ((IResource) element).getProject();
-				if (project.exists(new Path("platformio.ini"))) {//$NON-NLS-1$
-					return Optional.of(project);
-				}
-			}
-		}
-		return Optional.empty();
+		return Arrays.asList(selection.toArray()).stream() //
+				.filter(IResource.class::isInstance) //
+				.map(resource -> ((IResource) resource).getProject()) //
+				.filter(new IsPlatformIOProject()).findFirst();
 	}
 
 	private Optional<IProject> ask() {

@@ -20,17 +20,37 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
-import java.nio.file.Paths;
+import java.util.Optional;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.ServiceCaller;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 
-public final class CleanHandler extends PlatformIOHandler {
+public abstract class PlatformIOHandler extends AbstractHandler {
 
 	@Override
-	public void execute(PlatformIO pio, IProject project) throws CoreException {
-		pio.clean(Paths.get(project.getDescription().getLocationURI()));
+	public final Object execute(ExecutionEvent event) throws ExecutionException {
+		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
+		Optional<IProject> project = new SelectProject(selection).get();
+		if (project.isPresent()) {
+			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
+				try {
+					execute(pio, project.get());
+				} catch (CoreException e) {
+					Platform.getLog(getClass()).error(e.toString());
+				}
+			});
+		}
+		return null;
 	}
+
+	public abstract void execute(PlatformIO pio, IProject project) throws CoreException;
 
 }
