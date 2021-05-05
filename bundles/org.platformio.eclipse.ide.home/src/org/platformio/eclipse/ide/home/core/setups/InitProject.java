@@ -18,19 +18,28 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui;
+package org.platformio.eclipse.ide.home.core.setups;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.handlers.HandlerUtil;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
 
-public final class OpenHomeHandler extends AbstractHandler {
+import org.platformio.eclipse.ide.home.core.BaseCommand;
+
+public final class InitProject extends BaseCommand {
+
+	private final String project;
+
+	public InitProject(Supplier<String> executable, String project, File workingDirectory) {
+		super(executable.get(), workingDirectory);
+		this.project = project;
+	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		new OpenHomeAction().accept(() -> HandlerUtil.getActiveWorkbenchWindow(event));
-		return null;
+	public List<String> arguments() {
+		return Arrays.asList("project", "init", "-d", project, "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				"--project-option", "nobuild"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }

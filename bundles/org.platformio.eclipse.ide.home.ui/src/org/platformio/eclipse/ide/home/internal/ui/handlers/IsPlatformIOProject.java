@@ -18,23 +18,18 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.util.function.Predicate;
 
-public interface PlatformIO {
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Path;
 
-	void home() throws IOException;
+public final class IsPlatformIOProject implements Predicate<IProject> {
 
-	void initProject(Path path) throws IOException;
-
-	void stop() throws IOException;
-
-	void build(Path path);
-
-	void clean(Path path);
-
-	void upload(Path path);
+	@Override
+	public boolean test(IProject project) {
+		return project.exists(new Path("platformio.ini")); //$NON-NLS-1$
+	}
 
 }

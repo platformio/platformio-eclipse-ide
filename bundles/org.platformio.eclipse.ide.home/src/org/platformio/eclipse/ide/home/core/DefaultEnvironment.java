@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
+import org.platformio.eclipse.ide.home.api.Command;
 import org.platformio.eclipse.ide.home.api.CommandResult;
 import org.platformio.eclipse.ide.home.api.Environment;
 
@@ -48,9 +49,9 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@Override
-	public CommandResult execute(String command, List<String> arguments) {
+	public CommandResult execute(Command command) {
 		try {
-			Process process = start(command, arguments);
+			Process process = start(command.command(), command.arguments(), command.workingDirectory());
 			int code = process.waitFor();
 			return new CommandResult.Success(code);
 		} catch (Exception e) {
@@ -88,9 +89,9 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@Override
-	public void executeLasting(String command, List<String> arguments, String id) {
+	public void executeLasting(Command command, String id) {
 		try {
-			Process process = start(command, arguments);
+			Process process = start(command.command(), command.arguments(), command.workingDirectory());
 			running.put(id, process);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -99,9 +100,8 @@ public final class DefaultEnvironment implements Environment {
 	}
 
 	@SuppressWarnings("resource")
-	private Process start(String command, List<String> arguments) throws IOException {
+	private Process start(String command, List<String> arguments, File directory) throws IOException {
 		ProcessBuilder builder = new ProcessBuilder(input(command, arguments));
-		File directory = home().resolve("penv").resolve("Scripts").toFile(); //$NON-NLS-1$//$NON-NLS-2$
 		if (directory.exists()) {
 			builder.directory(directory);
 		}
@@ -117,6 +117,11 @@ public final class DefaultEnvironment implements Environment {
 		if (process != null) {
 			process.destroy();
 		}
+	}
+
+	@Override
+	public Path defaultWorkingDirectory() {
+		return home().resolve("penv").resolve("Scripts"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

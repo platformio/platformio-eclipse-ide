@@ -33,6 +33,8 @@ public class Messages {
 	public static String Installation_failed_message;
 	public static String View_Tooltip_text;
 	public static String View_Not_Opened_Error_text;
+	public static String Select_Project_Title;
+	public static String Select_Project_Message;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

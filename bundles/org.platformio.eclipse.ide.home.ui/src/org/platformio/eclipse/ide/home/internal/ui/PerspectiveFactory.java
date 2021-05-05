@@ -20,32 +20,18 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.PlatformUI;
+import org.platformio.eclipse.ide.home.internal.ui.handlers.OpenHome;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.ide.IDE;
-import org.platformio.eclipse.ide.home.core.Messages;
-
-public final class OpenHomeAction implements Consumer<Supplier<IWorkbenchWindow>> {
+public final class PerspectiveFactory implements IPerspectiveFactory {
 
 	@Override
-	public void accept(Supplier<IWorkbenchWindow> window) {
-		if (window.get() != null) {
-			IWorkbenchPage activePage = window.get().getActivePage();
-			if (activePage != null) {
-				try {
-					IDE.openEditor(activePage, new HomeInput(), new HomeViewId().get());
-					return;
-				} catch (PartInitException e) {
-					Platform.getLog(getClass()).error(e.toString(), e);
-				}
-			}
-		}
-		Platform.getLog(getClass()).error(Messages.View_Not_Opened_Error_text);
+	public void createInitialLayout(IPageLayout layout) {
+		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
+		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
+		new OpenHome().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
 
 }

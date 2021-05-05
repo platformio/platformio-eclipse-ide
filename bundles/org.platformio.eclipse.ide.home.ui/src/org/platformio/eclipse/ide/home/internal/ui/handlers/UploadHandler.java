@@ -18,23 +18,19 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public interface PlatformIO {
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.platformio.eclipse.ide.home.api.PlatformIO;
 
-	void home() throws IOException;
+public final class UploadHandler extends PlatformIOHandler {
 
-	void initProject(Path path) throws IOException;
-
-	void stop() throws IOException;
-
-	void build(Path path);
-
-	void clean(Path path);
-
-	void upload(Path path);
+	@Override
+	public void execute(PlatformIO pio, IProject project) throws CoreException {
+		pio.upload(Paths.get(project.getDescription().getLocationURI()));
+	}
 
 }

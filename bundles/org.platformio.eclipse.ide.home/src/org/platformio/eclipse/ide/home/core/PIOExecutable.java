@@ -18,23 +18,29 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.core;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.util.function.Supplier;
 
-public interface PlatformIO {
+import org.platformio.eclipse.ide.home.json.Dump;
 
-	void home() throws IOException;
+public abstract class PIOExecutable implements Supplier<String> {
 
-	void initProject(Path path) throws IOException;
+	public static final class OfDump extends PIOExecutable {
 
-	void stop() throws IOException;
+		private final Dump dump;
+		private final String suffix;
 
-	void build(Path path);
+		public OfDump(Dump dump, String suffix) {
+			this.dump = dump;
+			this.suffix = suffix;
+		}
 
-	void clean(Path path);
+		@Override
+		public String get() {
+			return dump.envBinDir().resolve("pio" + suffix).toString(); //$NON-NLS-1$
+		}
 
-	void upload(Path path);
+	}
 
 }

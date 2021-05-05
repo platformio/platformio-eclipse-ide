@@ -23,7 +23,6 @@ package org.platformio.eclipse.ide.home.core;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -31,6 +30,11 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
+import org.platformio.eclipse.ide.home.core.setups.Build;
+import org.platformio.eclipse.ide.home.core.setups.Clean;
+import org.platformio.eclipse.ide.home.core.setups.Home;
+import org.platformio.eclipse.ide.home.core.setups.InitProject;
+import org.platformio.eclipse.ide.home.core.setups.Upload;
 import org.platformio.eclipse.ide.home.json.Dump;
 import org.platformio.eclipse.ide.home.net.HandlerRegistry;
 import org.platformio.eclipse.ide.home.net.IDEWebSocket;
@@ -40,6 +44,7 @@ import org.platformio.eclipse.ide.home.python.Python;
 public final class LocalPlatformIO implements PlatformIO {
 
 	private static final String PROCESS_ID = "pio"; //$NON-NLS-1$
+
 	private final Python python;
 	private final Dump installation;
 	private final IDEWebSocket socket;
@@ -55,9 +60,8 @@ public final class LocalPlatformIO implements PlatformIO {
 
 	@Override
 	public void home() throws IOException {
-		python.environment().executeLasting(installation.envBinDir().resolve("pio" + python.suffix()).toString(), //$NON-NLS-1$
-				Arrays.asList("home", "--no-open"), //$NON-NLS-1$//$NON-NLS-2$
-				PROCESS_ID);
+		python.environment().executeLasting(new Home(new PIOExecutable.OfDump(installation, python.suffix()),
+				python.environment().defaultWorkingDirectory().toFile()), PROCESS_ID);
 		WebSocketClient client = new WebSocketClient();
 		try {
 			client.start();
@@ -77,9 +81,24 @@ public final class LocalPlatformIO implements PlatformIO {
 
 	@Override
 	public void initProject(Path path) throws IOException {
-		python.environment().execute(installation.envBinDir().resolve("pio" + python.suffix()).toString(), //$NON-NLS-1$
-				Arrays.asList("project", "init", "-d", path.toString(), "--ide", "eclipse", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-						"--project-option", "nobuild")); //$NON-NLS-1$//$NON-NLS-2$
+		python.environment().execute(new InitProject(new PIOExecutable.OfDump(installation, python.suffix()),
+				path.toString(), python.environment().defaultWorkingDirectory().toFile()));
+	}
+
+	@Override
+	public void build(Path path) {
+		python.environment().execute(new Build(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()));
+	}
+
+	@Override
+	public void clean(Path path) {
+		python.environment().execute(new Clean(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()));
+	}
+
+	@Override
+	public void upload(Path path) {
+		python.environment()
+				.execute(new Upload(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()));
 	}
 
 }

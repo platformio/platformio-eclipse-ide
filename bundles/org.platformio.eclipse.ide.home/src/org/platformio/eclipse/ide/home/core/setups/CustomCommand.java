@@ -18,20 +18,25 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.ui;
+package org.platformio.eclipse.ide.home.core.setups;
 
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.PlatformUI;
-import org.platformio.eclipse.ide.home.internal.ui.OpenHomeAction;
+import java.io.File;
+import java.util.List;
 
-public final class PerspectiveFactory implements IPerspectiveFactory {
+import org.platformio.eclipse.ide.home.core.BaseCommand;
+
+public final class CustomCommand extends BaseCommand {
+
+	private final List<String> arguments;
+
+	public CustomCommand(String command, List<String> arguments, File workingDirectory) {
+		super(command, workingDirectory);
+		this.arguments = arguments;
+	}
 
 	@Override
-	public void createInitialLayout(IPageLayout layout) {
-		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
-		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		new OpenHomeAction().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	public List<String> arguments() {
+		return arguments;
 	}
 
 }

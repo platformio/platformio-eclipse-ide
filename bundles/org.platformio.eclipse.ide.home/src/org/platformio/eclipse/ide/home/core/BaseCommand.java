@@ -18,23 +18,30 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.core;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.File;
 
-public interface PlatformIO {
+import org.platformio.eclipse.ide.home.api.Command;
 
-	void home() throws IOException;
+public abstract class BaseCommand implements Command {
 
-	void initProject(Path path) throws IOException;
+	private final String command;
+	private final File workingDirectory;
 
-	void stop() throws IOException;
+	public BaseCommand(String command, File workingDirectory) {
+		this.command = command;
+		this.workingDirectory = workingDirectory;
+	}
 
-	void build(Path path);
+	@Override
+	public final String command() {
+		return command;
+	}
 
-	void clean(Path path);
-
-	void upload(Path path);
+	@Override
+	public final File workingDirectory() {
+		return workingDirectory;
+	}
 
 }

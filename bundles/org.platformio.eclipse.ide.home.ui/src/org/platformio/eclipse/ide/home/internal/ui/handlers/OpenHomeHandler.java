@@ -18,23 +18,19 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-public interface PlatformIO {
+public final class OpenHomeHandler extends AbstractHandler {
 
-	void home() throws IOException;
-
-	void initProject(Path path) throws IOException;
-
-	void stop() throws IOException;
-
-	void build(Path path);
-
-	void clean(Path path);
-
-	void upload(Path path);
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		new OpenHome().accept(() -> HandlerUtil.getActiveWorkbenchWindow(event));
+		return null;
+	}
 
 }

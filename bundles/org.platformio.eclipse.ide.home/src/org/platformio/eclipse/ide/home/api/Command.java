@@ -20,21 +20,15 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.File;
+import java.util.List;
 
-public interface PlatformIO {
+public interface Command {
 
-	void home() throws IOException;
+	String command();
 
-	void initProject(Path path) throws IOException;
+	List<String> arguments();
 
-	void stop() throws IOException;
-
-	void build(Path path);
-
-	void clean(Path path);
-
-	void upload(Path path);
+	File workingDirectory();
 
 }

@@ -36,6 +36,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.CommandResult;
 import org.platformio.eclipse.ide.home.api.Environment;
+import org.platformio.eclipse.ide.home.core.setups.CustomCommand;
 
 @Component
 public final class LocalPython implements Python {
@@ -82,7 +83,8 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
-		return environment.execute(executable, executionArgs);
+		return environment
+				.execute(new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()));
 	}
 
 	@Override
@@ -90,7 +92,8 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
-		environment.executeLasting(executable, executionArgs, module);
+		environment.executeLasting(
+				new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()), module);
 	}
 
 	@Override
@@ -103,14 +106,16 @@ public final class LocalPython implements Python {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.add(location.toString());
 		executionArgs.addAll(Arrays.asList(args));
-		return environment.execute(executable, executionArgs);
+		return environment
+				.execute(new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()));
 	}
 
 	@Override
 	public CommandResult executeCode(String code) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-c", "\"" + code + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return environment.execute(executable, executionArgs);
+		return environment
+				.execute(new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()));
 	}
 
 	@Override
