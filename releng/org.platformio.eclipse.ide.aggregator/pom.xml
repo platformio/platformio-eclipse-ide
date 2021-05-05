@@ -35,6 +35,7 @@
 		<module>..\..\features\org.platformio.eclipse.ide.license.feature</module>
 
 		<module>..\..\bundles\org.platformio.eclipse.ide</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.console</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.installer</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.installer.win32</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.installer.macosx</module>
