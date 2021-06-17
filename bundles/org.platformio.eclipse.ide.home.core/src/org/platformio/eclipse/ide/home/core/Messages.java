@@ -37,6 +37,9 @@ public class Messages {
 	public static String Select_Project_Message;
 	public static String Terminal_Top_Message;
 	public static String Terminal_Unknown_Message;
+	public static String Task_Build_Title;
+	public static String Task_Clean_Title;
+	public static String Task_Upload_Title;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

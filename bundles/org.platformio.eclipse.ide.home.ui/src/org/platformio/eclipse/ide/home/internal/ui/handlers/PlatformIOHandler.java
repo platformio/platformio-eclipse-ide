@@ -49,7 +49,7 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 		if (project.isPresent()) {
 			Terminal terminal = new ExistingTerminal().get();
 			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
-				Job.create(getClass().getName(), monitor -> {
+				Job.create(title(), monitor -> {
 					try (IOConsoleOutputStream output = terminal.newOutputStream()) {
 						execute(pio, project.get(), new TerminalOutput(output));
 					} catch (IOException e) {
@@ -62,5 +62,7 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 	}
 
 	public abstract void execute(PlatformIO pio, IProject project, Output output) throws CoreException;
+
+	public abstract String title();
 
 }
