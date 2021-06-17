@@ -38,7 +38,7 @@ public final class HomeDirectory implements Supplier<Path> {
 	}
 
 	private boolean isASCIIValid(Path result) {
-		return result.toAbsolutePath().toString().chars().anyMatch(ch -> ch <= 127);
+		return result.toAbsolutePath().toString().chars().anyMatch(ch -> ch <= 127 && ch > 27);
 	}
 
 }

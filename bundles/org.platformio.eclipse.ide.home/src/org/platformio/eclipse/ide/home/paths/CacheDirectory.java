@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
+import org.eclipse.core.runtime.Platform;
+
 public final class CacheDirectory implements Supplier<Path> {
 
 	@Override
@@ -32,11 +34,13 @@ public final class CacheDirectory implements Supplier<Path> {
 		Path dir = new HomeDirectory().get().resolve(".cache"); //$NON-NLS-1$
 		if (!Files.isDirectory(dir)) {
 			try {
+				if (Files.isRegularFile(dir)) {
+					Files.delete(dir);
+				}
 				Files.createDirectories(dir);
 				Files.createDirectory(dir.resolve("downloads")); //$NON-NLS-1$
 			} catch (IOException e) {
-				// TODO: handle exception
-				e.printStackTrace();
+				Platform.getLog(getClass()).error(e.getMessage(), e);
 			}
 		}
 		return dir;

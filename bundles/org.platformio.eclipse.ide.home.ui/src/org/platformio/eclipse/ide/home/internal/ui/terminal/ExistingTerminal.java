@@ -20,32 +20,26 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import org.eclipse.ui.console.IOConsoleInputStream;
-import org.platformio.eclipse.ide.home.api.Input;
+import org.eclipse.ui.console.ConsolePlugin;
 
-public final class TerminalInput implements Input {
-
-	private final IOConsoleInputStream stream;
-
-	public TerminalInput(IOConsoleInputStream stream) {
-		this.stream = stream;
-	}
+public final class ExistingTerminal implements Supplier<Terminal> {
 
 	@Override
-	public void connect(OutputStream output) throws IOException {
-		transfer(stream, output);
-	}
-
-	private void transfer(InputStream in, OutputStream out) throws IOException {
-		byte[] buffer = new byte[8192];
-		int read;
-		while ((read = in.read(buffer, 0, 8192)) >= 0) {
-			out.write(buffer, 0, read);
+	public Terminal get() {
+		Optional<Terminal> opened = Stream.of(ConsolePlugin.getDefault().getConsoleManager().getConsoles())
+				.filter(console -> console instanceof Terminal) //
+				.map(console -> (Terminal) console) //
+				.findAny();
+		if (opened.isPresent()) {
+			return opened.get();
 		}
+		Terminal terminal = new Terminal();
+		new OpenTerminal().accept(terminal);
+		return terminal;
 	}
 
 }

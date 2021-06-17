@@ -24,30 +24,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 
 import org.platformio.eclipse.ide.home.api.Output;
 
 public final class DefaultOutput implements Output {
 
 	@Override
-	public void output(InputStream stream) {
-		read(stream);
+	public void output(InputStream stream) throws IOException {
+		read(stream, System.out);
 	}
 
 	@Override
-	public void error(InputStream stream) {
-		read(stream);
+	public void error(InputStream stream) throws IOException {
+		read(stream, System.err);
 	}
 
-	private void read(InputStream stream) {
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+	private void read(InputStream in, PrintStream out) throws IOException {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				System.out.println(line);
+				out.println(line);
 			}
-		} catch (final IOException e) {
-			e.printStackTrace();
 		}
 	}
-
 }

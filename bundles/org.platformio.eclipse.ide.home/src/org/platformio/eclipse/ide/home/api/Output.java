@@ -20,12 +20,13 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public interface Output {
 
-	public void output(InputStream stream);
+	public void output(InputStream stream) throws IOException;
 
-	public void error(InputStream stream);
+	public void error(InputStream stream) throws IOException;
 
 }

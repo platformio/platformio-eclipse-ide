@@ -23,17 +23,16 @@ package org.platformio.eclipse.ide.home.internal.ui;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.console.IConsoleConstants;
 import org.platformio.eclipse.ide.home.internal.ui.handlers.OpenHome;
 
 public final class PerspectiveFactory implements IPerspectiveFactory {
-
-	private static final String ID_CONSOLE = "org.eclipse.ui.console.ConsoleView"; //$NON-NLS-1$
 
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		layout.addView(ID_CONSOLE, IPageLayout.BOTTOM, 0.7f, layout.getEditorArea());
+		layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM, 0.7f, layout.getEditorArea());
 		new OpenHome().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
 

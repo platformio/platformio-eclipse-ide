@@ -23,7 +23,7 @@ package org.platformio.eclipse.ide.home.paths;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-public class DefaultWorkingDirectory implements Supplier<Path> {
+public final class DefaultWorkingDirectory implements Supplier<Path> {
 
 	@Override
 	public Path get() {

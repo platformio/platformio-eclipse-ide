@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ServiceCaller;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.console.IOConsoleOutputStream;
@@ -37,12 +38,10 @@ public final class CustomInputHandler {
 	public void handle(String input, Terminal console) {
 		List<String> words = new LinkedList<String>();
 		words.addAll(Arrays.asList(input.trim().split(" "))); //$NON-NLS-1$
-		String executable = words.get(0);
-		words.remove(0);
+		String executable = words.remove(0);
 		Job.create(executable, monitor -> {
 			try (IOConsoleOutputStream stream = console.newOutputStream()) {
 				TerminalOutput output = new TerminalOutput(stream);
-				System.out.println(executable);
 				switch (executable) {
 				case "pio": //$NON-NLS-1$
 					new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> pio.execute(words, output));
@@ -55,7 +54,7 @@ public final class CustomInputHandler {
 					break;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Platform.getLog(getClass()).error(e.getMessage(), e);
 			}
 		}).schedule();
 	}

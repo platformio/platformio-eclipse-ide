@@ -131,7 +131,7 @@
       <consoleFactory
             class="org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalFactory"
             icon="platform:/plugin/org.eclipse.ui.console/icons/full/cview16/console_view.png"
-            label="%terminal.label">
+            label="%consoleFactory.terminal.label">
       </consoleFactory>
    </extension>
 

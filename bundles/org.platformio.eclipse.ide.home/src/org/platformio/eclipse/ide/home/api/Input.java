@@ -20,10 +20,11 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public interface Input {
 
-	public void connect(OutputStream stream);
+	public void connect(OutputStream stream) throws IOException;
 
 }

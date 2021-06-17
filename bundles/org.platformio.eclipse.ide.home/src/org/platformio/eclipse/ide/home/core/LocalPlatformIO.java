@@ -82,8 +82,7 @@ public final class LocalPlatformIO implements PlatformIO {
 	@Override
 	public void stop() throws IOException {
 		if (!running.isEmpty()) {
-			running.get(0).interrupt();
-			running.remove(0);
+			running.remove(0).interrupt();
 		}
 	}
 

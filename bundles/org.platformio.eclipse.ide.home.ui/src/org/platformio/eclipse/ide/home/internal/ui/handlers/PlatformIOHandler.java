@@ -22,25 +22,24 @@ package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ServiceCaller;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.platformio.eclipse.ide.home.api.Input;
 import org.platformio.eclipse.ide.home.api.Output;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.core.DefaultInput;
+import org.platformio.eclipse.ide.home.internal.ui.terminal.ExistingTerminal;
 import org.platformio.eclipse.ide.home.internal.ui.terminal.Terminal;
-import org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalFactory;
 import org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalOutput;
 
 public abstract class PlatformIOHandler extends AbstractHandler {
@@ -49,19 +48,14 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 	public final Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
 		Optional<IProject> project = new SelectProject(selection).get();
-		Optional<Terminal> terminal = Stream.of(ConsolePlugin.getDefault().getConsoleManager().getConsoles())
-				.filter(console -> console instanceof Terminal).map(console -> (Terminal) console).findAny();
 		if (project.isPresent()) {
-			if (!terminal.isPresent()) {
-				new TerminalFactory().openConsole();
-				return execute(event);
-			}
+			Terminal terminal = new ExistingTerminal().get();
 			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
 				Job.create(getClass().getName(), monitor -> {
-					try (IOConsoleOutputStream output = terminal.get().newOutputStream()) {
+					try (IOConsoleOutputStream output = terminal.newOutputStream()) {
 						execute(pio, project.get(), new DefaultInput(), new TerminalOutput(output));
 					} catch (IOException e) {
-						e.printStackTrace();
+						Platform.getLog(getClass()).error(e.getMessage(), e);
 					}
 				}).schedule();
 			});

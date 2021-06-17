@@ -20,11 +20,12 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -38,34 +39,27 @@ public final class OpenTerminal implements Consumer<Terminal> {
 
 	@Override
 	public void accept(Terminal terminal) {
-		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWindow == null) {
-			return;
-		}
-		IWorkbenchPage activePage = activeWindow.getActivePage();
-		if (activePage == null) {
-			return;
-		}
-		try {
-			IConsoleView consoleView = (IConsoleView) activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW);
-			IDocument document = terminal.getDocument();
-			document.addDocumentListener(new TerminalInputListener(event -> {
-				try {
-					int offset = document.getLineOffset(document.getNumberOfLines() - 2);
-					String command = document.get(offset, document.getLength() - offset - 2);
-					System.out.println(command);
-					new CustomInputHandler().handle(command, terminal);
-
-				} catch (BadLocationException e) {
-					e.printStackTrace();
-				}
-			}));
-			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { terminal });
-			consoleView.display(terminal);
-			document.set(Messages.Terminal_Top_Message + System.lineSeparator());
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
+		Optional.ofNullable(PlatformUI.getWorkbench().getActiveWorkbenchWindow()) //
+				.map(IWorkbenchWindow::getActivePage) //
+				.ifPresent(page -> {
+					try {
+						IConsoleView consoleView = (IConsoleView) page.showView(IConsoleConstants.ID_CONSOLE_VIEW);
+						IDocument document = terminal.getDocument();
+						document.addDocumentListener(new TerminalInputListener(event -> {
+							try {
+								int offset = document.getLineOffset(document.getNumberOfLines() - 2);
+								String command = document.get(offset, document.getLength() - offset - 2);
+								new CustomInputHandler().handle(command, terminal);
+							} catch (BadLocationException e) {
+								Platform.getLog(getClass()).error(e.getMessage(), e);
+							}
+						}));
+						ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { terminal });
+						consoleView.display(terminal);
+						document.set(Messages.Terminal_Top_Message + System.lineSeparator());
+					} catch (PartInitException e) {
+						Platform.getLog(getClass()).error(e.getMessage(), e);
+					}
+				});
 	}
-
 }

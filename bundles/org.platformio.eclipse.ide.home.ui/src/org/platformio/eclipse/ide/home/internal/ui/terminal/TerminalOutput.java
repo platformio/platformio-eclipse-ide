@@ -37,26 +37,21 @@ public final class TerminalOutput implements Output {
 	}
 
 	@Override
-	public void output(InputStream stream) {
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				output.write((line + "\n").getBytes()); //$NON-NLS-1$
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+	public void output(InputStream stream) throws IOException {
+		read(stream);
 	}
 
 	@Override
-	public void error(InputStream stream) {
+	public void error(InputStream stream) throws IOException {
+		read(stream);
+	}
+
+	private void read(InputStream stream) throws IOException {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				output.write((line + "\n").getBytes()); //$NON-NLS-1$
+				output.write((line + System.lineSeparator()).getBytes());
 			}
-		} catch (final IOException e) {
-			e.printStackTrace();
 		}
 	}
 
