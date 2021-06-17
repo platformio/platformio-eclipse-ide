@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.internal.ui.handlers;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -29,9 +30,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ServiceCaller;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.platformio.eclipse.ide.home.api.Output;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
+import org.platformio.eclipse.ide.home.internal.ui.terminal.ExistingTerminal;
+import org.platformio.eclipse.ide.home.internal.ui.terminal.Terminal;
+import org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalOutput;
 
 public abstract class PlatformIOHandler extends AbstractHandler {
 
@@ -40,17 +47,22 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
 		Optional<IProject> project = new SelectProject(selection).get();
 		if (project.isPresent()) {
+			Terminal terminal = new ExistingTerminal().get();
 			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
-				try {
-					execute(pio, project.get());
-				} catch (CoreException e) {
-					Platform.getLog(getClass()).error(e.toString());
-				}
+				Job.create(title(), monitor -> {
+					try (IOConsoleOutputStream output = terminal.newOutputStream()) {
+						execute(pio, project.get(), new TerminalOutput(output));
+					} catch (IOException e) {
+						Platform.getLog(getClass()).error(e.getMessage(), e);
+					}
+				}).schedule();
 			});
 		}
 		return null;
 	}
 
-	public abstract void execute(PlatformIO pio, IProject project) throws CoreException;
+	public abstract void execute(PlatformIO pio, IProject project, Output output) throws CoreException;
+
+	public abstract String title();
 
 }

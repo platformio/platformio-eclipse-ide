@@ -20,17 +20,10 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
-import java.io.File;
-import java.util.List;
+public interface Execution {
 
-public interface Command {
+	ExecutionResult start();
 
-	String command();
-
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	void interrupt();
 
 }

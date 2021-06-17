@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.home.api.Environment;
+import org.platformio.eclipse.ide.home.paths.CacheDirectory;
 import org.platformio.eclipse.ide.installer.json.Distribution;
 import org.platformio.eclipse.ide.installer.net.RemoteResource;
 
@@ -42,15 +42,9 @@ public final class PythonDistribution {
 
 	private static final String DISTRIBUTION_SITE_URL = "https://api.registry.platformio.org/v3/packages/platformio/tool/python-portable"; //$NON-NLS-1$
 
-	private final Environment environment;
-
-	public PythonDistribution(Environment environment) {
-		this.environment = environment;
-	}
-
 	public void install(Path target) {
 		try {
-			Path packagePath = environment.cache().resolve("downloads").resolve("python3.tar.gz"); //$NON-NLS-1$ //$NON-NLS-2$
+			Path packagePath = new CacheDirectory().get().resolve("downloads").resolve("python3.tar.gz"); //$NON-NLS-1$ //$NON-NLS-2$
 			new RemoteResource(distributionUrl()) //
 					.download(packagePath) //
 					.extract(target);
@@ -72,7 +66,7 @@ public final class PythonDistribution {
 	}
 
 	private List<Distribution> readDistributives() throws IOException {
-		Path target = environment.cache().resolve("info"); //$NON-NLS-1$
+		Path target = new CacheDirectory().get().resolve("info"); //$NON-NLS-1$
 		new RemoteResource(DISTRIBUTION_SITE_URL).download(target);
 		try (BufferedReader fileReader = Files.newBufferedReader(target);) {
 			JsonElement element = JsonParser.parseReader(fileReader);

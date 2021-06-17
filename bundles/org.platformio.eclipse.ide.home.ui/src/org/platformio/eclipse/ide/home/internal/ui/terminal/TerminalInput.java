@@ -18,19 +18,34 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public interface Command {
+import org.eclipse.ui.console.IOConsoleInputStream;
+import org.platformio.eclipse.ide.home.api.Input;
 
-	String command();
+public final class TerminalInput implements Input {
 
-	List<String> arguments();
+	private final IOConsoleInputStream stream;
 
-	File workingDirectory();
+	public TerminalInput(IOConsoleInputStream stream) {
+		this.stream = stream;
+	}
 
-	List<String> asList();
+	@Override
+	public void connect(OutputStream output) throws IOException {
+		transfer(stream, output);
+	}
+
+	private void transfer(InputStream in, OutputStream out) throws IOException {
+		byte[] buffer = new byte[8192];
+		int read;
+		while ((read = in.read(buffer, 0, 8192)) >= 0) {
+			out.write(buffer, 0, read);
+		}
+	}
 
 }

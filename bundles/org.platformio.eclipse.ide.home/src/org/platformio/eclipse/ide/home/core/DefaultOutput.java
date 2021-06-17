@@ -24,37 +24,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.function.Consumer;
+import java.io.PrintStream;
 
-public final class ReadStream extends Thread {
-	private final InputStream stream;
-	private final Consumer<String> consumer;
-	private final Consumer<Exception> handler;
+import org.platformio.eclipse.ide.home.api.Output;
 
-	public ReadStream(InputStream input) {
-		this(input, System.out::println, t -> t.printStackTrace());
-	}
+public final class DefaultOutput implements Output {
 
-	@SuppressWarnings("resource")
-	public ReadStream(InputStream input, Consumer<String> consumer, Consumer<Exception> handler) {
-		Objects.requireNonNull(input, "ReadStream::stream"); //$NON-NLS-1$
-		Objects.requireNonNull(consumer, "ReadStream::consumer"); //$NON-NLS-1$
-		Objects.requireNonNull(handler, "ReadStream::handler"); //$NON-NLS-1$
-		this.stream = input;
-		this.consumer = consumer;
-		this.handler = handler;
+	@Override
+	public void output(InputStream stream) throws IOException {
+		read(stream, System.out);
 	}
 
 	@Override
-	public void run() {
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+	public void error(InputStream stream) throws IOException {
+		read(stream, System.err);
+	}
+
+	private void read(InputStream in, PrintStream out) throws IOException {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				consumer.accept(line);
+				out.println(line);
 			}
-		} catch (final IOException e) {
-			handler.accept(e);
 		}
 	}
 }

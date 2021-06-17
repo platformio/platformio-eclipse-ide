@@ -20,17 +20,38 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
-import java.io.File;
-import java.util.List;
+public abstract class ExecutionResult {
 
-public interface Command {
+	private final int code;
 
-	String command();
+	public final int code() {
+		return code;
+	}
 
-	List<String> arguments();
+	public ExecutionResult(int code) {
+		this.code = code;
+	}
 
-	File workingDirectory();
+	public static final class Success extends ExecutionResult {
 
-	List<String> asList();
+		public Success(int code) {
+			super(code);
+		}
 
+	}
+
+	public static final class Failure extends ExecutionResult {
+
+		private final String message;
+
+		public Failure(int code, String message) {
+			super(code);
+			this.message = message;
+		}
+
+		public String message() {
+			return message;
+		}
+
+	}
 }

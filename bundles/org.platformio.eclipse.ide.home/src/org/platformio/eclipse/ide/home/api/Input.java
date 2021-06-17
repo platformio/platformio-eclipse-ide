@@ -20,17 +20,11 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
-import java.io.File;
-import java.util.List;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public interface Command {
+public interface Input {
 
-	String command();
-
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	public void connect(OutputStream stream) throws IOException;
 
 }

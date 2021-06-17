@@ -28,10 +28,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.platformio.eclipse.ide.home.api.Environment;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.home.core.DefaultEnvironment;
 import org.platformio.eclipse.ide.home.core.LocalPlatformIO;
+import org.platformio.eclipse.ide.home.paths.HomeDirectory;
 import org.platformio.eclipse.ide.home.python.LocalPython;
 import org.platformio.eclipse.ide.home.python.Python;
 import org.platformio.eclipse.ide.home.python.PythonsRegistry;
@@ -41,16 +40,14 @@ import org.platformio.eclipse.ide.installer.python.PythonDistribution;
 
 public final class Installer {
 
-	private final Environment environment = new DefaultEnvironment();
-
 	public PlatformIO install(IProgressMonitor monitor) throws IOException, CoreException {
 		Optional<String> executable = registry().findPython();
 		if (!executable.isPresent()) {
 			monitor.setTaskName(Messages.Python_installation_message);
-			new PythonDistribution(environment).install(environment.home().resolve("python39")); //$NON-NLS-1$
+			new PythonDistribution().install(new HomeDirectory().get().resolve("python39")); //$NON-NLS-1$
 			return install(monitor);
 		}
-		Python python = new LocalPython(environment, executable.get());
+		Python python = new LocalPython(executable.get());
 
 		monitor.setTaskName(Messages.Installing_Platformio_message);
 		PioCoreDistribution pio = new LocalPioCoreDistribution(python);

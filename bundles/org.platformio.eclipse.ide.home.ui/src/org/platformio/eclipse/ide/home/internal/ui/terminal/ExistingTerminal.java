@@ -18,19 +18,28 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-public interface Command {
+import org.eclipse.ui.console.ConsolePlugin;
 
-	String command();
+public final class ExistingTerminal implements Supplier<Terminal> {
 
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	public Terminal get() {
+		Optional<Terminal> opened = Stream.of(ConsolePlugin.getDefault().getConsoleManager().getConsoles())
+				.filter(console -> console instanceof Terminal) //
+				.map(console -> (Terminal) console) //
+				.findAny();
+		if (opened.isPresent()) {
+			return opened.get();
+		}
+		Terminal terminal = new Terminal();
+		new OpenTerminal().accept(terminal);
+		return terminal;
+	}
 
 }

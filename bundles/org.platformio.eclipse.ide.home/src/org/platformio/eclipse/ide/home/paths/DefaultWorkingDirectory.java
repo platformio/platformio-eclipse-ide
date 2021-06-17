@@ -18,19 +18,16 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.paths;
 
-import java.io.File;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.function.Supplier;
 
-public interface Command {
+public final class DefaultWorkingDirectory implements Supplier<Path> {
 
-	String command();
-
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	public Path get() {
+		return new HomeDirectory().get().resolve("penv").resolve("Scripts"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
 
 }

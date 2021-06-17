@@ -18,22 +18,41 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.internal.ui;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.console.IConsoleConstants;
-import org.platformio.eclipse.ide.home.internal.ui.handlers.OpenHome;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-public final class PerspectiveFactory implements IPerspectiveFactory {
+import org.eclipse.ui.console.IOConsoleOutputStream;
+import org.platformio.eclipse.ide.home.api.Output;
+
+public final class TerminalOutput implements Output {
+
+	private final IOConsoleOutputStream output;
+
+	public TerminalOutput(IOConsoleOutputStream output) {
+		this.output = output;
+	}
 
 	@Override
-	public void createInitialLayout(IPageLayout layout) {
-		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
-		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM, 0.7f, layout.getEditorArea());
-		new OpenHome().accept(() -> PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	public void output(InputStream stream) throws IOException {
+		read(stream);
+	}
+
+	@Override
+	public void error(InputStream stream) throws IOException {
+		read(stream);
+	}
+
+	private void read(InputStream stream) throws IOException {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				output.write((line + System.lineSeparator()).getBytes());
+			}
+		}
 	}
 
 }

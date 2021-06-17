@@ -18,19 +18,15 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import org.eclipse.ui.console.IConsoleFactory;
 
-public interface Command {
+public final class TerminalFactory implements IConsoleFactory {
 
-	String command();
-
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	public void openConsole() {
+		new OpenTerminal().accept(new Terminal());
+	}
 
 }

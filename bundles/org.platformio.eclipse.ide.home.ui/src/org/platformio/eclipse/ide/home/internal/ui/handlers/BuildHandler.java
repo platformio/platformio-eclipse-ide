@@ -24,13 +24,20 @@ import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.platformio.eclipse.ide.home.api.Output;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
+import org.platformio.eclipse.ide.home.core.Messages;
 
 public final class BuildHandler extends PlatformIOHandler {
 
 	@Override
-	public void execute(PlatformIO pio, IProject project) throws CoreException {
-		pio.build(Paths.get(project.getDescription().getLocationURI()));
+	public void execute(PlatformIO pio, IProject project, Output output) throws CoreException {
+		pio.build(Paths.get(project.getDescription().getLocationURI()), output);
+	}
+
+	@Override
+	public String title() {
+		return Messages.Task_Build_Title;
 	}
 
 }

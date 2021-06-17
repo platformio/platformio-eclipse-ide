@@ -20,19 +20,19 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.core.setups;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
 import org.platformio.eclipse.ide.home.core.BaseCommand;
+import org.platformio.eclipse.ide.home.paths.DefaultWorkingDirectory;
 
 public final class InitProject extends BaseCommand {
 
 	private final String project;
 
-	public InitProject(Supplier<String> executable, String project, File workingDirectory) {
-		super(executable.get(), workingDirectory);
+	public InitProject(Supplier<String> executable, String project) {
+		super(executable.get(), new DefaultWorkingDirectory().get().toFile());
 		this.project = project;
 	}
 
