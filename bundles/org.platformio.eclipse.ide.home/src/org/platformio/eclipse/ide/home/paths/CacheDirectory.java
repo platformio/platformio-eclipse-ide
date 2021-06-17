@@ -18,19 +18,28 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.paths;
 
-import java.io.File;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.function.Supplier;
 
-public interface Command {
+public final class CacheDirectory implements Supplier<Path> {
 
-	String command();
-
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	public Path get() {
+		Path dir = new HomeDirectory().get().resolve(".cache"); //$NON-NLS-1$
+		if (!Files.isDirectory(dir)) {
+			try {
+				Files.createDirectories(dir);
+				Files.createDirectory(dir.resolve("downloads")); //$NON-NLS-1$
+			} catch (IOException e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		return dir;
+	}
 
 }

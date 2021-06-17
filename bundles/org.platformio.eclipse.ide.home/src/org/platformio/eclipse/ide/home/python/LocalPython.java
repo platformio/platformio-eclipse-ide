@@ -31,34 +31,30 @@ import java.util.stream.Stream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
-import org.platformio.eclipse.ide.home.api.CommandResult;
-import org.platformio.eclipse.ide.home.api.Environment;
-import org.platformio.eclipse.ide.home.core.setups.CustomCommand;
+import org.platformio.eclipse.ide.home.api.ExecutionResult;
+import org.platformio.eclipse.ide.home.api.Output;
+import org.platformio.eclipse.ide.home.core.CommandExecution;
+import org.platformio.eclipse.ide.home.core.CustomCommand;
+import org.platformio.eclipse.ide.home.core.DefaultInput;
 
 @Component
 public final class LocalPython implements Python {
 
-	private final Environment environment;
 	private final String executable;
 	private final String suffix;
 
 	public LocalPython() throws CoreException {
-		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		PythonsRegistry registry = registry();
-		this.environment = context.getService(context.getServiceReference(Environment.class));
 		this.executable = registry.findPython().get();
 		this.suffix = registry.executableSuffix();
 	}
 
-	public LocalPython(Environment environment, Path location) throws CoreException {
-		this(environment, location.toString());
+	public LocalPython(Path location) throws CoreException {
+		this(location.toString());
 	}
 
-	public LocalPython(Environment environment, String location) throws CoreException {
-		this.environment = environment;
+	public LocalPython(String location) throws CoreException {
 		this.executable = location;
 		this.suffix = registry().executableSuffix();
 	}
@@ -79,48 +75,26 @@ public final class LocalPython implements Python {
 	}
 
 	@Override
-	public CommandResult executeModule(String module, String... moduleArgs) {
+	public ExecutionResult executeModule(String module, String... moduleArgs) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
 		executionArgs.addAll(Arrays.asList(moduleArgs));
-		return environment
-				.execute(new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()));
+		return new CommandExecution(new CustomCommand(executable, executionArgs)).start();
 	}
 
 	@Override
-	public void executeLasting(String module, String... moduleArgs) {
-		List<String> executionArgs = new LinkedList<>();
-		executionArgs.addAll(Arrays.asList("-m", module)); //$NON-NLS-1$
-		executionArgs.addAll(Arrays.asList(moduleArgs));
-		environment.executeLasting(
-				new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()), module);
-	}
-
-	@Override
-	public void killProcess(String module) {
-		environment.killProcess(module);
-	}
-
-	@Override
-	public CommandResult executeScript(Path location, String... args) {
+	public ExecutionResult executeScript(Path location, String... args) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.add(location.toString());
 		executionArgs.addAll(Arrays.asList(args));
-		return environment
-				.execute(new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()));
+		return new CommandExecution(new CustomCommand(executable, executionArgs)).start();
 	}
 
 	@Override
-	public CommandResult executeCode(String code) {
+	public ExecutionResult executeCode(String code) {
 		List<String> executionArgs = new LinkedList<>();
 		executionArgs.addAll(Arrays.asList("-c", "\"" + code + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return environment
-				.execute(new CustomCommand(executable, executionArgs, environment.defaultWorkingDirectory().toFile()));
-	}
-
-	@Override
-	public Environment environment() {
-		return environment;
+		return new CommandExecution(new CustomCommand(executable, executionArgs)).start();
 	}
 
 	private PythonsRegistry registry() throws CoreException {
@@ -136,6 +110,11 @@ public final class LocalPython implements Python {
 	@Override
 	public String suffix() {
 		return suffix;
+	}
+
+	@Override
+	public void execute(List<String> arguments, Output output) {
+		new CommandExecution(new CustomCommand(executable, arguments), new DefaultInput(), output).start();
 	}
 
 }

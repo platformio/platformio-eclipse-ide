@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.platformio.eclipse.ide.home.paths.CacheDirectory;
 import org.platformio.eclipse.ide.home.python.Python;
 
 import com.google.gson.JsonElement;
@@ -41,8 +42,9 @@ public final class Dump {
 	public Dump() throws IOException {
 		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		Python python = context.getService(context.getServiceReference(Python.class));
-		Path script = python.environment().cache().resolve("get-platformio.py"); //$NON-NLS-1$
-		Path dump = python.environment().cache().resolve("tmpdir/state.json"); //$NON-NLS-1$
+		Path cache = new CacheDirectory().get();
+		Path script = cache.resolve("get-platformio.py"); //$NON-NLS-1$
+		Path dump = cache.resolve("tmpdir/state.json"); //$NON-NLS-1$
 		python.executeScript(script, "check", "core", "--dump-state", dump.toString()); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		try (Reader reader = Files.newBufferedReader(dump)) {
 			JsonElement root = JsonParser.parseReader(reader);

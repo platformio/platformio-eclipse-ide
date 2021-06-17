@@ -18,19 +18,27 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.paths;
 
-import java.io.File;
-import java.util.List;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.function.Supplier;
 
-public interface Command {
+public final class HomeDirectory implements Supplier<Path> {
 
-	String command();
+	@Override
+	public Path get() {
+		Path directory = Optional.ofNullable(System.getenv("PLATFORMIO_HOME_DIR")).map(s -> Paths.get(s)) //$NON-NLS-1$
+				.orElse(Paths.get(System.getProperty("user.home"), ".platformio")); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!isASCIIValid(directory)) {
+			directory = directory.getRoot().resolve(".platformio"); //$NON-NLS-1$
+		}
+		return directory;
+	}
 
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	private boolean isASCIIValid(Path result) {
+		return result.toAbsolutePath().toString().chars().anyMatch(ch -> ch <= 127);
+	}
 
 }

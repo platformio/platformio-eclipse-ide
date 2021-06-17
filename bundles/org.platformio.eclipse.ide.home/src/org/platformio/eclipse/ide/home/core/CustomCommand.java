@@ -18,19 +18,29 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.core;
 
 import java.io.File;
 import java.util.List;
 
-public interface Command {
+import org.platformio.eclipse.ide.home.paths.DefaultWorkingDirectory;
 
-	String command();
+public final class CustomCommand extends BaseCommand {
 
-	List<String> arguments();
+	private final List<String> arguments;
 
-	File workingDirectory();
+	public CustomCommand(String command, List<String> arguments, File workingDirectory) {
+		super(command, workingDirectory);
+		this.arguments = arguments;
+	}
 
-	List<String> asList();
+	public CustomCommand(String command, List<String> arguments) {
+		this(command, arguments, new DefaultWorkingDirectory().get().toFile());
+	}
+
+	@Override
+	public List<String> arguments() {
+		return arguments;
+	}
 
 }

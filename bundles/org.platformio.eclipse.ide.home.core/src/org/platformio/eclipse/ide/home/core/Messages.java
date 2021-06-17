@@ -35,6 +35,8 @@ public class Messages {
 	public static String View_Not_Opened_Error_text;
 	public static String Select_Project_Title;
 	public static String Select_Project_Message;
+	public static String Terminal_Top_Message;
+	public static String Terminal_Unknown_Message;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -18,19 +18,28 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleView;
+import org.eclipse.ui.console.IOConsole;
+import org.eclipse.ui.part.IPageBookViewPage;
+import org.osgi.framework.FrameworkUtil;
 
-public interface Command {
+public final class Terminal extends IOConsole {
 
-	String command();
+	public Terminal() {
+		super("Terminal", ImageDescriptor //$NON-NLS-1$
+				.createFromURL(FileLocator.find(FrameworkUtil.getBundle(IConsole.class),
+						new Path("icons/full/cview16/console_view.png"), null))); //$NON-NLS-1$
+	}
 
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	public IPageBookViewPage createPage(IConsoleView view) {
+		return new TerminalPage(this, view);
+	}
 
 }

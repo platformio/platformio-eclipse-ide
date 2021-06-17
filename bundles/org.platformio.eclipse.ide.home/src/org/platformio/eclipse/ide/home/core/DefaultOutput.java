@@ -18,19 +18,36 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.core;
 
-import java.io.File;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-public interface Command {
+import org.platformio.eclipse.ide.home.api.Output;
 
-	String command();
+public final class DefaultOutput implements Output {
 
-	List<String> arguments();
+	@Override
+	public void output(InputStream stream) {
+		read(stream);
+	}
 
-	File workingDirectory();
+	@Override
+	public void error(InputStream stream) {
+		read(stream);
+	}
 
-	List<String> asList();
+	private void read(InputStream stream) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				System.out.println(line);
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

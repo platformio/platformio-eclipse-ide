@@ -22,6 +22,7 @@ package org.platformio.eclipse.ide.home.api;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 public interface PlatformIO {
 
@@ -31,10 +32,12 @@ public interface PlatformIO {
 
 	void stop() throws IOException;
 
-	void build(Path path);
+	void build(Path path, Input input, Output output);
 
-	void clean(Path path);
+	void clean(Path path, Input input, Output output);
 
-	void upload(Path path);
+	void upload(Path path, Input input, Output output);
+
+	void execute(List<String> arguments, Output output);
 
 }

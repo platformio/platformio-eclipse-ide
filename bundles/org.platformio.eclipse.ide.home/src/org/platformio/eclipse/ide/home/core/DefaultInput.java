@@ -18,19 +18,17 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.core;
 
-import java.io.File;
-import java.util.List;
+import java.io.OutputStream;
 
-public interface Command {
+import org.platformio.eclipse.ide.home.api.Input;
 
-	String command();
+public final class DefaultInput implements Input {
 
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	public void connect(OutputStream stream) {
+		// Do nothing
+	}
 
 }

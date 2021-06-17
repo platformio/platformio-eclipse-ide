@@ -58,6 +58,10 @@
             class="org.platformio.eclipse.ide.home.internal.ui.handlers.CleanHandler"
             commandId="org.platformio.eclipse.ide.home.ui.clean">
       </handler>
+      <handler
+            class="org.platformio.eclipse.ide.home.internal.ui.terminal.OpenTerminalHandler"
+            commandId="org.platformio.eclipse.ide.home.ui.terminal">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -76,6 +80,10 @@
       <command
             id="org.platformio.eclipse.ide.home.ui.upload"
             name="%command.upload.name">
+      </command>
+      <command
+            id="org.platformio.eclipse.ide.home.ui.terminal"
+            name="%command.terminal.name">
       </command>
    </extension>
    <extension
@@ -108,8 +116,23 @@
                   label="%command.clean.name"
                   style="push">
             </command>
+            <command
+                  commandId="org.platformio.eclipse.ide.home.ui.terminal"
+                  icon="platform:/plugin/org.eclipse.ui.console/icons/full/cview16/console_view.png"
+                  label="%command.terminal.name"
+                  style="push">
+            </command>
          </toolbar>
       </menuContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalFactory"
+            icon="platform:/plugin/org.eclipse.ui.console/icons/full/cview16/console_view.png"
+            label="%terminal.label">
+      </consoleFactory>
    </extension>
 
 </plugin>

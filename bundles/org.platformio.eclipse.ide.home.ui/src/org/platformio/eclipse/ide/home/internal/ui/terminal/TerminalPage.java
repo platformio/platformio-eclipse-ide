@@ -18,19 +18,23 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.console.IConsoleView;
+import org.eclipse.ui.console.TextConsole;
+import org.eclipse.ui.console.TextConsolePage;
+import org.eclipse.ui.console.TextConsoleViewer;
 
-public interface Command {
+public final class TerminalPage extends TextConsolePage {
 
-	String command();
+	public TerminalPage(TextConsole console, IConsoleView view) {
+		super(console, view);
+	}
 
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	@Override
+	protected TextConsoleViewer createViewer(Composite parent) {
+		return new TerminalViewer(parent, (Terminal) getConsole());
+	}
 
 }

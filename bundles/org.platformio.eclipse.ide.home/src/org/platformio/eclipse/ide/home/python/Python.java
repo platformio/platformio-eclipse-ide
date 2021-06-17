@@ -21,9 +21,10 @@
 package org.platformio.eclipse.ide.home.python;
 
 import java.nio.file.Path;
+import java.util.List;
 
-import org.platformio.eclipse.ide.home.api.CommandResult;
-import org.platformio.eclipse.ide.home.api.Environment;
+import org.platformio.eclipse.ide.home.api.ExecutionResult;
+import org.platformio.eclipse.ide.home.api.Output;
 
 public interface Python {
 
@@ -33,17 +34,13 @@ public interface Python {
 
 	boolean moduleInstalled(String module);
 
-	CommandResult executeCode(String code);
+	void execute(List<String> arguments, Output output);
 
-	CommandResult executeScript(Path name, String... args);
+	ExecutionResult executeCode(String code);
 
-	CommandResult executeModule(String module, String... args);
+	ExecutionResult executeScript(Path name, String... args);
 
-	void executeLasting(String module, String... args);
-
-	void killProcess(String module);
-
-	Environment environment();
+	ExecutionResult executeModule(String module, String... args);
 
 	String suffix();
 

@@ -24,13 +24,15 @@ import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.platformio.eclipse.ide.home.api.Input;
+import org.platformio.eclipse.ide.home.api.Output;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 
 public final class CleanHandler extends PlatformIOHandler {
 
 	@Override
-	public void execute(PlatformIO pio, IProject project) throws CoreException {
-		pio.clean(Paths.get(project.getDescription().getLocationURI()));
+	public void execute(PlatformIO pio, IProject project, Input input, Output output) throws CoreException {
+		pio.clean(Paths.get(project.getDescription().getLocationURI()), input, output);
 	}
 
 }

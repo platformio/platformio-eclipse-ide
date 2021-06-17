@@ -20,17 +20,12 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.home.api;
 
-import java.io.File;
-import java.util.List;
+import java.io.InputStream;
 
-public interface Command {
+public interface Output {
 
-	String command();
+	public void output(InputStream stream);
 
-	List<String> arguments();
-
-	File workingDirectory();
-
-	List<String> asList();
+	public void error(InputStream stream);
 
 }

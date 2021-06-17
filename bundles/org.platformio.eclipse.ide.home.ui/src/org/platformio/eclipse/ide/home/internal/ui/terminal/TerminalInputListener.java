@@ -18,19 +18,31 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.api;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import java.util.function.Consumer;
 
-public interface Command {
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocumentListener;
 
-	String command();
+public final class TerminalInputListener implements IDocumentListener {
 
-	List<String> arguments();
+	private final Consumer<DocumentEvent> handler;
 
-	File workingDirectory();
+	public TerminalInputListener(Consumer<DocumentEvent> handler) {
+		this.handler = handler;
+	}
 
-	List<String> asList();
+	@Override
+	public void documentAboutToBeChanged(DocumentEvent event) {
+		// Do nothing
+	}
+
+	@Override
+	public void documentChanged(DocumentEvent event) {
+		if (System.lineSeparator().equals(event.getText())) {
+			handler.accept(event);
+		}
+	}
 
 }

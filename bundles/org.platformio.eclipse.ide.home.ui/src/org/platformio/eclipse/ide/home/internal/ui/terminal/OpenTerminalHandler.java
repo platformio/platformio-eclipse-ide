@@ -18,25 +18,18 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.home.core.setups;
+package org.platformio.eclipse.ide.home.internal.ui.terminal;
 
-import java.io.File;
-import java.util.List;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 
-import org.platformio.eclipse.ide.home.core.BaseCommand;
-
-public final class CustomCommand extends BaseCommand {
-
-	private final List<String> arguments;
-
-	public CustomCommand(String command, List<String> arguments, File workingDirectory) {
-		super(command, workingDirectory);
-		this.arguments = arguments;
-	}
+public final class OpenTerminalHandler extends AbstractHandler {
 
 	@Override
-	public List<String> arguments() {
-		return arguments;
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		new OpenTerminal().accept(new Terminal());
+		return null;
 	}
 
 }

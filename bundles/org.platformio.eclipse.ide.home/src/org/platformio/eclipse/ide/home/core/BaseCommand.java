@@ -21,6 +21,8 @@
 package org.platformio.eclipse.ide.home.core;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.platformio.eclipse.ide.home.api.Command;
 
@@ -42,6 +44,14 @@ public abstract class BaseCommand implements Command {
 	@Override
 	public final File workingDirectory() {
 		return workingDirectory;
+	}
+
+	@Override
+	public final List<String> asList() {
+		List<String> input = new LinkedList<>();
+		input.add(command());
+		input.addAll(arguments());
+		return input;
 	}
 
 }
