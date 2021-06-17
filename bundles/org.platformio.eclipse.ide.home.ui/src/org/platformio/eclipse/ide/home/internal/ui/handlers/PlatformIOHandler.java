@@ -34,10 +34,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.platformio.eclipse.ide.home.api.Input;
 import org.platformio.eclipse.ide.home.api.Output;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.home.core.DefaultInput;
 import org.platformio.eclipse.ide.home.internal.ui.terminal.ExistingTerminal;
 import org.platformio.eclipse.ide.home.internal.ui.terminal.Terminal;
 import org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalOutput;
@@ -53,7 +51,7 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
 				Job.create(getClass().getName(), monitor -> {
 					try (IOConsoleOutputStream output = terminal.newOutputStream()) {
-						execute(pio, project.get(), new DefaultInput(), new TerminalOutput(output));
+						execute(pio, project.get(), new TerminalOutput(output));
 					} catch (IOException e) {
 						Platform.getLog(getClass()).error(e.getMessage(), e);
 					}
@@ -63,6 +61,6 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 		return null;
 	}
 
-	public abstract void execute(PlatformIO pio, IProject project, Input input, Output output) throws CoreException;
+	public abstract void execute(PlatformIO pio, IProject project, Output output) throws CoreException;
 
 }

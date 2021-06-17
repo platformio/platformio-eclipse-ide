@@ -44,6 +44,10 @@ public final class CommandExecution implements Execution {
 		this.executing = new ArrayList<>(1);
 	}
 
+	public CommandExecution(Command command, Output output) {
+		this(command, new DefaultInput(), output);
+	}
+
 	public CommandExecution(Command command) {
 		this(command, new DefaultInput(), new DefaultOutput());
 	}

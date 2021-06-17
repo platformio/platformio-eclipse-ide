@@ -32,11 +32,11 @@ public interface PlatformIO {
 
 	void stop() throws IOException;
 
-	void build(Path path, Input input, Output output);
+	void build(Path path, Output output);
 
-	void clean(Path path, Input input, Output output);
+	void clean(Path path, Output output);
 
-	void upload(Path path, Input input, Output output);
+	void upload(Path path, Output output);
 
 	void execute(List<String> arguments, Output output);
 

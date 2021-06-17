@@ -33,7 +33,6 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.Command;
 import org.platformio.eclipse.ide.home.api.Execution;
-import org.platformio.eclipse.ide.home.api.Input;
 import org.platformio.eclipse.ide.home.api.Output;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.core.setups.Build;
@@ -89,26 +88,26 @@ public final class LocalPlatformIO implements PlatformIO {
 	@Override
 	public void initProject(Path path) throws IOException {
 		execute(new InitProject(new PIOExecutable.OfDump(installation, python.suffix()), path.toString()),
-				new DefaultInput(), new DefaultOutput());
+				new DefaultOutput());
 	}
 
 	@Override
-	public void build(Path path, Input input, Output output) {
-		execute(new Build(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()), input, output);
+	public void build(Path path, Output output) {
+		execute(new Build(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()), output);
 	}
 
 	@Override
-	public void clean(Path path, Input input, Output output) {
-		execute(new Clean(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()), input, output);
+	public void clean(Path path, Output output) {
+		execute(new Clean(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()), output);
 	}
 
 	@Override
-	public void upload(Path path, Input input, Output output) {
-		execute(new Upload(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()), input, output);
+	public void upload(Path path, Output output) {
+		execute(new Upload(new PIOExecutable.OfDump(installation, python.suffix()), path.toFile()), output);
 	}
 
-	private void execute(Command command, Input input, Output output) {
-		new CommandExecution(command, input, output).start();
+	private void execute(Command command, Output output) {
+		new CommandExecution(command, output).start();
 	}
 
 	private void launch() {
@@ -123,7 +122,7 @@ public final class LocalPlatformIO implements PlatformIO {
 	@Override
 	public void execute(List<String> command, Output output) {
 		new CommandExecution(new CustomCommand(new PIOExecutable.OfDump(installation, python.suffix()).get(), command),
-				new DefaultInput(), output).start();
+				output).start();
 	}
 
 }
