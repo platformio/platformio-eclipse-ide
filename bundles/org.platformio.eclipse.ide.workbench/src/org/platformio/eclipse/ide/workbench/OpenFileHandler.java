@@ -18,14 +18,13 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.internal.ui;
+package org.platformio.eclipse.ide.workbench;
+
+import java.util.Optional;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IRegion;
@@ -50,21 +49,21 @@ public final class OpenFileHandler implements IDECommand {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().syncExec(() -> {
 			try {
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
 				JsonObject result = element.getAsJsonObject().get("params").getAsJsonObject(); //$NON-NLS-1$
 				String path = result.get("path").getAsString(); //$NON-NLS-1$
 				int line = result.get("line").getAsInt(); //$NON-NLS-1$
-				IFile file = workspace.getRoot().getFileForLocation(new Path(path));
-				IWorkbenchWindow window = window(workbench);
-				IEditorPart editor = IDE.openEditor(window.getActivePage(), file);
-				if (editor instanceof ITextEditor) {
-					IRegion region = ((ITextEditor) editor).getDocumentProvider().getDocument(editor.getEditorInput())
-							.getLineInformation(line - 1);
-					((ITextEditor) editor).getSelectionProvider()
-							.setSelection(new TextSelection(region.getOffset(), region.getLength()));
+				Optional<IFile> file = new OpenFile(path).get();
+				if (file.isPresent()) {
+					IWorkbenchWindow window = window(workbench);
+					IEditorPart editor = IDE.openEditor(window.getActivePage(), file.get());
+					if (editor instanceof ITextEditor) {
+						IRegion region = ((ITextEditor) editor).getDocumentProvider()
+								.getDocument(editor.getEditorInput()).getLineInformation(line - 1);
+						((ITextEditor) editor).getSelectionProvider()
+								.setSelection(new TextSelection(region.getOffset(), region.getLength()));
+					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				Platform.getLog(getClass()).info(e.toString());
 			}
 		});

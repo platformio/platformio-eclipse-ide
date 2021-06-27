@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.workbench.handlers;
+package org.platformio.eclipse.ide.workbench;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,18 +40,21 @@ import org.platformio.eclipse.ide.home.net.IDECommand;
 import com.google.gson.JsonElement;
 
 @Component
-public final class OpenProjectHandler implements IDECommand {
+public final class ImportProject implements IDECommand {
 
 	private final PlatformIO installation;
 
-	public OpenProjectHandler() {
+	public ImportProject() {
 		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		this.installation = context.getService(context.getServiceReference(PlatformIO.class));
 	}
 
 	@Override
 	public void execute(JsonElement element) {
-		Path location = Paths.get(element.getAsJsonObject().get("params").getAsString()); //$NON-NLS-1$
+		execute(Paths.get(element.getAsJsonObject().get("params").getAsString())); //$NON-NLS-1$
+	}
+
+	public void execute(Path location) {
 		init(location);
 		open(location);
 	}
