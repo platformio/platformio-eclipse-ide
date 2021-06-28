@@ -20,6 +20,9 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.workbench;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -34,6 +37,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.platformio.eclipse.ide.home.api.PlatformIO;
 import org.platformio.eclipse.ide.home.net.IDECommand;
 import org.platformio.eclipse.ide.workspace.OpenFile;
 
@@ -42,10 +48,26 @@ import com.google.gson.JsonElement;
 @Component
 public final class OpenFileHandler implements IDECommand {
 
+	private final List<PlatformIO> pio = new ArrayList<>(1);
+
 	@Override
 	public void execute(JsonElement element) {
 		OpenEditorData data = new OpenEditorData(element);
-		new OpenFile(data.path()).get().ifPresent(file -> open(file, data.line()));
+		new OpenFile(data.path(), () -> pio.get(0)).get().ifPresent(file -> open(file, data.line()));
+	}
+
+	@Override
+	public String method() {
+		return "open_text_document"; //$NON-NLS-1$
+	}
+
+	@Reference(cardinality = ReferenceCardinality.MANDATORY)
+	public void bindPlatformIO(PlatformIO reference) {
+		pio.set(0, reference);
+	}
+
+	public void unbindPlatformIO(PlatformIO reference) {
+		pio.remove(reference);
 	}
 
 	private void open(IFile file, int line) {
@@ -77,10 +99,4 @@ public final class OpenFileHandler implements IDECommand {
 		}
 		return window;
 	}
-
-	@Override
-	public String method() {
-		return "open_text_document"; //$NON-NLS-1$
-	}
-
 }

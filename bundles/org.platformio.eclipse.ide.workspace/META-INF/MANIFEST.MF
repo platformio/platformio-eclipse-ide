@@ -15,4 +15,3 @@ Require-Bundle: org.platformio.eclipse.ide.home;bundle-version="0.0.0",
 Bundle-ActivationPolicy: lazy
 Export-Package: org.platformio.eclipse.ide.workspace
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Service-Component: OSGI-INF/org.platformio.eclipse.ide.workspace.ImportProject.xml

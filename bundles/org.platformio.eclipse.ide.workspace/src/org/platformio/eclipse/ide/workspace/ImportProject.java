@@ -22,68 +22,41 @@ package org.platformio.eclipse.ide.workspace;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.api.PlatformIO;
-import org.platformio.eclipse.ide.home.net.IDECommand;
 
-import com.google.gson.JsonElement;
-
-@Component
-public final class ImportProject implements IDECommand {
+public final class ImportProject {
 
 	private final PlatformIO installation;
 
-	public ImportProject() {
-		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
-		this.installation = context.getService(context.getServiceReference(PlatformIO.class));
+	public ImportProject(PlatformIO installation) {
+		this.installation = installation;
 	}
 
-	@Override
-	public void execute(JsonElement element) {
-		execute(Paths.get(element.getAsJsonObject().get("params").getAsString())); //$NON-NLS-1$
-	}
-
-	public void execute(Path location) {
+	public void execute(Path location) throws IOException, CoreException {
 		init(location);
 		open(location);
 	}
 
-	private void init(Path path) {
-		try {
-			installation.initProject(path);
-		} catch (IOException e) {
-			Platform.getLog(getClass()).error(e.toString());
-		}
+	private void init(Path path) throws IOException {
+		installation.initProject(path);
 	}
 
-	private void open(Path path) {
-		try {
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			IProjectDescription description = workspace.loadProjectDescription(
-					new org.eclipse.core.runtime.Path(path.toString() + java.io.File.separator + ".project")); //$NON-NLS-1$
-			IProject project = workspace.getRoot().getProject(path.toFile().getName());
-			NullProgressMonitor monitor = new NullProgressMonitor();
-			project.create(description, monitor);
-			project.open(monitor);
-		} catch (CoreException e) {
-			Platform.getLog(getClass()).log(e.getStatus());
-		}
-	}
-
-	@Override
-	public String method() {
-		return "open_project"; //$NON-NLS-1$
+	private void open(Path path) throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProjectDescription description = workspace.loadProjectDescription(
+				new org.eclipse.core.runtime.Path(path.toString() + java.io.File.separator + ".project")); //$NON-NLS-1$
+		IProject project = workspace.getRoot().getProject(path.toFile().getName());
+		IProgressMonitor monitor = new NullProgressMonitor();
+		project.create(description, monitor);
+		project.open(monitor);
 	}
 
 }
