@@ -45,6 +45,8 @@
 		<module>..\..\bundles\org.platformio.eclipse.ide.workbench</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.workspace</module>
 		<module>..\..\features\org.platformio.eclipse.ide.feature</module>
+		
+		<module>..\..\tests\org.platformio.eclipse.ide.workspace.test</module>
 
 		<module>..\..\releng\org.platformio.eclipse.ide.repository</module>
 	</modules>
