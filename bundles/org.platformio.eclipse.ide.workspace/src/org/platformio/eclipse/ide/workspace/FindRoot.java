@@ -18,25 +18,29 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.workbench;
+package org.platformio.eclipse.ide.workspace;
 
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.function.Predicate;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
- * 
- * Applicable to path of directory that is supposed to be PlatformIO project
- * root.
- *
+ * An utility to find project's root by a single file it contains.
  */
-public final class IsRoot implements Predicate<String> {
-
-	private final String config = "platformio.ini"; //$NON-NLS-1$
+public final class FindRoot implements Function<String, Optional<String>> {
 
 	@Override
-	public boolean test(String path) {
-		return Files.exists(Paths.get(path).resolve(config));
+	public Optional<String> apply(String path) {
+		Path segment = Paths.get(path);
+		IsRoot isRoot = new IsRoot();
+		while (segment.getParent() != null) {
+			segment = segment.getParent();
+			if (isRoot.test(segment.toString())) {
+				return Optional.of(segment.toString());
+			}
+		}
+		return Optional.empty();
 	}
 
 }

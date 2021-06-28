@@ -18,14 +18,13 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.workbench;
+package org.platformio.eclipse.ide.workspace;
 
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 
@@ -37,23 +36,22 @@ public final class OpenFile implements Supplier<Optional<IFile>> {
 		this.path = path;
 	}
 
-	private IFile fromWorkspace() {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		return workspace.getRoot().getFileForLocation(new Path(path));
+	private Optional<IFile> fromWorkspace() {
+		return Optional.ofNullable(ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(path)));
 	}
 
-	private IFile fromImported() {
+	private Optional<IFile> fromImported() {
 		Optional<String> found = new FindRoot().apply(path);
 		if (found.isPresent()) {
 			new ImportProject().execute(Paths.get(found.get()));
 			return fromWorkspace();
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	@Override
 	public Optional<IFile> get() {
-		return Optional.of(Optional.ofNullable(fromWorkspace()).orElse(fromImported()));
+		return fromWorkspace().or(this::fromImported);
 	}
 
 }

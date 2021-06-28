@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.workbench;
+package org.platformio.eclipse.ide.workspace;
 
 import java.io.IOException;
 import java.nio.file.Path;
