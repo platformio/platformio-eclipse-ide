@@ -117,7 +117,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+   
    <plugin
          id="org.platformio.eclipse.ide.workspace"
          download-size="0"

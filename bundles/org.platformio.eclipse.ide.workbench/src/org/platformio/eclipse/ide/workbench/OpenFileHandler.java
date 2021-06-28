@@ -18,14 +18,11 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.internal.ui;
+package org.platformio.eclipse.ide.workbench;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IRegion;
@@ -38,23 +35,23 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.osgi.service.component.annotations.Component;
 import org.platformio.eclipse.ide.home.net.IDECommand;
+import org.platformio.eclipse.ide.workspace.OpenFile;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 @Component
 public final class OpenFileHandler implements IDECommand {
 
 	@Override
 	public void execute(JsonElement element) {
+		OpenEditorData data = new OpenEditorData(element);
+		new OpenFile(data.path()).get().ifPresent(file -> open(file, data.line()));
+	}
+
+	private void open(IFile file, int line) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().syncExec(() -> {
 			try {
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				JsonObject result = element.getAsJsonObject().get("params").getAsJsonObject(); //$NON-NLS-1$
-				String path = result.get("path").getAsString(); //$NON-NLS-1$
-				int line = result.get("line").getAsInt(); //$NON-NLS-1$
-				IFile file = workspace.getRoot().getFileForLocation(new Path(path));
 				IWorkbenchWindow window = window(workbench);
 				IEditorPart editor = IDE.openEditor(window.getActivePage(), file);
 				if (editor instanceof ITextEditor) {
@@ -64,7 +61,6 @@ public final class OpenFileHandler implements IDECommand {
 							.setSelection(new TextSelection(region.getOffset(), region.getLength()));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				Platform.getLog(getClass()).info(e.toString());
 			}
 		});
