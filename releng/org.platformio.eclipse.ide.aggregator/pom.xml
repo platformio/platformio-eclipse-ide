@@ -34,20 +34,21 @@
 
 		<module>..\..\features\org.platformio.eclipse.ide.license.feature</module>
 
-		<module>..\..\bundles\org.platformio.eclipse.ide</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.installer</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.installer.win32</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.installer.macosx</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.installer.linux</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.home</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.home.core</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.home.ui</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.workbench</module>
-		<module>..\..\bundles\org.platformio.eclipse.ide.workspace</module>
 		<module>..\..\features\org.platformio.eclipse.ide.core.feature</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core.installer</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core.installer.win32</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core.installer.macosx</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core.installer.linux</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core.workbench</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.core.workspace</module>
+		<module>..\..\tests\org.platformio.eclipse.ide.core.workspace.tests</module>
+
 		<module>..\..\features\org.platformio.eclipse.ide.home.feature</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.home</module>
+		<module>..\..\bundles\org.platformio.eclipse.ide.home.ui</module>
 		
-		<module>..\..\tests\org.platformio.eclipse.ide.workspace.tests</module>
 
 		<module>..\..\releng\org.platformio.eclipse.ide.repository</module>
 	</modules>

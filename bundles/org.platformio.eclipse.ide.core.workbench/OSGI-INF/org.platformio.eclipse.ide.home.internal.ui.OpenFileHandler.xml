@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.platformio.eclipse.ide.home.internal.ui.OpenFileHandler">
+   <service>
+      <provide interface="org.platformio.eclipse.ide.home.net.IDECommand"/>
+   </service>
+   <reference bind="bindPlatformIO" cardinality="1..1" interface="org.platformio.eclipse.ide.home.api.PlatformIO" name="PlatformIO" unbind="unbindPlatformIO"/>
+   <implementation class="org.platformio.eclipse.ide.home.internal.ui.OpenFileHandler"/>
+</scr:component>

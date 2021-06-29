@@ -23,8 +23,7 @@
       id="org.platformio.eclipse.ide.home.feature"
       label="%featureName"
       version="0.1.0.qualifier"
-      provider-name="%providerName"
-      plugin="org.platformio.eclipse.ide">
+      provider-name="%providerName">
 
    <description>
       %description

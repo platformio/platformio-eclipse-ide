@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.platformio.eclipse.ide.core.workspace
+Bundle-Version: 0.1.0.qualifier
+Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: org.platformio.eclipse.ide.workspace
+Require-Bundle: org.platformio.eclipse.ide.core;bundle-version="0.0.0",
+ org.eclipse.osgi.services;bundle-version="0.0.0",
+ org.eclipse.osgi;bundle-version="0.0.0",
+ org.eclipse.core.resources;bundle-version="0.0.0",
+ org.eclipse.equinox.common;bundle-version="0.0.0",
+ com.google.gson;bundle-version="0.0.0",
+ org.eclipse.core.runtime;bundle-version="0.0.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: org.platformio.eclipse.ide.core.workspace
+Bundle-RequiredExecutionEnvironment: JavaSE-11
