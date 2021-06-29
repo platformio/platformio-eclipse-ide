@@ -54,14 +54,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.platformio.eclipse.ide.installer"
+         id="org.platformio.eclipse.ide.core.installer"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.platformio.eclipse.ide.installer.win32"
+         id="org.platformio.eclipse.ide.core.installer.win32"
          os="win32"
          arch="x86_64"
          download-size="0"
@@ -71,7 +71,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.platformio.eclipse.ide.installer.macosx"
+         id="org.platformio.eclipse.ide.core.installer.macosx"
          os="macosx"
          arch="x86_64"
          download-size="0"
@@ -81,7 +81,7 @@
          unpack="false"/>
          
     <plugin
-         id="org.platformio.eclipse.ide.installer.linux"
+         id="org.platformio.eclipse.ide.core.installer.linux"
          os="linux"
          arch="x86_64"
          download-size="0"
@@ -89,37 +89,16 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
-	<plugin
-         id="org.platformio.eclipse.ide.home"
+         
+    <plugin
+         id="org.platformio.eclipse.ide.core.workspace"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-	<plugin
-         id="org.platformio.eclipse.ide.home.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-	<plugin
-         id="org.platformio.eclipse.ide.home.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.platformio.eclipse.ide.workbench"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-   
-   <plugin
-         id="org.platformio.eclipse.ide.workspace"
+         
+    <plugin
+         id="org.platformio.eclipse.ide.core.workbench"
          download-size="0"
          install-size="0"
          version="0.0.0"

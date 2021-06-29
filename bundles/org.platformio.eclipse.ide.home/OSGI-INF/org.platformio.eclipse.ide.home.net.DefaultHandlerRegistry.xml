@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.platformio.eclipse.ide.home.net.DefaultHandlerRegistry">
-   <service>
-      <provide interface="org.platformio.eclipse.ide.home.net.HandlerRegistry"/>
-   </service>
-   <reference bind="bind" cardinality="0..n" interface="org.platformio.eclipse.ide.home.net.IDECommand" unbind="unbind"/>
-   <implementation class="org.platformio.eclipse.ide.home.net.DefaultHandlerRegistry"/>
-</scr:component>

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.platformio.eclipse.ide.workspace.tests
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.platformio.eclipse.ide.core.workspace.tests
+Bundle-Version: 0.1.0.qualifier
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
+ org.eclipse.core.runtime;bundle-version="0.0.0",
+ org.junit;bundle-version="4.13.0",
+ org.platformio.eclipse.ide.core.workspace;bundle-version="0.0.0",
+ org.platformio.eclipse.ide.core;bundle-version="0.0.0"

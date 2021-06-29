@@ -22,20 +22,11 @@
 -->
 <plugin>
    <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.platformio.eclipse.ide.home.internal.ui.PerspectiveFactory"
-            icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
-            id="org.platformio.eclipse.ide.home.ui.perspective"
-            name="%perspective.name">
-      </perspective>
-   </extension>
-   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="org.platformio.eclipse.ide.home.internal.ui.HomeView"
             default="false"
-            icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
+            icon="platform:/plugin/org.platformio.eclipse.ide.core.workbench/icons/eview16/platformio.png"
             id="org.platformio.eclipse.ide.home.ui.view"
             name="%view.name">
       </editor>
@@ -46,47 +37,15 @@
             class="org.platformio.eclipse.ide.home.internal.ui.handlers.OpenHomeHandler"
             commandId="org.platformio.eclipse.ide.home.ui.openView">
       </handler>
-      <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.handlers.BuildHandler"
-            commandId="org.platformio.eclipse.ide.home.ui.build">
-      </handler>
-      <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.handlers.UploadHandler"
-            commandId="org.platformio.eclipse.ide.home.ui.upload">
-      </handler>
-      <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.handlers.CleanHandler"
-            commandId="org.platformio.eclipse.ide.home.ui.clean">
-      </handler>
-      <handler
-            class="org.platformio.eclipse.ide.home.internal.ui.terminal.OpenTerminalHandler"
-            commandId="org.platformio.eclipse.ide.home.ui.terminal">
-      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
-      <command
+         <command
             id="org.platformio.eclipse.ide.home.ui.openView"
             name="%command.home.name">
       </command>
-      <command
-            id="org.platformio.eclipse.ide.home.ui.build"
-            name="%command.build.name">
-      </command>
-      <command
-            id="org.platformio.eclipse.ide.home.ui.clean"
-            name="%command.clean.name">
-      </command>
-      <command
-            id="org.platformio.eclipse.ide.home.ui.upload"
-            name="%command.upload.name">
-      </command>
-      <command
-            id="org.platformio.eclipse.ide.home.ui.terminal"
-            name="%command.terminal.name">
-      </command>
-   </extension>
-   <extension
+  </extension>
+  <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
@@ -94,45 +53,11 @@
                id="org.platformio.eclipse.ide.home.ui.toolbar">
             <command
                   commandId="org.platformio.eclipse.ide.home.ui.openView"
-                  icon="platform:/plugin/org.platformio.eclipse.ide.workbench/icons/eview16/platformio.png"
+                  icon="platform:/plugin/org.platformio.eclipse.ide.core.workbench/icons/eview16/platformio.png"
                   label="%command.home.name"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.platformio.eclipse.ide.home.ui.build"
-                  icon="platform:/plugin/org.eclipse.ui.browser/icons/clcl16/nav_go.png"
-                  label="%command.build.name"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.platformio.eclipse.ide.home.ui.upload"
-                  icon="platform:/plugin/org.eclipse.ui/icons/full/elcl16/forward_nav.png"
-                  label="%command.upload.name"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.platformio.eclipse.ide.home.ui.clean"
-                  icon="platform:/plugin/org.eclipse.ui/icons/full/elcl16/trash.png"
-                  label="%command.clean.name"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.platformio.eclipse.ide.home.ui.terminal"
-                  icon="platform:/plugin/org.eclipse.ui.console/icons/full/cview16/console_view.png"
-                  label="%command.terminal.name"
                   style="push">
             </command>
          </toolbar>
       </menuContribution>
    </extension>
-   
-   <extension
-         point="org.eclipse.ui.console.consoleFactories">
-      <consoleFactory
-            class="org.platformio.eclipse.ide.home.internal.ui.terminal.TerminalFactory"
-            icon="platform:/plugin/org.eclipse.ui.console/icons/full/cview16/console_view.png"
-            label="%consoleFactory.terminal.label">
-      </consoleFactory>
-   </extension>
-
 </plugin>

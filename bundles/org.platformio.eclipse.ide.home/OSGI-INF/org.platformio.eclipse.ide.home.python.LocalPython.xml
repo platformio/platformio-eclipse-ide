@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.platformio.eclipse.ide.home.python.LocalPython">
-   <service>
-      <provide interface="org.platformio.eclipse.ide.home.python.Python"/>
-   </service>
-   <implementation class="org.platformio.eclipse.ide.home.python.LocalPython"/>
-</scr:component>
