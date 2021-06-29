@@ -20,7 +20,7 @@
 		ArSysOp - initial API and implementation
 -->
 <feature
-      id="org.platformio.eclipse.ide.feature"
+      id="org.platformio.eclipse.ide.core.feature"
       label="%featureName"
       version="0.1.0.qualifier"
       provider-name="%providerName"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.platformio.eclipse.ide.feature</name>
+	<name>org.platformio.eclipse.ide.core.feature</name>
 	<comment></comment>
 	<projects>
 	</projects>
