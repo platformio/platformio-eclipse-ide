@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+environment/project/0.910961921/PATH/delimiter=;
+environment/project/0.910961921/PATH/operation=replace
+environment/project/0.910961921/PATH/value=C\:/Program Files/AdoptOpenJDK/jdk-11.0.10.9-hotspot/bin/client;C\:/Program Files/AdoptOpenJDK/jdk-11.0.10.9-hotspot/bin;C\:/Program Files (x86)/VMware/VMware Player/bin/;C\:/Program Files/AdoptOpenJDK/jdk-11.0.10.9-hotspot/bin;C\:/Python39/Scripts/;C\:/Python39/;C\:/Windows/system32;C\:/Windows;C\:/Windows/System32/Wbem;C\:/Windows/System32/WindowsPowerShell/v1.0/;C\:/Windows/System32/OpenSSH/;C\:/soft/nodejs/;C\:/ProgramData/chocolatey/bin;C\:/Program Files/Git/cmd;C\:/Users/nikifor/AppData/Local/Microsoft/WindowsApps;C\:/soft/Microsoft VS Code/bin;C\:/Users/nikifor/AppData/Roaming/npm;C\:/apache-maven-3.6.3/bin;C\:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin;C\:/Qt/Qt5.8.0/5.8/mingw53_32/bin;C\:/texlive/2021/bin/win32;C\:/eclipse/committers-latest-released/eclipse;${PathDelimiter}${PATH}
+environment/project/0.910961921/append=true
+environment/project/0.910961921/appendContributed=true
+environment/project/0.910961921.1363900502/PATH/delimiter=;
+environment/project/0.910961921.1363900502/PATH/operation=replace
+environment/project/0.910961921.1363900502/PATH/value=C\:/Program Files/AdoptOpenJDK/jdk-11.0.10.9-hotspot/bin/client;C\:/Program Files/AdoptOpenJDK/jdk-11.0.10.9-hotspot/bin;C\:/Program Files (x86)/VMware/VMware Player/bin/;C\:/Program Files/AdoptOpenJDK/jdk-11.0.10.9-hotspot/bin;C\:/Python39/Scripts/;C\:/Python39/;C\:/Windows/system32;C\:/Windows;C\:/Windows/System32/Wbem;C\:/Windows/System32/WindowsPowerShell/v1.0/;C\:/Windows/System32/OpenSSH/;C\:/soft/nodejs/;C\:/ProgramData/chocolatey/bin;C\:/Program Files/Git/cmd;C\:/Users/nikifor/AppData/Local/Microsoft/WindowsApps;C\:/soft/Microsoft VS Code/bin;C\:/Users/nikifor/AppData/Roaming/npm;C\:/apache-maven-3.6.3/bin;C\:/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin;C\:/Qt/Qt5.8.0/5.8/mingw53_32/bin;C\:/texlive/2021/bin/win32;C\:/eclipse/committers-latest-released/eclipse;${PathDelimiter}${PATH}
+environment/project/0.910961921.1363900502/append=true
+environment/project/0.910961921.1363900502/appendContributed=true

@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.platformio.eclipse.ide.workspace;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.platformio.eclipse.ide.workbench
-Service-Component: OSGI-INF/org.platformio.eclipse.ide.workbench.OpenFileHandler.xml
+Service-Component: OSGI-INF/org.platformio.eclipse.ide.workbench.OpenFileHandler.xml,
+ OSGI-INF/org.platformio.eclipse.ide.workbench.OpenProjectHandler.xml
