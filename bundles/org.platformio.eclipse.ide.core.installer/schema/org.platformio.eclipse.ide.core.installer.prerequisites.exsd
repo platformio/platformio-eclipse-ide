@@ -19,10 +19,10 @@
 	Contributors:
 		ArSysOp - initial API and implementation
 -->
-<schema targetNamespace="org.platformio.eclipse.ide.installer" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.platformio.eclipse.ide.core.installer" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.platformio.eclipse.ide.installer" id="org.platformio.eclipse.ide.installer.prerequisites" name="Installer Prerequisites"/>
+         <meta.schema plugin="org.platformio.eclipse.ide.core.installer" id="org.platformio.eclipse.ide.core.installer.prerequisites" name="Installer Prerequisites"/>
       </appinfo>
       <documentation>
          
@@ -39,6 +39,7 @@
          <sequence>
             <element ref="architecture" minOccurs="0" maxOccurs="1"/>
             <element ref="registry"/>
+            <element ref="executable"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -91,8 +92,20 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.platformio.eclipse.ide.installer.api.PythonsRegistry"/>
+                  <meta.attribute kind="java" basedOn=":org.platformio.eclipse.ide.core.installer.api.PythonsRegistry"/>
                </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="executable">
+      <complexType>
+         <attribute name="extension" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

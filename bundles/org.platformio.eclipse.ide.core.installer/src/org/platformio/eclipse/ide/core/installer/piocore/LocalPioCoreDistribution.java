@@ -18,16 +18,16 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.piocore;
+package org.platformio.eclipse.ide.core.installer.piocore;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.platformio.eclipse.ide.core.installer.api.PioCoreDistribution;
+import org.platformio.eclipse.ide.core.installer.net.RemoteResource;
 import org.platformio.eclipse.ide.core.paths.CacheDirectory;
 import org.platformio.eclipse.ide.core.python.Python;
-import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
-import org.platformio.eclipse.ide.installer.net.RemoteResource;
 
 public final class LocalPioCoreDistribution implements PioCoreDistribution {
 

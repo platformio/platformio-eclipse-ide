@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.net;
+package org.platformio.eclipse.ide.core.installer.net;
 
 import java.io.IOException;
 import java.io.InputStream;

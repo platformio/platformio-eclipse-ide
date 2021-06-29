@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.python;
+package org.platformio.eclipse.ide.core.installer.python;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.Platform;
+import org.platformio.eclipse.ide.core.installer.json.Distribution;
+import org.platformio.eclipse.ide.core.installer.net.RemoteResource;
 import org.platformio.eclipse.ide.core.paths.CacheDirectory;
-import org.platformio.eclipse.ide.installer.json.Distribution;
-import org.platformio.eclipse.ide.installer.net.RemoteResource;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

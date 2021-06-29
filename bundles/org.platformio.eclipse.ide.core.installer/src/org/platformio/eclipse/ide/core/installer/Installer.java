@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer;
+package org.platformio.eclipse.ide.core.installer;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -28,13 +28,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.platformio.eclipse.ide.core.installer.api.PioCoreDistribution;
+import org.platformio.eclipse.ide.core.installer.piocore.LocalPioCoreDistribution;
+import org.platformio.eclipse.ide.core.installer.python.PythonDistribution;
 import org.platformio.eclipse.ide.core.paths.HomeDirectory;
 import org.platformio.eclipse.ide.core.python.LocalPython;
 import org.platformio.eclipse.ide.core.python.Python;
 import org.platformio.eclipse.ide.core.python.PythonsRegistry;
-import org.platformio.eclipse.ide.installer.api.PioCoreDistribution;
-import org.platformio.eclipse.ide.installer.piocore.LocalPioCoreDistribution;
-import org.platformio.eclipse.ide.installer.python.PythonDistribution;
 
 public final class Installer {
 

@@ -22,8 +22,8 @@
 -->
 <plugin>
    <extension-point 
-   			id="org.platformio.eclipse.ide.installer.prerequisites" 
+   			id="org.platformio.eclipse.ide.core.installer.prerequisites" 
    			name="%extension-point.name" 
-   			schema="schema/org.platformio.eclipse.ide.installer.prerequisites.exsd"/>
+   			schema="schema/org.platformio.eclipse.ide.core.installer.prerequisites.exsd"/>
 
 </plugin>

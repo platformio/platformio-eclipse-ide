@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer;
+package org.platformio.eclipse.ide.core.installer;
 
 import org.eclipse.osgi.util.NLS;
 

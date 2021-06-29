@@ -20,8 +20,11 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.core.core;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+import org.eclipse.core.runtime.Platform;
 import org.platformio.eclipse.ide.core.json.Dump;
 
 public abstract class PIOExecutable implements Supplier<String> {
@@ -36,11 +39,19 @@ public abstract class PIOExecutable implements Supplier<String> {
 
 		@Override
 		public String get() {
-			return dump.envBinDir().resolve("pio" + suffix()).toString(); //$NON-NLS-1$
+			String suffix = suffix();
+			return dump.envBinDir().resolve("pio" + suffix).toString(); //$NON-NLS-1$
 		}
 
 		private String suffix() {
-			return ".exe"; //$NON-NLS-1$
+			return Arrays
+					.asList(Platform.getExtensionRegistry()
+							.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions()) //$NON-NLS-1$
+					.stream() //
+					.flatMap(extension -> Stream.of(extension.getConfigurationElements())) //
+					.filter(element -> "executable".equals(element.getName())).findFirst() //$NON-NLS-1$
+					.map(element -> element.getAttribute("extension")) //$NON-NLS-1$
+					.get();
 		}
 
 	}

@@ -22,7 +22,7 @@
 -->
 <fragment>
    <extension
-         point="org.platformio.eclipse.ide.installer.prerequisites">
+         point="org.platformio.eclipse.ide.core.installer.prerequisites">
       <architecture
             id="org.platformio.eclipse.ide.installer.win32.x64"
             url="windows_amd64">
@@ -30,6 +30,9 @@
       <registry
             class="org.platformio.eclipse.ide.installer.internal.win32.WindowsPythonsRegistry">
       </registry>
+            <executable
+            extension=".exe">
+      </executable>
    </extension>
 
 </fragment>
