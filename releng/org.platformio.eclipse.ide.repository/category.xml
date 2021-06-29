@@ -27,6 +27,9 @@
    <feature id="org.platformio.eclipse.ide.license.feature">
       <category name="org.platformio.eclipse.ide.category"/>
    </feature>
+   <feature id="org.platformio.eclipse.ide.home.feature">
+      <category name="org.platformio.eclipse.ide.category"/>
+   </feature>
    <category-def name="org.platformio.eclipse.ide.category" label="PlatformIO Eclipse IDE">
       <description>
          PlatformIO IDE for Eclipse: The next generation integrated development environment for IoT

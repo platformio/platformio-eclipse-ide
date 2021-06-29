@@ -45,6 +45,7 @@
 		<module>..\..\bundles\org.platformio.eclipse.ide.workbench</module>
 		<module>..\..\bundles\org.platformio.eclipse.ide.workspace</module>
 		<module>..\..\features\org.platformio.eclipse.ide.core.feature</module>
+		<module>..\..\features\org.platformio.eclipse.ide.home.feature</module>
 		
 		<module>..\..\tests\org.platformio.eclipse.ide.workspace.tests</module>
 
