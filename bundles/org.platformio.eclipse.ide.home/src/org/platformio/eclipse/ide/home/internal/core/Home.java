@@ -29,13 +29,16 @@ import org.platformio.eclipse.ide.core.core.BaseCommand;
 
 public final class Home extends BaseCommand {
 
-	public Home(Supplier<String> executable, File workingDirectory) {
+	private final int port;
+
+	public Home(Supplier<String> executable, File workingDirectory, int port) {
 		super(executable.get(), workingDirectory);
+		this.port = port;
 	}
 
 	@Override
 	public List<String> arguments() {
-		return Arrays.asList("home", "--no-open"); //$NON-NLS-1$//$NON-NLS-2$
+		return Arrays.asList("home", "--no-open", "--port", String.valueOf(port)); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 }

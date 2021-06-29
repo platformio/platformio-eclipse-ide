@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.service.component.annotations.Component;
+import org.platformio.eclipse.ide.core.installer.Installer;
 import org.platformio.eclipse.ide.home.api.HandlerRegistry;
 import org.platformio.eclipse.ide.home.api.PlatformIOHome;
 import org.platformio.eclipse.ide.home.core.DefaultHandlerRegistry;
@@ -35,7 +36,6 @@ import org.platformio.eclipse.ide.home.core.LocalPlatformIOHome;
 import org.platformio.eclipse.ide.home.core.Messages;
 import org.platformio.eclipse.ide.home.internal.ui.handlers.OpenFileHandler;
 import org.platformio.eclipse.ide.home.internal.ui.handlers.OpenProjectHandler;
-import org.platformio.eclipse.ide.installer.Installer;
 
 //FIXME: AF: "ensureServerStarted" should be implemented here
 @Component(immediate = true)
@@ -56,7 +56,7 @@ public final class HomeAccess {
 						installer.install(monitor);
 					}
 					pio = new LocalPlatformIOHome(registry());
-					pio.launch(8080);
+					pio.launch(8008);
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
 				} catch (IOException e) {
 					return new Status(IStatus.ERROR, getClass(),

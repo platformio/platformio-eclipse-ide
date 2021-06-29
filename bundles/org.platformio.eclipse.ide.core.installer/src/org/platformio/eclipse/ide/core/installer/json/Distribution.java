@@ -18,7 +18,7 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.installer.json;
+package org.platformio.eclipse.ide.core.installer.json;
 
 public final class Distribution {
 

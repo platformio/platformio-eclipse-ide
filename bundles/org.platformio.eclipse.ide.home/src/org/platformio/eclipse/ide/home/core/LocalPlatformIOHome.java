@@ -52,15 +52,15 @@ public final class LocalPlatformIOHome implements PlatformIOHome {
 
 	@Override
 	public void launch(int port) {
-		server();
-		client();
+		server(port);
+		client(port);
 	}
 
-	private void client() {
+	private void client(int port) {
 		WebSocketClient client = new WebSocketClient();
 		try {
 			client.start();
-			URI address = new URI("ws://localhost:8008/wsrpc"); //$NON-NLS-1$
+			URI address = new URI(String.format("ws://localhost:%d/wsrpc", port)); //$NON-NLS-1$
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
 			client.connect(socket, address, request);
 			socket.latch().await();
@@ -77,9 +77,9 @@ public final class LocalPlatformIOHome implements PlatformIOHome {
 
 	}
 
-	private void server() {
+	private void server(int port) {
 		final CommandExecution execution = new CommandExecution(
-				new Home(new PIOExecutable.OfDump(installation), new DefaultWorkingDirectory().get().toFile()),
+				new Home(new PIOExecutable.OfDump(installation), new DefaultWorkingDirectory().get().toFile(), port),
 				new DefaultInput(), new DefaultOutput());
 		running.add(execution);
 		execution.start();
