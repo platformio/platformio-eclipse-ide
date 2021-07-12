@@ -33,7 +33,7 @@ import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleView;
-import org.platformio.eclipse.ide.home.core.Messages;
+import org.platformio.eclipse.ide.core.internal.workbench.Messages;
 
 public final class OpenTerminal implements Consumer<Terminal> {
 

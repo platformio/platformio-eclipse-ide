@@ -30,8 +30,8 @@ import org.eclipse.core.runtime.ServiceCaller;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.platformio.eclipse.ide.core.api.PlatformIO;
+import org.platformio.eclipse.ide.core.internal.workbench.Messages;
 import org.platformio.eclipse.ide.core.python.Python;
-import org.platformio.eclipse.ide.home.core.Messages;
 
 public final class CustomInputHandler {
 

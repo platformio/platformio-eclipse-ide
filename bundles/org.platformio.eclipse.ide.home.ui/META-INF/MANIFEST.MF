@@ -25,7 +25,7 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.platformio.eclipse.ide.home.ui
-Service-Component: OSGI-INF/org.platformio.eclipse.ide.home.internal.ui.handlers.OpenFileHandler.xml,
- OSGI-INF/org.platformio.eclipse.ide.home.internal.ui.handlers.OpenProjectHandler.xml,
- OSGI-INF/org.platformio.eclipse.ide.home.internal.ui.HomeAccess.xml
+Service-Component: OSGI-INF/org.platformio.eclipse.ide.home.internal.ui.HomeAccess.xml,
+ OSGI-INF/org.platformio.eclipse.ide.home.internal.ui.handlers.OpenFileHandler.xml,
+ OSGI-INF/org.platformio.eclipse.ide.home.internal.ui.handlers.OpenProjectHandler.xml
 

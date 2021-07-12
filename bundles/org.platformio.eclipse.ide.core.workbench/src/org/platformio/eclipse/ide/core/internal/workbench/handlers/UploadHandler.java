@@ -26,7 +26,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.platformio.eclipse.ide.core.api.Output;
 import org.platformio.eclipse.ide.core.api.PlatformIO;
-import org.platformio.eclipse.ide.home.core.Messages;
+import org.platformio.eclipse.ide.core.internal.workbench.Messages;
 
 public final class UploadHandler extends PlatformIOHandler {
 
