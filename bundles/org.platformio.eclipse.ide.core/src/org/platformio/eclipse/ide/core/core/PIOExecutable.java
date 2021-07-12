@@ -46,8 +46,8 @@ public abstract class PIOExecutable implements Supplier<String> {
 		private String suffix() {
 			return Arrays
 					.asList(Platform.getExtensionRegistry()
-							.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions()) //$NON-NLS-1$
-					.stream() //
+							.getExtensionPoint("org.platformio.eclipse.ide.core.installer.prerequisites") //$NON-NLS-1$
+							.getExtensions()).stream() //
 					.flatMap(extension -> Stream.of(extension.getConfigurationElements())) //
 					.filter(element -> "executable".equals(element.getName())).findFirst() //$NON-NLS-1$
 					.map(element -> element.getAttribute("extension")) //$NON-NLS-1$

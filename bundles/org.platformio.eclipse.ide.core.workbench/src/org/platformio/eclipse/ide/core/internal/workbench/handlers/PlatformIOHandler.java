@@ -20,7 +20,6 @@
  *******************************************************************************/
 package org.platformio.eclipse.ide.core.internal.workbench.handlers;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -28,17 +27,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ServiceCaller;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.platformio.eclipse.ide.core.api.Output;
 import org.platformio.eclipse.ide.core.api.PlatformIO;
-import org.platformio.eclipse.ide.core.internal.workbench.terminal.ExistingTerminal;
-import org.platformio.eclipse.ide.core.internal.workbench.terminal.Terminal;
-import org.platformio.eclipse.ide.core.internal.workbench.terminal.TerminalOutput;
+import org.platformio.eclipse.ide.core.core.DefaultOutput;
 import org.platformio.eclipse.ide.core.workbench.SelectProject;
 
 public abstract class PlatformIOHandler extends AbstractHandler {
@@ -48,14 +43,9 @@ public abstract class PlatformIOHandler extends AbstractHandler {
 		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
 		Optional<IProject> project = new SelectProject(selection).get();
 		if (project.isPresent()) {
-			Terminal terminal = new ExistingTerminal().get();
 			new ServiceCaller<>(getClass(), PlatformIO.class).call(pio -> {
 				Job.create(title(), monitor -> {
-					try (IOConsoleOutputStream output = terminal.newOutputStream()) {
-						execute(pio, project.get(), new TerminalOutput(output));
-					} catch (IOException e) {
-						Platform.getLog(getClass()).error(e.getMessage(), e);
-					}
+					execute(pio, project.get(), new DefaultOutput());
 				}).schedule();
 			});
 		}
