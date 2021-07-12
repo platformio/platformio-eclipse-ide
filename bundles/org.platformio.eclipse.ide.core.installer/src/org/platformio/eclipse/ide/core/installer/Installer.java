@@ -63,7 +63,7 @@ public final class Installer {
 	private PythonsRegistry registry() throws CoreException {
 		Optional<IConfigurationElement> extensionItem = Stream
 				.of(Platform.getExtensionRegistry()
-						.getExtensionPoint("org.platformio.eclipse.ide.installer.prerequisites").getExtensions()) //$NON-NLS-1$
+						.getExtensionPoint("org.platformio.eclipse.ide.core.installer.prerequisites").getExtensions()) //$NON-NLS-1$
 				.flatMap(extension -> Stream.of(extension.getConfigurationElements())) //
 				.filter(element -> "registry".equals(element.getName())) // //$NON-NLS-1$
 				.findAny();

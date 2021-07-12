@@ -28,15 +28,6 @@
             name="%category.pio.name">
       </category>
    </extension>
-   
-   <extension
-         point="org.eclipse.ui.console.consoleFactories">
-      <consoleFactory
-            class="org.platformio.eclipse.ide.core.internal.workbench.terminal.TerminalFactory"
-            icon="platform:/plugin/org.eclipse.ui.console/icons/full/cview16/console_view.png"
-            label="%consoleFactory.terminal.label">
-      </consoleFactory>
-   </extension>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
@@ -61,7 +52,7 @@
             commandId="org.platformio.eclipse.ide.home.ui.clean">
       </handler>
       <handler
-            class="org.platformio.eclipse.ide.core.internal.workbench.terminal.OpenTerminalHandler"
+            class="org.platformio.eclipse.ide.core.internal.workbench.handlers.TerminalHandler"
             commandId="org.platformio.eclipse.ide.home.ui.terminal">
       </handler>
    </extension>

@@ -22,7 +22,6 @@ package org.platformio.eclipse.ide.core.internal.workbench;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.console.IConsoleConstants;
 
 public final class PerspectiveFactory implements IPerspectiveFactory {
 
@@ -30,7 +29,8 @@ public final class PerspectiveFactory implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.3f, layout.getEditorArea());
 		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.BOTTOM, 0.5f, IPageLayout.ID_PROJECT_EXPLORER);
-		layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM, 0.7f, layout.getEditorArea());
+		layout.addView("org.eclipse.tm.terminal.view.ui.TerminalsView", IPageLayout.BOTTOM, 0.7f, //$NON-NLS-1$
+				layout.getEditorArea());
 	}
 
 }

@@ -43,7 +43,7 @@ public final class HomeAccess {
 
 	// FIXME: AF: actually we don't need this field, we need to keep "ensure job"
 	// running from "activate" till "deactivate";
-	private PlatformIOHome pio;
+	private PlatformIOHome home;
 
 	public void activate() {
 		Job install = new Job(Messages.PlatformIO_installation_message) {
@@ -55,8 +55,8 @@ public final class HomeAccess {
 					if (!installer.installed(monitor)) {
 						installer.install(monitor);
 					}
-					pio = new LocalPlatformIOHome(registry());
-					pio.launch(8008);
+					home = new LocalPlatformIOHome(registry());
+					home.launch(8008);
 					return new Status(IStatus.OK, getClass(), Messages.Installation_successful_message);
 				} catch (IOException e) {
 					return new Status(IStatus.ERROR, getClass(),
@@ -72,12 +72,12 @@ public final class HomeAccess {
 	}
 
 	public void deactivate() {
-		if (pio != null) {
+		if (home != null) {
 			Job stop = new Job(Messages.PlatformIO_stop_message) {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					pio.stop();
+					home.stop();
 					return Status.OK_STATUS;
 				}
 			};
