@@ -26,8 +26,8 @@ import java.nio.file.Paths;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.service.component.annotations.Component;
-import org.platformio.eclipse.ide.core.core.LocalPlatformIO;
-import org.platformio.eclipse.ide.core.workspace.ImportProject;
+import org.platformio.eclipse.ide.base.core.LocalPlatformIO;
+import org.platformio.eclipse.ide.base.workspace.ImportProject;
 import org.platformio.eclipse.ide.home.api.IDECommand;
 
 import com.google.gson.JsonElement;

@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.osgi.service.component.annotations.Component;
-import org.platformio.eclipse.ide.core.installer.Installer;
+import org.platformio.eclipse.ide.base.installer.Installer;
 import org.platformio.eclipse.ide.home.api.HandlerRegistry;
 import org.platformio.eclipse.ide.home.api.PlatformIOHome;
 import org.platformio.eclipse.ide.home.core.DefaultHandlerRegistry;
