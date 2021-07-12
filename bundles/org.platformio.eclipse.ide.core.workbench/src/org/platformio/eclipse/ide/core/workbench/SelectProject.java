@@ -35,7 +35,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.platformio.eclipse.ide.home.core.Messages;
+import org.platformio.eclipse.ide.core.internal.workbench.Messages;
 
 public final class SelectProject implements Supplier<Optional<IProject>> {
 

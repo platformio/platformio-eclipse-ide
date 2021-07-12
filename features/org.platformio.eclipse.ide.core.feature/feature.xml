@@ -41,13 +41,19 @@
    </license>
 
    <requires>
-      <import feature="com.make.chromium.cef.feature" version="0.0.0"/>
       <import feature="org.eclipse.cdt" version="0.0.0"/>
       <import feature="org.eclipse.platform" version="4.19.0.v20210303-1800"/>
    </requires>
 
    <plugin
          id="org.platformio.eclipse.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
+         id="org.platformio.eclipse.ide.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

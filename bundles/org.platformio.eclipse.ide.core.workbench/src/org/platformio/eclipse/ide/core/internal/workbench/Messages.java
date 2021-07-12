@@ -18,26 +18,27 @@
  * Contributors:
  *     Nikifor Fedorov (ArSysOp) - initial API and implementation
  *******************************************************************************/
-package org.platformio.eclipse.ide.core.internal.workbench.handlers;
+package org.platformio.eclipse.ide.core.internal.workbench;
 
-import java.nio.file.Paths;
+import org.eclipse.osgi.util.NLS;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.platformio.eclipse.ide.core.api.Output;
-import org.platformio.eclipse.ide.core.api.PlatformIO;
-import org.platformio.eclipse.ide.core.internal.workbench.Messages;
+public final class Messages {
 
-public final class CleanHandler extends PlatformIOHandler {
+	private static final String BUNDLE_NAME = "org.platformio.eclipse.ide.core.internal.workbench.messages"; //$NON-NLS-1$
 
-	@Override
-	public void execute(PlatformIO pio, IProject project, Output output) throws CoreException {
-		pio.clean(Paths.get(project.getDescription().getLocationURI()), output);
+	public static String Task_Build_Title;
+	public static String Task_Clean_Title;
+	public static String Task_Upload_Title;
+	public static String Terminal_Top_Message;
+	public static String Terminal_Unknown_Message;
+	public static String Select_Project_Title;
+	public static String Select_Project_Message;
+
+	static {
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	@Override
-	public String title() {
-		return Messages.Task_Clean_Title;
+	private Messages() {
 	}
 
 }
