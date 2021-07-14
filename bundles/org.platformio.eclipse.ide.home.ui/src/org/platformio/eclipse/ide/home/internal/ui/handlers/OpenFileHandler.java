@@ -36,8 +36,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.osgi.service.component.annotations.Component;
-import org.platformio.eclipse.ide.core.core.LocalPlatformIO;
-import org.platformio.eclipse.ide.core.workspace.OpenFile;
+import org.platformio.eclipse.ide.base.core.LocalPlatformIO;
+import org.platformio.eclipse.ide.base.workspace.OpenFile;
 import org.platformio.eclipse.ide.home.api.IDECommand;
 import org.platformio.eclipse.ide.home.core.json.OpenEditorData;
 
